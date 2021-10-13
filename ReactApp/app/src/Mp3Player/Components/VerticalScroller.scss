@@ -1,0 +1,53 @@
+@import "../Styles/Variables.scss";
+
+.vertical-scroller-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	list-style-type: none;
+
+	column-gap: 24px;
+
+	width: 100%;
+	overflow: auto hidden;
+	padding: 0px 24px;
+}
+
+.album {
+	width: $album-width;
+	height: fit-content;
+
+	cursor: pointer;
+}
+
+.album-cover {
+	width: $album-width;
+	height: calc(230px - $album-height);
+	object-fit: cover;
+	border-radius: $border-radius;
+	margin-bottom: 10px;
+	border: 1px solid $transparent-border;
+}
+
+.album-title {
+	height: calc($text-size-1 * 1.3);
+	font-size: $text-size-1;
+	font-weight: 500;
+	width: 100%;
+	overflow: hidden;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.album-artist {
+	height: calc($text-size-2 * 1.3);
+	font-size: $text-size-2;
+	font-weight: 300;
+	width: 100%;
+	overflow: hidden;
+	opacity: 50%;
+
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

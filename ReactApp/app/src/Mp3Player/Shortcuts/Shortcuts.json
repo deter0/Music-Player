@@ -1,0 +1,10 @@
+[
+	{
+		"Name": "Search",
+		"Keys": "control+f"
+	},
+	{
+		"Name": "Quit",
+		"Keys": "escape"
+	}
+]
