@@ -16,12 +16,12 @@ export class Connection {
 	}
 }
 
-class Signal {
+class Signal<T> {
 	Connections: Connection[];
 	constructor() {
 		this.Connections = [];
 	}
-	connect(callback: Callback): Connection {
+	connect(callback: (args: T) => void): Connection {
 		var connection = new Connection(this, callback);
 		this.Connections.push(connection);
 
@@ -37,7 +37,7 @@ class Signal {
 		});
 		delete this.Connections[ind];
 	}
-	dispatch(...args: any) {
+	dispatch(args: T) {
 		this.Connections.forEach((connection) => {
 			if (connection.__callback) {
 				connection.__callback(args);

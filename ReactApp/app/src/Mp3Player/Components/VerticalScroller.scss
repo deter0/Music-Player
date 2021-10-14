@@ -9,7 +9,7 @@
 	column-gap: 24px;
 
 	width: 100%;
-	overflow: auto hidden;
+	overflow: hidden hidden;
 	padding: 0px 24px;
 }
 
@@ -18,19 +18,58 @@
 	height: fit-content;
 
 	cursor: pointer;
+	position: relative;
 }
 
-.album-cover {
+.album-cover,
+.album-cover-container {
 	width: $album-width;
-	height: calc(230px - $album-height);
+	height: $album-width;
 	object-fit: cover;
 	border-radius: $border-radius;
 	margin-bottom: 10px;
 	border: 1px solid $transparent-border;
 }
 
+.loader {
+	background-color: $grey;
+	display: block;
+}
+
+.loader:before {
+	content: "";
+	width: $spinner-size;
+	height: $spinner-size;
+	background-color: transparent;
+	border: $spinner-thickness solid $transparent-border;
+	border-top: $spinner-thickness solid $text-color;
+	color: transparent;
+	border-radius: 100%;
+	z-index: 91;
+	position: absolute;
+	left: calc(50% - calc($spinner-size / 2) - calc($spinner-thickness / 2));
+	top: calc(50% - calc($spinner-size / 2) - calc($spinner-thickness / 2));
+
+	backdrop-filter: blur(6px) brightness(0.5);
+	box-shadow: 0 0 14px 0 $background;
+
+	animation-name: spin;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
 .album-title {
-	height: calc($text-size-1 * 1.3);
+	height: fit-content;
 	font-size: $text-size-1;
 	font-weight: 500;
 	width: 100%;
@@ -41,7 +80,7 @@
 }
 
 .album-artist {
-	height: calc($text-size-2 * 1.3);
+	height: fit-content;
 	font-size: $text-size-2;
 	font-weight: 300;
 	width: 100%;
@@ -50,4 +89,23 @@
 
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+@media all and (max-width: 756px) {
+	.album-artist {
+		font-size: $text-size-2-small;
+	}
+	.album-title {
+		font-size: $text-size-1-small;
+	}
+	.album-cover {
+		width: $album-width-small;
+		height: calc(230px - $album-height-small);
+	}
+	.album {
+		width: $album-width-small;
+		height: fit-content;
+
+		cursor: pointer;
+	}
 }

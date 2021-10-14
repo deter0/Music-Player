@@ -35,19 +35,19 @@ function InitalizeBindings(): ShortcutBinding[] {
 
 class KeybindConnection {
 	name: string;
-	signal: Signal;
-	constructor(name: string, signal: Signal) {
+	signal: Signal<KeyboardEvent>;
+	constructor(name: string, signal: Signal<KeyboardEvent>) {
 		this.name = name;
 		this.signal = signal;
 	}
 };
 
-const OnKeyDown = new Signal();
+const OnKeyDown = new Signal<KeyboardEvent>();
 document.addEventListener("keydown", (event) => {
 	OnKeyDown.dispatch(event);
 });
 
-const OnKeyUp = new Signal();
+const OnKeyUp = new Signal<KeyboardEvent>();
 document.addEventListener("keyup", (event) => {
 	OnKeyUp.dispatch(event);
 });
@@ -60,8 +60,8 @@ class Shortcuts {
 	constructor() {
 		this.ShortcutData = InitalizeBindings();
 
-		OnKeyDown.connect((event: KeyboardEvent[]) => {
-			const key = event[0]?.key.toLowerCase();
+		OnKeyDown.connect((event) => {
+			const key = event.key.toLowerCase();
 
 			if (this.keysDown.indexOf(key) === -1) {
 				this.keysDown.push(key);
@@ -79,20 +79,20 @@ class Shortcuts {
 					});
 				})
 				if (bindPressed) {
-					this.GetConnectionByName(shortcutData.name).signal.dispatch(event[0]);
-					event[0]?.preventDefault();
+					this.GetConnectionByName(shortcutData.name).signal.dispatch(event);
+					event.preventDefault();
 				}
 			};
 		});
-		OnKeyUp.connect((event: KeyboardEvent[]) => {
-			const key = event[0].key.toLowerCase();
+		OnKeyUp.connect((event) => {
+			const key = event.key.toLowerCase();
 
 			this.keysDown = this.keysDown.filter((value) => {
 				return value !== key;
 			});
 		});
 	}
-	On(name: string): Signal {
+	On(name: string): Signal<KeyboardEvent> {
 		let foundConnection: KeybindConnection = this.GetConnectionByName(name);
 		return foundConnection.signal;
 	}
@@ -110,7 +110,7 @@ class Shortcuts {
 		return foundConnection;
 	}
 	private CreateConnection(name: string): KeybindConnection {
-		const keybindConnection = new KeybindConnection(name, new Signal());
+		const keybindConnection = new KeybindConnection(name, new Signal<KeyboardEvent>());
 		this.Connections.push(keybindConnection);
 
 		return keybindConnection;

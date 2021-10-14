@@ -8,6 +8,7 @@ body {
 }
 
 * {
+	user-select: none;
 	box-sizing: border-box;
 }
 
@@ -18,4 +19,202 @@ h4,
 h5,
 h6 {
 	margin: 0;
+}
+
+.context-title {
+	padding: 0px 24px;
+	font-size: $heading-size;
+	font-weight: 500;
+}
+
+.context-title-icon {
+	font-size: $heading-size !important;
+}
+
+.context-title-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+@media all and (max-width: 756px) {
+	.context-title-icon {
+		font-size: $heading-size-small !important;
+	}
+	.context-title {
+		font-size: $heading-size-small;
+	}
+	button {
+		font-size: $button-font-size-smaller;
+	}
+}
+
+button {
+	padding: $button-padding;
+	font-family: inherit;
+	border: none;
+	background: $button-background;
+	color: $text-color;
+	border-radius: $border-radius-alt;
+	font-size: $button-font-size;
+	font-weight: 500;
+	border: 1px solid $transparent-border;
+	cursor: pointer;
+
+	transition: background $background-transition, border $background-transition;
+	outline: none;
+}
+
+button:focus {
+	border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.button-highlight {
+	background: $special-button-background;
+	color: $special-button-text;
+	border: 1px solid transparent;
+	outline: none;
+}
+
+.button-highlight:hover,
+.button-highlight:focus {
+	background: lighten($special-button-background, 10%);
+}
+
+.notifications {
+	position: relative;
+}
+
+.notifications::after {
+	content: attr(data-notifications);
+	width: fit-content;
+	height: fit-content;
+	font-family: $font;
+	font-size: $notifications-size;
+	position: absolute;
+	right: -5%;
+	top: -20%;
+	z-index: 2;
+	background-color: $notifications-background;
+	padding: calc($button-padding / 8) calc($button-padding / 2);
+	border-radius: $border-radius-alt;
+}
+
+input {
+	padding: $button-padding;
+	font-family: $font;
+	border-radius: $border-radius-alt;
+	border: 1px solid $transparent-border;
+	background: $button-background;
+	color: $text-color;
+	font-size: 1em;
+	outline: none;
+	transition: border $background-transition;
+}
+
+input:focus {
+	border: 1px solid $border-color;
+}
+
+.search {
+	position: relative;
+	padding: $button-padding;
+	font-family: $font;
+	border-radius: $border-radius-alt;
+	border: 1px solid $transparent-border;
+	background: $button-background;
+	color: $text-color;
+	font-size: 1em;
+	outline: none;
+	transition: border $background-transition;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	column-gap: 35px;
+}
+
+.search input {
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	border: none;
+	font-size: inherit;
+}
+
+.search:focus-within {
+	border: 1px solid $border-color;
+}
+
+.search input:focus {
+	border: transparent;
+}
+
+.search::before {
+	content: ""; /* MS Icon Unicode Character */
+	font-family: "FabricMDL2Icons";
+	font-size: 20px;
+}
+.search::after {
+	position: absolute;
+	left: 50px;
+	content: "";
+	width: 1px;
+	height: 60%;
+	background: $transparent-border;
+}
+
+.select {
+	outline: none;
+	background: transparent;
+	border: none;
+	color: $text-color;
+	overflow: visible;
+	width: 100%;
+	max-width: 400px;
+	list-style-type: none;
+	padding: 0;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-direction: column;
+	row-gap: 4px;
+	height: fit-content;
+}
+
+.select button {
+	height: fit-content;
+	padding: 10px;
+	font-size: 1.3em;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: $border-radius-alt;
+	width: 100%;
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	padding: $button-padding;
+	cursor: pointer;
+}
+
+.select button:hover,
+.select button:focus {
+	background: $transparent-dark;
+}
+
+.select button::before {
+	content: attr(data-icon);
+	width: 20px;
+	font-family: "FabricMDL2Icons";
+	margin-right: 14px;
+}
+
+.select button[data-selected] {
+	background: $transparent-dark;
+	border: 1px solid $border-color;
+}
+
+.select button[data-selected]:focus {
+	filter: brightness(1.5);
 }

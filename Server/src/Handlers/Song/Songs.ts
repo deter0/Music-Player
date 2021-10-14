@@ -193,7 +193,7 @@ export default class Songs {
 		const FilePath = `${Path || this.Path}/${Identifier}`;
 		const Metadata = await MusicMetadata.parseFile(FilePath);
 		const Cover = MusicMetadata.selectCover(Metadata.common.picture);
-		const CoverData = `data:${Cover.format};base64,${Cover.data.toString('base64')}`;
+		const CoverData = Cover.data.toString('base64');//`data:${Cover.format};base64,${Cover.data.toString('base64')}`;
 		return CoverData;
 	}
 }
