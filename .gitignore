@@ -1,5 +1,6 @@
 Client/node_modules
 Client/node_modules/out/
+Client/out/
 ReactApp/node_modules/
 ReactApp/app/node_modules/
 Server/node_modules/
