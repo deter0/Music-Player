@@ -9,5 +9,5 @@ export default function SecondsToHMS(Seconds: number) {
 	if (hours < 10) { hours_str = "0" + hours; }
 	if (minutes < 10) { minutes_str = "0" + minutes; }
 	if (seconds < 10) { seconds_str = "0" + seconds; }
-	return (hours <= 0 ? '' : (hours_str + ":")) + minutes_str + ' : ' + seconds_str;
+	return ((hours <= 0 ? '' : (hours_str + ":")) + minutes_str + ' : ' + seconds_str).replace(" ", "");
 }

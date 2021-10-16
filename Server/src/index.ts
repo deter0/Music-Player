@@ -44,21 +44,14 @@ const GetUTC = () => {
 						await fs.closeSync(await fs.openSync(`${Path}/${RequiredFile}`, 'w'));
 					}
 				}
-			} else {
-				// const FolderFiles = await fs.readdirSync(`${Path}/${RequiredFolder}`);
-				// console.log(`Search data: ${FolderFiles} ${typeof (FolderFiles)} index of ${FolderFiles.indexOf(`Plays.json`)}`)
-				// for (const RequiredFile of RequiredFiles) {
-				// 	console.log(`Searching for: "${RequiredFile.split(`/`)[1]}"`)
-				// 	if (FolderFiles.indexOf(RequiredFile.split(`/`)[1]) === -1) {
-				// 		console.log(`created file ${RequiredFile.split(`/`)[1]}`);
-				// 		console.log(FolderFiles.indexOf(RequiredFile.split(`/`)[1]), '\n');
-				// 		for (const File of FolderFiles) {
-				// 			console.log(File == RequiredFile.split(`/`)[1]);
-				// 			console.log(File);
-				// 		}
-				// 		await fs.closeSync(await fs.openSync(`${Path}/${RequiredFile}`, 'w'));
-				// 	}
-				// }
+			}
+		}
+		for (const RequiredFile of RequiredFiles) {
+			let FolderFiles = fs.readdirSync(`${Path}${RequiredFile.split("/")[0]}`);
+			if (FolderFiles.indexOf(RequiredFile.split("/")[1]) === -1) {
+				let Open = (fs.openSync(`${Path}${RequiredFile}`, 'w'));
+				fs.writeSync(Open, "{}");
+				fs.closeSync(Open);
 			}
 		}
 	} catch (err) {
@@ -185,9 +178,9 @@ app.listen(port, "192.168.2.13", () => {
 	console.log(`server started at http://192.168.2.13:${port}`);
 });
 
-const G = new Graph("Memory", process.stdout.columns - 30);
-setInterval(() => {
-	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
-	G.PushData(Memory);
-	G.Print();
-}, 1000);
+// const G = new Graph("Memory", process.stdout.columns - 30);
+// setInterval(() => {
+// 	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
+// 	G.PushData(Memory);
+// 	G.Print();
+// }, 1000);

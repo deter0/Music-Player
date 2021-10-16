@@ -16,9 +16,9 @@ interface Props {
 export default class VerticalSong extends Component<Props> {
 	state = {
 		Image: "",
-		Liked: false
+		Liked: false,
+		ImageRef: React.createRef<HTMLImageElement>()
 	}
-	Image = React.createRef<HTMLImageElement>();
 	constructor(props: Props) {
 		super(props);
 		this.state.Liked = props.Item.Liked || false;
@@ -32,7 +32,7 @@ export default class VerticalSong extends Component<Props> {
 		this.WatchForLoad();
 	}
 	WatchForLoad() {
-		if (this.Image.current && IsVisible(this.Image.current)) {
+		if (this.state.ImageRef.current && IsVisible(this.state.ImageRef.current)) {
 			this.LoadImage();
 		} else {
 			setTimeout(() => {
@@ -53,13 +53,13 @@ export default class VerticalSong extends Component<Props> {
 	render() {
 		return (
 			<div className="song-container">
-				<img ref={this.Image} draggable={false} className="song-image" src={this.state.Image} alt="" />
+				<img ref={this.state.ImageRef} draggable={false} className="song-image" src={this.state.Image} alt="" />
 				<h1 className="song-index">{this.props.Index + 1 < 10 ? `0${this.props.Index + 1}` : this.props.Index + 1}</h1>
 				<button onClick={() => {
 					this.Like();
 					this.setState({ Liked: !this.state.Liked });
 				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.props.Item.Liked ? "favorite" : "favorite_border"}</button>
-				<h1 className="song-title">{this.props.Item.Title}</h1>
+				<h1 className="song-title">{this.props.Item.Title.substr(0, this.state.ImageRef.current ? this.state.ImageRef.current.getBoundingClientRect().width / 3 : 30) + (this.props.Item.Title.length > 30 ? "..." : "")}<span className="song-artist-span">— {this.props.Item.Artist}</span></h1>
 				<h1 className="song-album">{this.props.Item.Album}</h1>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
 				<button className="song-options material-icons">more_horiz</button>

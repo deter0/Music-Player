@@ -44,6 +44,7 @@ export default class VerticalScroller extends Component<Props, State, {}> {
 		this.OnMouseDown.connect((args) => {
 			let X = MouseLocation.x;
 			let Last = GetUTC();
+			MouseUp = false;
 			if (this.Scroller.current) {
 				let Real = this.Scroller.current.scrollLeft;
 				let Callback = () => {
