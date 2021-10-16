@@ -3,13 +3,12 @@ import React, { Component } from 'react'
 import * as Types from "../Types";
 import IsVisible from '../Helpers/IsVisible';
 
-import "./VerticalScroller.scss";
+import "./HorizontalScroller.scss";
 import Signal from '../Signal';
 import Vector2 from '../Helpers/Vector2';
 import LoadImage from "../Helpers/LoadImage";
 import GetUTC from '../Helpers/GetUTC';
 import Lerp from '../Helpers/Lerp';
-import Clamp from '../Helpers/Clamp';
 
 interface Props {
 	Items?: Types.Album[],
@@ -49,6 +48,7 @@ export default class VerticalScroller extends Component<Props, State, {}> {
 				let Real = this.Scroller.current.scrollLeft;
 				let Callback = () => {
 					let DeltaTime = GetUTC() - Last;
+					console.log(DeltaTime);
 					if (this.Scroller.current) {
 						let Difference = X - MouseLocation.x;
 						X = MouseLocation.x;

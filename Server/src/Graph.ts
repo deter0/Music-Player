@@ -44,16 +44,20 @@ export default class Graph {
 		const Height = process.stdout.rows - 2;
 		// process.stdout.write('\u001b[{n}J');
 		console.log("\n".repeat(Height * 2));
+		if (this.LargestValue === this.LowestValue) {
+			this.LargestValue += 10;
+			this.LowestValue -= 10;
+		}
 		for (let y = 0; y < Height; y++) {
 			let XString = "";
 			for (let x = 0; x < this.BufferSize; x++) {
 				let Value = Math.round((this.Buffer[x] - (this.RangeL || this.LargestValue || 0)) / ((this.RangeH || this.LowestValue || 1) - (this.RangeL || this.LargestValue || 0)) * Height);
-				let NextValue = 0;
-				if (this.Buffer[x + 1]) {
-					NextValue = Math.round((this.Buffer[x + 1] - (this.RangeL || this.LargestValue || 0)) / ((this.RangeH || this.LowestValue || 1) - (this.RangeL || this.LargestValue || 0)) * Height);
-				}
-				if (y === Value || y > Value) {//(y > Value && y < NextValue) || (y > NextValue && y < Value)) {
-					XString += "\u001b[31m#\u001b[0m";
+				// let NextValue = 0;
+				// if (this.Buffer[x + 1]) {
+				// 	NextValue = Math.round((this.Buffer[x + 1] - (this.RangeL || this.LargestValue || 0)) / ((this.RangeH || this.LowestValue || 1) - (this.RangeL || this.LargestValue || 0)) * Height);
+				// }
+				if (y === Value || y > Value || Value === 1 || Value === 0 || Value === NaN) {//(y > Value && y < NextValue) || (y > NextValue && y < Value)) {
+					XString += `\u001b[31m$\u001b[0m`;
 				} else {
 					XString += "\u001b[234m.\u001b[0m";
 				}

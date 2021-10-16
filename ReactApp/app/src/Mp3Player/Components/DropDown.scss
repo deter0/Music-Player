@@ -1,0 +1,106 @@
+@import "../Styles/Variables.scss";
+
+.dropdown {
+	font-size: $text-size-2-small;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	column-gap: 10px;
+
+	position: relative;
+}
+
+.dropdown::before {
+	font-family: "FabricMDL2Icons";
+	content: "";
+}
+
+.dropped-down {
+	position: absolute;
+	bottom: 0;
+	width: fit-content;
+	min-width: 100%;
+	left: -1px;
+	height: fit-content;
+	transform: translateY(calc(100% + calc($button-padding / 4) + 20px));
+	background-color: $background;
+	border-radius: $border-radius-alt;
+	border: 1px solid $transparent-border;
+	border-top: none;
+	transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+	box-shadow: 0 0 15px 4px $shadow-color;
+	z-index: 4;
+}
+
+@supports not (backdrop-filter: none) {
+	.dropped-down {
+		background-color: red;
+	}
+}
+
+.dropped-down::before {
+	content: "";
+	position: absolute;
+	z-index: -2;
+	left: 20px;
+	top: -11px;
+	transform: rotate(45deg);
+	width: 20px;
+	height: 20px;
+	background-color: $background;
+	border: 1px solid $transparent-border;
+	border-bottom: none;
+	border-right: none;
+}
+
+.drop-down-option:nth-child(1) {
+	border-radius: $border-radius-alt $border-radius-alt 0 0;
+}
+
+.drop-down-option:last-child {
+	border-radius: 0 0 $border-radius-alt $border-radius-alt;
+}
+
+.dropped-down-closed {
+	transform: translateY(calc(100% + calc($button-padding / 4) - 20px));
+	opacity: 0;
+	z-index: -99;
+}
+
+.drop-down-option {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	height: 52px;
+	white-space: nowrap;
+	padding: $button-padding;
+	border-radius: 0;
+	min-width: 100%;
+	column-gap: 10px;
+	border: 1px solid transparent;
+	border-top: 1px solid $transparent-border;
+	font-weight: 300;
+}
+
+.drop-down-option-selected {
+	border: 1px solid $border-color;
+	background: transparentize($border-color, 0.5) !important;
+}
+
+.drop-down-option-selected:hover,
+.drop-down-option-selected:focus {
+	border: 1px solid $border-color;
+	background: transparentize($border-color, 0.4) !important;
+}
+
+.drop-down-option:hover {
+	background-color: $transparent-border;
+}
+
+.drop-down-option::before {
+	content: attr(data-icon);
+	font-family: "FabricMDL2Icons";
+	font-weight: inherit;
+}

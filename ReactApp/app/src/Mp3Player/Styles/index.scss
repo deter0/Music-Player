@@ -66,7 +66,7 @@ button {
 }
 
 button:focus {
-	border: 1px solid rgba(255, 255, 255, 0.5);
+	box-shadow: 0 0 6px 6px transparentize($border-color, 0.5), 0 0 0 2px $border-color;
 }
 
 .button-highlight {
@@ -92,6 +92,7 @@ button:focus {
 	font-family: $font;
 	font-size: $notifications-size;
 	position: absolute;
+	color: $text-color;
 	right: -5%;
 	top: -20%;
 	z-index: 2;
@@ -178,7 +179,7 @@ input:focus {
 	justify-content: flex-start;
 	align-items: flex-start;
 	flex-direction: column;
-	row-gap: 4px;
+	row-gap: 10px;
 	height: fit-content;
 }
 
@@ -195,6 +196,7 @@ input:focus {
 	justify-content: flex-start;
 	align-items: center;
 	padding: $button-padding;
+	color: $text-color;
 	cursor: pointer;
 }
 
@@ -211,10 +213,12 @@ input:focus {
 }
 
 .select button[data-selected] {
-	background: $transparent-dark;
+	background: $special-button-background;
 	border: 1px solid $border-color;
+	transition: filter $background-transition;
+	color: $special-button-text;
 }
 
 .select button[data-selected]:focus {
-	filter: brightness(1.5);
+	filter: brightness(1.1);
 }

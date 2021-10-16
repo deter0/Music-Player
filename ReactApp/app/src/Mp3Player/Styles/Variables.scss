@@ -14,43 +14,44 @@ $text-color: white;
 $button-background: transparent;
 $special-button-background: $light-purple; /* Important buttons */
 $border-color: transparentize(lighten($special-button-background, 20%), 0.4); /* Main border color */
-$special-button-text: $text-color;
-$transparent-border: #ffffff2d; /* Border around images and other objects */
+$special-button-text: white;
+$transparent-border: transparentize($text-color, 0.875); /* Border around images and other objects */
 $notifications-background: $blue;
-$transparent-dark: rgba(15, 15, 15, 0.4);
-$grey: rgb(56, 56, 56);
+$transparent-dark: rgba(126, 126, 126, 0.2);
+$grey: rgb(180, 180, 180);
+$shadow-color: rgba(0, 0, 0, 0.2);
 
 /* Poppins font, https://fonts.google.com/specimen/Poppins#about */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 /* Other */
-$font: "Poppins", sans-serif; /* Main font */
+$font: "Fira Sans", "Poppins", sans-serif; /* Main font */
 $button-padding: 16px;
 
 /* Borders */
 $border-radius: 12px; /* Images */
-$border-radius-alt: 4px; /* Buttons and such */
+$border-radius-alt: 12px; /* Buttons and such */
 $border-radius-round: 40px;
 
 /* Font sizes */
-$text-size-1: 1.1em;
-$text-size-2: 1em;
-$heading-size: 2.4em;
-$button-font-size: 1em;
+$text-size-1: 1.1rem;
+$text-size-2: 1rem;
+$heading-size: 2.1rem;
+$button-font-size: 0.9rem;
 $notifications-size: 16px;
 
 /* Mobile/ smaller font sizes */
-$text-size-1-small: 0.95em;
-$text-size-2-small: 0.8em;
-$heading-size-small: 2em;
-$button-font-size-smaller: 1em;
+$text-size-1-small: 0.95rem;
+$text-size-2-small: 0.8rem;
+$heading-size-small: 1.8rem;
+$button-font-size-smaller: 1rem;
 
 /* Sizes */
-$album-width: 200px;
-$album-height: 250px;
+$album-width: 175px;
+$album-height: calc($album-width - 50px);
 
 /* Mobile/ smaller screen sizes */
 $album-width-small: 140px;
-$album-height-small: 90px;
+$album-height-small: calc($album-width-small - 50px);
 
 /* Css Transitions */
 $background-transition: 0.2s ease-out;

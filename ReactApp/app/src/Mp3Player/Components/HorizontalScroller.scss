@@ -31,43 +31,6 @@
 	border: 1px solid $transparent-border;
 }
 
-.loader {
-	background-color: $grey;
-	display: block;
-}
-
-.loader:before {
-	content: "";
-	width: $spinner-size;
-	height: $spinner-size;
-	background-color: transparent;
-	border: $spinner-thickness solid $transparent-border;
-	border-top: $spinner-thickness solid $text-color;
-	color: transparent;
-	border-radius: 100%;
-	z-index: 91;
-	position: absolute;
-	left: calc(50% - calc($spinner-size / 2) - calc($spinner-thickness / 2));
-	top: calc(50% - calc($spinner-size / 2) - calc($spinner-thickness / 2));
-
-	backdrop-filter: blur(6px) brightness(0.5);
-	box-shadow: 0 0 14px 0 $background;
-
-	animation-name: spin;
-	animation-duration: 1s;
-	animation-timing-function: linear;
-	animation-iteration-count: infinite;
-}
-
-@keyframes spin {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: rotate(360deg);
-	}
-}
-
 .album-title {
 	height: fit-content;
 	font-size: $text-size-1;
