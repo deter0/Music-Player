@@ -119,7 +119,7 @@ input:focus {
 
 .search {
 	position: relative;
-	padding: $button-padding;
+	padding: 0 $button-padding;
 	font-family: $font;
 	border-radius: $border-radius-alt;
 	border: 1px solid $transparent-border;
@@ -127,6 +127,8 @@ input:focus {
 	color: $text-color;
 	font-size: 1em;
 	outline: none;
+	height: calc(calc(1em + 3px) + $button-padding * 2);
+	box-sizing: content-box !important;
 	transition: border $background-transition;
 	position: relative;
 	display: flex;
@@ -152,8 +154,8 @@ input:focus {
 }
 
 .search::before {
-	content: ""; /* MS Icon Unicode Character */
-	font-family: "FabricMDL2Icons";
+	content: "search";
+	font-family: $icon-font; //"FabricMDL2Icons";
 	font-size: 20px;
 }
 .search::after {
@@ -208,7 +210,7 @@ input:focus {
 .select button::before {
 	content: attr(data-icon);
 	width: 20px;
-	font-family: "FabricMDL2Icons";
+	font-family: $icon-font;
 	margin-right: 14px;
 }
 

@@ -13,8 +13,8 @@
 }
 
 .dropdown::before {
-	font-family: "FabricMDL2Icons";
-	content: "";
+	font-family: $icon-font;
+	content: attr(data-icon);
 }
 
 .dropped-down {
@@ -101,6 +101,7 @@
 
 .drop-down-option::before {
 	content: attr(data-icon);
-	font-family: "FabricMDL2Icons";
+	// font-family: "FabricMDL2Icons";
+	font-family: $icon-font;
 	font-weight: inherit;
 }

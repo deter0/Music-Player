@@ -32,6 +32,7 @@ export default class DropDown extends Component<Props> {
 		return (
 			<button
 				className="dropdown"
+				data-icon={this.state.Opened ? `expand_less` : `expand_more`}
 				onMouseUp={() => this.setState({ Opened: !this.state.Opened })}
 				onMouseEnter={() => this.setState({ Hovering: true })}
 				onMouseLeave={() => this.setState({ Hovering: false })}
