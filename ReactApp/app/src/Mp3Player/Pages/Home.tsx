@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import DropDown from '../Components/DropDown'
-import VerticalScroller from '../Components/HorizontalScroller'
+import Horizontal from '../Components/HorizontalScroller'
+import VerticalSongs from "../Components/VerticalSongs";
 
 export default class Index extends Component {
 	render() {
@@ -11,7 +12,8 @@ export default class Index extends Component {
 					<span className="context-title">Context Title</span>
 					<span className="context-title-icon material-icons">search</span>
 				</p>
-				<VerticalScroller Url="/albums/range" />
+				<Horizontal Url="/albums/range" />
+				<VerticalSongs Url="/songs/range" />
 				<div style={{ padding: "24px", display: 'flex', alignItems: "flex-start", rowGap: "14px", justifyContent: "flex-start", flexDirection: "column" }}>
 					<DropDown Label="Drop down" Items={[
 						{

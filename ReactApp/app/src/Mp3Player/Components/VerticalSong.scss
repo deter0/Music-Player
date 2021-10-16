@@ -1,0 +1,173 @@
+@import "../Styles/Variables.scss";
+
+.song-container {
+	display: grid;
+	grid-template-columns: $vertical-songs-height 0.2fr 0.2fr 3fr 3fr 0.425fr 0.4fr;
+	grid-template-rows: 1fr;
+	gap: 0px 11px;
+	grid-auto-flow: row;
+	grid-template-areas: ". . . . . . .";
+
+	width: 100%;
+	max-width: 1200px;
+
+	height: $vertical-songs-height;
+	padding: $button-padding;
+	box-sizing: content-box;
+	border-radius: $border-radius-alt;
+	transition: background $background-transition;
+}
+
+.song-container:hover {
+	background-color: transparentize($transparent-dark, 0.175);
+}
+
+.song-index {
+	font-size: $text-size-1;
+	font-weight: 400;
+	opacity: 40%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.song-like {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 40%;
+	transition: opacity $background-transition;
+	border: none;
+	box-shadow: none !important;
+	padding: 0;
+	height: fit-content;
+	margin: auto 0;
+}
+
+.song-liked {
+	animation-name: heart-animation;
+	animation-duration: 0.5s;
+	opacity: 1 !important;
+	position: relative;
+}
+
+.song-liked::before {
+	position: absolute;
+	content: "favorite";
+	font-family: $icon-font;
+	width: 100%;
+	height: 100%;
+	color: $special-button-background;
+	top: 0;
+	left: 0;
+	animation-name: heart-inner-animation;
+	animation-duration: 0.4s;
+}
+
+$size: 100%;
+.song-liked::after {
+	content: "";
+	width: $size;
+	height: $size;
+	position: absolute;
+	background: transparentize($special-button-background, 0.3);
+	top: -15%; //calc($size / 2);
+	left: 0; //calc($size / 2);
+	padding-bottom: 6px;
+	animation-name: heart-background;
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+	z-index: -1;
+	border-radius: 9999px;
+}
+
+@keyframes heart-background {
+	from {
+		transform: scale(1);
+		opacity: 1;
+		filter: grayscale(1);
+	}
+	to {
+		transform: scale(2);
+		opacity: 0;
+	}
+}
+
+@keyframes heart-inner-animation {
+	from {
+		transform: rotateY(90deg);
+		opacity: 0;
+	}
+}
+
+@keyframes heart-animation {
+	0% {
+		transform: scale(1);
+	}
+	30% {
+		transform: scale(0.9);
+	}
+	60% {
+		transform: scale(0.9);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
+.song-title {
+	font-size: $text-size-1;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	font-weight: 400;
+	text-overflow: ellipsis;
+}
+
+.song-album {
+	font-size: $text-size-1;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	font-weight: 400;
+	opacity: 40%;
+	text-overflow: ellipsis;
+	text-align: right;
+	background: transparent;
+}
+
+.song-duration {
+	font-size: $text-size-1;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	font-family: inherit;
+	font-weight: 400;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	opacity: 30%;
+}
+
+.song-options {
+	border: none;
+	box-shadow: none !important;
+	padding: 0;
+	height: fit-content;
+	width: fit-content;
+	margin: auto auto;
+	transition: opacity $background-transition;
+	z-index: 0 !important;
+	opacity: 30%;
+}
+
+.song-options:hover,
+.song-liked:hover {
+	opacity: 70%;
+}
+
+.song-image {
+	height: $vertical-songs-height;
+	width: $vertical-songs-height;
+	margin: auto auto;
+	border-radius: calc($border-radius / 2);
+}

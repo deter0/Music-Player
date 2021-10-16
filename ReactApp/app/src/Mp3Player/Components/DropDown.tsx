@@ -6,7 +6,11 @@ interface Props {
 	style?: { [index: string]: any };
 	Label: string,
 	Items: { Icon: string, Text: string }[],
-	SelectedIndex?: number
+	SelectedIndex?: number,
+	IsNotSelectable?: boolean,
+	Icon?: string,
+	IconSize?: string,
+	className?: string
 }
 export default class DropDown extends Component<Props> {
 	state = {
@@ -31,8 +35,9 @@ export default class DropDown extends Component<Props> {
 	render() {
 		return (
 			<button
-				className="dropdown"
-				data-icon={this.state.Opened ? `expand_less` : `expand_more`}
+				className={(this.props.className ? this.props.className + " " : "") + "dropdown"}
+				data-icon={this.props.Icon || (this.state.Opened ? `expand_less` : `expand_more`)}
+				data-icon-size={this.props.IconSize || `14px`}
 				onMouseUp={() => this.setState({ Opened: !this.state.Opened })}
 				onMouseEnter={() => this.setState({ Hovering: true })}
 				onMouseLeave={() => this.setState({ Hovering: false })}
@@ -43,7 +48,7 @@ export default class DropDown extends Component<Props> {
 					{this.props.Items.map((Item, Index) => {
 						return <button
 							key={Index}
-							onClick={() => this.setState({ Selected: Index })}
+							onClick={() => this.setState({ Selected: this.props.IsNotSelectable ? this.props.SelectedIndex : Index })}
 							onFocus={() => this.setState({ Opened: true })}
 							onBlur={() => this.setState({ Opened: false })}
 							className={`${Index === this.state.Selected ? "drop-down-option-selected" : ""} drop-down-option`}

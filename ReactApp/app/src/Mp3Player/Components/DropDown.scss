@@ -7,7 +7,7 @@
 	align-items: center;
 	justify-content: center;
 
-	column-gap: 10px;
+	column-gap: 6px;
 
 	position: relative;
 }
@@ -15,6 +15,7 @@
 .dropdown::before {
 	font-family: $icon-font;
 	content: attr(data-icon);
+	font-size: attr(data-icon-size) !important;
 }
 
 .dropped-down {
@@ -101,7 +102,6 @@
 
 .drop-down-option::before {
 	content: attr(data-icon);
-	// font-family: "FabricMDL2Icons";
 	font-family: $icon-font;
 	font-weight: inherit;
 }
