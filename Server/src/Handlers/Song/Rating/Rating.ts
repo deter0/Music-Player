@@ -56,10 +56,10 @@ export default class Ratings {
 		for (const RatingKey in this.Ratings) {
 			if (this.Ratings[RatingKey]) {
 				if (this.Ratings[RatingKey].GeneratedRating === DefaultRating.GeneratedRating && this.Ratings[RatingKey].UserLiked === DefaultRating.UserLiked) {
-					this.Ratings[RatingKey] = undefined;
+					delete this.Ratings[RatingKey];
 				}
-			} else {
-				this.Ratings[RatingKey] = undefined; // Null cases
+			} else { // Null cases
+				delete this.Ratings[RatingKey];
 			}
 		}
 		console.log("saving", JSON.stringify(this.Ratings), this.Ratings);

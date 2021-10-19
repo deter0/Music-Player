@@ -2,24 +2,60 @@
 
 .song-container {
 	display: grid;
-	grid-template-columns: $vertical-songs-height 0.2fr 0.2fr 3fr 3fr 0.425fr 0.4fr;
+	grid-template-columns: $vertical-songs-height 2.426723% 25px 39.3909427% 36.3909427% 03.7958806% 01.9804595%;
 	grid-template-rows: 1fr;
 	gap: 0px 11px;
 	grid-auto-flow: row;
 	grid-template-areas: ". . . . . . .";
 
-	width: 100%;
-	max-width: 1200px;
-
+	width: calc(100% - 16px * 2.25);
 	height: $vertical-songs-height;
 	padding: $button-padding;
 	box-sizing: content-box;
 	border-radius: $border-radius-alt;
 	transition: background $background-transition;
+	max-width: 1150px;
+}
+
+@media (max-width: 1110px) {
+	.song-container {
+		grid-template-columns: $vertical-songs-height 2.426723% 25px 35.3909427% 35.3909427% 03.7958806% 01.9804595%;
+	}
+}
+
+@media (max-width: 900px) {
+	.song-container {
+		grid-template-columns: 0px 20px 37.3909427% 37.3909427% 6.7958806% 0.9804595%;
+	}
+	.song-index {
+		font-size: 0 !important;
+		height: 0 !important;
+		display: none;
+	}
+	.song-container {
+		height: 40px;
+	}
+	.song-title,
+	.song-album,
+	.song-duration {
+		font-size: $text-size-1-small !important;
+	}
+	.song-div {
+		height: 40px !important;
+	}
+	.song-like,
+	.song-options {
+		font-size: $button-font-size-smaller !important;
+	}
+	.song-image {
+		height: 0 !important;
+		overflow: hidden;
+		display: none;
+	}
 }
 
 .song-container:hover {
-	background-color: transparentize($transparent-dark, 0.175);
+	background-color: transparentize($grey, 0.9);
 }
 
 .song-index {
@@ -128,6 +164,8 @@ $size: 100%;
 	font-weight: 400;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	overflow: hidden;
+	width: 100%;
 }
 
 .song-album {
@@ -137,10 +175,23 @@ $size: 100%;
 	justify-content: flex-end;
 	font-weight: 400;
 	opacity: 40%;
-	text-overflow: ellipsis;
 	text-align: right;
 	background: transparent;
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	position: relative;
+	width: 100%;
+}
+
+.song-title::after {
+	content: "";
+	width: 15px;
+	height: 100%;
+	position: absolute;
+	right: 0;
+	top: 0;
+	background: linear-gradient($background, transparent);
 }
 
 .song-duration {
@@ -177,4 +228,12 @@ $size: 100%;
 	width: $vertical-songs-height;
 	margin: auto auto;
 	border-radius: calc($border-radius / 2);
+}
+
+.song-div {
+	height: $vertical-songs-height;
+	display: flex;
+	align-items: center;
+	max-width: 100%;
+	overflow: hidden;
 }

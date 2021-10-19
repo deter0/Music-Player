@@ -3,6 +3,8 @@
 	display: flex;
 	flex-direction: column;
 	padding: calc(24px - $button-padding);
-	width: fit-content;
+	// max-width: 100%;
+	overflow: visible;
+	width: 100%;
 	height: fit-content;
 }

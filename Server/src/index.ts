@@ -9,6 +9,7 @@ import cors from 'cors';
 
 import Graph from "./Graph";
 
+import localIpUrl from "local-ip-url";
 import * as Types from "./Types";
 
 // Routers
@@ -16,6 +17,7 @@ import * as Types from "./Types";
 import SongsRouter from './Routes/Songs';
 import SearchRouter from "./Routes/Search";
 import AlbumsRouter from './Routes/Albums';
+import GetLocalNetworks from './GetLocalNetworkAddress';
 
 const app = express();
 app.use(cors());
@@ -174,8 +176,11 @@ app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
 
 // start the Express server
-app.listen(port, "192.168.2.13", () => {
-	console.log(`server started at http://192.168.2.13:${port}`);
+// const Ports = ();
+const LocalIps = GetLocalNetworks();
+const Ip = LocalIps.wlp2s0[0];
+app.listen(port, Ip, () => {
+	console.log(`server started at "http://${Ip}:${port}"`);
 });
 
 // const G = new Graph("Memory", process.stdout.columns - 30);

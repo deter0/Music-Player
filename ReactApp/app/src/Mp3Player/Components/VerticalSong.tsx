@@ -4,7 +4,7 @@ import * as Types from "../Types";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
 import LoadImage from "../Helpers/LoadImage";
 
-import DropDown from "./DropDown";
+// import DropDown from "./DropDown";
 
 import "./VerticalSongs.scss";
 import IsVisible from '../Helpers/IsVisible';
@@ -59,8 +59,12 @@ export default class VerticalSong extends Component<Props> {
 					this.Like();
 					this.setState({ Liked: !this.state.Liked });
 				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.props.Item.Liked ? "favorite" : "favorite_border"}</button>
-				<h1 className="song-title">{this.props.Item.Title.substr(0, this.state.ImageRef.current ? this.state.ImageRef.current.getBoundingClientRect().width / 3 : 30) + (this.props.Item.Title.length > 30 ? "..." : "")}<span className="song-artist-span">— {this.props.Item.Artist}</span></h1>
-				<h1 className="song-album">{this.props.Item.Album}</h1>
+				<div className='song-div'>
+					<h1 className="song-title">{this.props.Item.Title}<span className="song-artist-span">— {this.props.Item.Artist}</span></h1>
+				</div>
+				<div className='song-div'>
+					<h1 className="song-album">{this.props.Item.Album}</h1>
+				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
 				<button className="song-options material-icons">more_horiz</button>
 			</div >

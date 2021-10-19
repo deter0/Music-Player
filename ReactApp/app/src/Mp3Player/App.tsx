@@ -9,7 +9,7 @@ import Shortcuts from "./Shortcuts/Shortcuts";
 import axios, { AxiosInstance } from 'axios';
 
 const API = axios.create({
-	baseURL: "http://192.168.2.13:8080/",
+	baseURL: "http://192.168.2.12:8080/",
 	timeout: 10000
 });
 
