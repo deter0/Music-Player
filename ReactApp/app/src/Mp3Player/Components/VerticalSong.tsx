@@ -28,6 +28,13 @@ export default class VerticalSong extends Component<Props> {
 			this.setState({ Image: await LoadImage(this.props.Item.ImageData) });
 		}
 	}
+	componentDidUpdate(OldProps: Props) {
+		if (OldProps.Item.ImageData !== this.props.Item.ImageData) {
+			if (this.state.Image !== "") {
+				this.LoadImage();
+			}
+		}
+	}
 	componentDidMount() {
 		this.WatchForLoad();
 	}

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import "./DropDown.scss";
 
+//TODO(deter): Make the dropdown menu on a seperate layer so it doesn't interfere with any other elements
 interface Props {
 	style?: { [index: string]: any };
 	Label: string,

@@ -29,18 +29,38 @@ export default class VerticalSongs extends Component<Props> {
 		}
 	}
 
-	UrlConstructor() {
-		if (this.props.Url) {
+	Index = 0;
+	Completed = false;
+	UrlConstructor(Shift?: number) {
+		if (this.props.Url && !this.Completed) {
+			this.Index += (Shift || 0);
 			window.API.get(this.props.Url, {
 				params: {
-					From: 0,
-					To: 25
+					From: this.Index,
+					To: this.Index + 25
 				}
 			}).then((Response: AxiosResponse<Types.Song[]>) => {
 				this.setState({ Items: Response.data });
+				this.Index += Response.data.length;
+				if (Response.data.length <= 0) {
+					this.Completed = true;
+				}
 			}).catch(error => {
 				console.error(error);
 			});
+		}
+	}
+
+	// TODO(deter): Make it scroll to the top
+	NextPage() {
+		if (this.props.Url) {
+			this.UrlConstructor();
+		}
+	}
+
+	PreviousPage() {
+		if (this.props.Url) {
+			this.UrlConstructor(-50);
 		}
 	}
 
@@ -49,9 +69,14 @@ export default class VerticalSongs extends Component<Props> {
 			<div className="songs-container">
 				{
 					this.state.Items.map((Item, Index) => {
-						return <VerticalSong key={Index} Item={Item} Index={Index} />
+						return <VerticalSong key={Index} Item={Item} Index={Index + this.Index} />
 					})
 				}
+				<div className="songs-action">
+					<button className="button-highlight" onClick={() => this.PreviousPage()}>Previous Page</button>
+					<button className="button-highlight">Pages</button>
+					<button className="button-highlight" onClick={() => this.NextPage()}>Next Page</button>
+				</div>
 			</div>
 		)
 	}

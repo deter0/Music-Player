@@ -4,7 +4,21 @@
 	flex-direction: column;
 	padding: calc(24px - $button-padding);
 	// max-width: 100%;
+	row-gap: calc($button-padding / 2);
 	overflow: visible;
 	width: 100%;
+	max-width: 1200px;
 	height: fit-content;
+}
+
+.songs-action {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	column-gap: $button-padding;
+	padding: 12px;
+}
+
+.songs-action button {
+	width: 100%;
 }
