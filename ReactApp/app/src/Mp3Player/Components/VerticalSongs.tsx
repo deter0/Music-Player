@@ -33,7 +33,10 @@ export default class VerticalSongs extends Component<Props> {
 	Completed = false;
 	UrlConstructor(Shift?: number) {
 		if (this.props.Url && !this.Completed) {
-			this.Index += (Shift || 0);
+			if (this.Index + (Shift || 0) >= 0) {
+				this.Index += (Shift || 0);
+			}
+			console.log(this.Index);
 			window.API.get(this.props.Url, {
 				params: {
 					From: this.Index,
@@ -73,9 +76,9 @@ export default class VerticalSongs extends Component<Props> {
 					})
 				}
 				<div className="songs-action">
-					<button className="button-highlight" onClick={() => this.PreviousPage()}>Previous Page</button>
-					<button className="button-highlight">Pages</button>
-					<button className="button-highlight" onClick={() => this.NextPage()}>Next Page</button>
+					<button className="button-highlight" onClick={() => this.PreviousPage()}><span className="material-icons">arrow_back</span>Previous Page</button>
+					<button className="button-highlight"><span className="material-icons">layers</span>Pages</button>
+					<button className="button-highlight" onClick={() => this.NextPage()}>Next Page<span className="material-icons">arrow_forward</span></button>
 				</div>
 			</div>
 		)

@@ -8,6 +8,7 @@ import LoadImage from "../Helpers/LoadImage";
 
 import "./VerticalSongs.scss";
 import IsVisible from '../Helpers/IsVisible';
+import ImageLoader from './ImageLoader';
 
 interface Props {
 	Item: Types.Song,
@@ -31,6 +32,7 @@ export default class VerticalSong extends Component<Props> {
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.ImageData !== this.props.Item.ImageData) {
 			if (this.state.Image !== "") {
+				this.setState({ Image: "" });
 				this.LoadImage();
 			}
 		}
@@ -60,17 +62,17 @@ export default class VerticalSong extends Component<Props> {
 	render() {
 		return (
 			<div className="song-container">
-				<img ref={this.state.ImageRef} draggable={false} className="song-image" src={this.state.Image} alt="" />
+				<ImageLoader className="song-image" Loading={this.state.Image === ""} ImageElement={
+					<img ref={this.state.ImageRef} draggable={false} className="song-image" src={this.state.Image} alt="" />
+				} />
 				<h1 className="song-index">{this.props.Index + 1 < 10 ? `0${this.props.Index + 1}` : this.props.Index + 1}</h1>
 				<button onClick={() => {
 					this.Like();
 					this.setState({ Liked: !this.state.Liked });
-				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.props.Item.Liked ? "favorite" : "favorite_border"}</button>
+				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.state.Liked ? "favorite" : "favorite_border"}</button>
 				<div className='song-div'>
-					<h1 className="song-title">{this.props.Item.Title}<span className="song-artist-span">— {this.props.Item.Artist}</span></h1>
-				</div>
-				<div className='song-div'>
-					<h1 className="song-album">{this.props.Item.Album}</h1>
+					<h1 className="song-title">{this.props.Item.Title}</h1>
+					<h1 className="song-album">{this.props.Item.Artist}<span className="song-artist-span">• {this.props.Item.Album}</span></h1>
 				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
 				<button className="song-options material-icons">more_horiz</button>

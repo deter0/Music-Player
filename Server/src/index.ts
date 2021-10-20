@@ -176,16 +176,16 @@ app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
 
 // start the Express server
-// const Ports = ();
 const LocalIps = GetLocalNetworks();
 const Ip = LocalIps.wlp2s0[0];
-app.listen(port, Ip, () => {
-	console.log(`server started at "http://${Ip}:${port}"`);
+// NOTE(deter): Changing to local server because I'm going to be working on this at my school.
+app.listen(port, () => {
+	console.log(`server started at "http://localhost:${port}/ping"`);
 });
 
-// const G = new Graph("Memory", process.stdout.columns - 30);
-// setInterval(() => {
-// 	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
-// 	G.PushData(Memory);
-// 	G.Print();
-// }, 1000);
+const G = new Graph("Memory", process.stdout.columns - 30);
+setInterval(() => {
+	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
+	G.PushData(Memory);
+	G.Print();
+}, 1000);

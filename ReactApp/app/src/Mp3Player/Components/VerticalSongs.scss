@@ -21,4 +21,12 @@
 
 .songs-action button {
 	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	column-gap: 6px;
+}
+
+.songs-action button span {
+	font-size: 16px;
 }

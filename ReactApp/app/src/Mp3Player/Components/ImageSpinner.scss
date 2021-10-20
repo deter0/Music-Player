@@ -1,0 +1,44 @@
+@import "../Styles/Variables.scss";
+
+.spinner-outer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: none !important;
+	border: none !important;
+	width: fit-content;
+	height: fit-content;
+	position: relative;
+}
+
+.spinner-outer img {
+	z-index: -1;
+}
+
+.spinner-done {
+	opacity: 0;
+}
+
+.spinner-inner {
+	width: calc($button-font-size * 2);
+	height: calc($button-font-size * 2);
+	border-radius: 100%;
+	background: transparent;
+	border: 2px solid $transparent-border;
+	border-top: 3px solid white;
+	animation-name: Spin;
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	animation-duration: 1s;
+	position: absolute;
+	transition: opacity $background-transition;
+}
+
+@keyframes Spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}

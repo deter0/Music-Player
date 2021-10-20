@@ -18,7 +18,7 @@ $special-button-text: white;
 $transparent-border: transparentize($text-color, 0.875); /* Border around images and other objects */
 $notifications-background: $blue;
 $transparent-dark: rgba(126, 126, 126, 0.2);
-$grey: rgb(180, 180, 180);
+$grey: rgb(63, 63, 63);
 $shadow-color: rgba(0, 0, 0, 0.2);
 
 /* Poppins font, https://fonts.google.com/specimen/Poppins#about */
@@ -38,14 +38,14 @@ $border-radius-round: 40px;
 $text-size-1: 1rem;
 $text-size-2: 1rem;
 $heading-size: 2.1rem;
-$button-font-size: 0.9rem;
+$button-font-size: 1rem;
 $notifications-size: 16px;
 
 /* Mobile/ smaller font sizes */
-$text-size-1-small: 0.95rem;
-$text-size-2-small: 0.8rem;
+$text-size-1-small: 0.8rem;
+$text-size-2-small: 0.75rem;
 $heading-size-small: 1.8rem;
-$button-font-size-smaller: 1rem;
+$button-font-size-smaller: 0.8rem;
 
 /* Sizes */
 $album-width: 175px;

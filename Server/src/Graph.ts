@@ -51,7 +51,7 @@ export default class Graph {
 		for (let y = 0; y < Height; y++) {
 			let XString = "";
 			for (let x = 0; x < this.BufferSize; x++) {
-				let Value = Math.round((this.Buffer[x] - (this.RangeL || this.LargestValue || 0)) / ((this.RangeH || this.LowestValue || 1) - (this.RangeL || this.LargestValue || 0)) * Height);
+				let Value = Math.floor((this.Buffer[x] - (this.RangeL || this.LargestValue || 0)) / ((this.RangeH || this.LowestValue || 1) - (this.RangeL || this.LargestValue || 0)) * Height) - 1;
 				// let NextValue = 0;
 				// if (this.Buffer[x + 1]) {
 				// 	NextValue = Math.round((this.Buffer[x + 1] - (this.RangeL || this.LargestValue || 0)) / ((this.RangeH || this.LowestValue || 1) - (this.RangeL || this.LargestValue || 0)) * Height);

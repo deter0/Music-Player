@@ -9,6 +9,7 @@ import Vector2 from '../Helpers/Vector2';
 import LoadImage from "../Helpers/LoadImage";
 import GetUTC from '../Helpers/GetUTC';
 import Lerp from '../Helpers/Lerp';
+import ImageLoader from './ImageLoader';
 
 interface Props {
 	Items?: Types.Album[],
@@ -136,8 +137,9 @@ export default class VerticalScroller extends Component<Props, State, {}> {
 	}
 
 	render() {
+		let isTouchDevice = 'ontouchstart' in document.documentElement;
 		return (
-			<ul ref={this.Scroller} className="vertical-scroller-container">
+			<ul ref={this.Scroller} style={{ overflowX: isTouchDevice ? "auto" : "hidden", paddingBottom: isTouchDevice ? "8px" : "" }} className="vertical-scroller-container">
 				{(this.state.Items).map((AlbumItem, index) => {
 					return <Album OnMouseDown={this.OnMouseDown} key={index} Item={AlbumItem} />
 				})}
@@ -194,7 +196,9 @@ export class Album extends Component<AlbumProps> {
 	}
 	render() {
 		return <li onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
-			<img className="album-cover" ref={this.Image} src={this.state.Image} draggable={false} alt="" />
+			<ImageLoader className="album-cover" Loading={this.state.Image === ""} ImageElement={
+				<img ref={this.Image} draggable={false} className="album-cover" src={this.state.Image} alt="" />
+			} />
 			<h1 className="album-title">{this.props.Item.Title}</h1>
 			<h2 className="album-artist">{this.props.Item.Artist}</h2>
 		</li>
