@@ -40,10 +40,10 @@ export default class VerticalSongs extends Component<Props> {
 			window.API.get(this.props.Url, {
 				params: {
 					From: this.Index,
-					To: this.Index + 900
+					To: this.Index + 50
 				}
 			}).then((Response: AxiosResponse<Types.Song[]>) => {
-				this.setState({ Items: this.state.Items.concat(Response.data) });
+				this.setState({ Items: (Response.data) });
 				this.Index += Response.data.length;
 				if (Response.data.length <= 0) {
 					this.Completed = true;

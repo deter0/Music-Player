@@ -9,6 +9,7 @@ import LoadImage from "../Helpers/LoadImage";
 import "./VerticalSongs.scss";
 import IsVisible from '../Helpers/IsVisible';
 import ImageLoader from './ImageLoader';
+import DropDown from './DropDown';
 
 interface Props {
 	Item: Types.Song,
@@ -42,7 +43,7 @@ export default class VerticalSong extends Component<Props> {
 	}
 	WatchForLoad() {
 		if (this.state.ImageRef.current) { // TODO(deter): Make a more optimized loading with maybe `octree`s?
-			// this.LoadImage();
+			this.LoadImage();
 		}
 	}
 	Like() {
@@ -71,7 +72,21 @@ export default class VerticalSong extends Component<Props> {
 					<h1 className="song-album">{this.props.Item.Artist}<span className="song-artist-span">• {this.props.Item.Album}</span></h1>
 				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
-				<button className="song-options material-icons">more_horiz</button>
+				{/* <button className="song-options material-icons">more_horiz</button> */}
+				<DropDown className="song-options" style={{ padding: 0, border: "none" }} Label="" Icon="more_horiz" SelectedIndex={9999} Callback={(SelectedIndex) => { console.log(SelectedIndex) }} Items={[
+					{
+						Icon: this.state.Liked === false ? "favorite_border" : "favorite",
+						Label: this.state.Liked === true ? "Unlike" : "Like",
+					},
+					{
+						Icon: "play_arrow",
+						Label: "Play",
+					},
+					{
+						Icon: "queue",
+						Label: "Add to queue",
+					}
+				]} />
 			</div >
 		)
 	}

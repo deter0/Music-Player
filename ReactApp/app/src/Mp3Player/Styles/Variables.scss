@@ -8,11 +8,21 @@ $green: #2d9e64;
 $pink: #ff7d7d;
 $light-purple: #8a24fe;
 
+// Comment the following variables to use alternative colors
+//https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/color/
+$red: rgb(255, 59, 48);
+$orange: rgb(255, 149, 0);
+$yellow: rgb(255, 204, 0);
+$green: rgb(52, 199, 89);
+$blue: rgb(50, 173, 230);
+$purple: rgb(94, 92, 230);
+$pink: rgb(255, 55, 95);
+
 /* Colors */
-$background: $black;
-$text-color: white;
+$background: white;
+$text-color: $black;
 $button-background: transparent;
-$special-button-background: $light-purple; /* Important buttons */
+$special-button-background: $purple; /* Important buttons */
 $border-color: transparentize(lighten($special-button-background, 20%), 0.4); /* Main border color */
 $special-button-text: white;
 $transparent-border: transparentize($text-color, 0.875); /* Border around images and other objects */

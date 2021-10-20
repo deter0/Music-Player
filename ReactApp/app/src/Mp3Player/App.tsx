@@ -7,6 +7,7 @@ import Home from "./Pages/Home";
 
 import Shortcuts from "./Shortcuts/Shortcuts";
 import axios, { AxiosInstance } from 'axios';
+import DropDowns from './Components/DropDowns';
 
 const API = axios.create({
 	baseURL: "http://192.168.2.12:8080/",
@@ -47,6 +48,7 @@ export default class App extends Component {
 				{/* <Search /> */}
 				<div className="playing-layout">
 					<div className="layout">
+						<DropDowns />
 						{/* <LeftBar /> */}
 						<div ref={this.PageContainer} className="page-container">
 							<div id="page-animation-container" className="page-animation-container">

@@ -22,7 +22,6 @@
 	position: absolute;
 	bottom: 0;
 	width: fit-content;
-	min-width: 100%;
 	left: -1px;
 	height: fit-content;
 	transform: translateY(calc(100% + calc($button-padding / 4) + 20px));
@@ -33,6 +32,20 @@
 	transition: transform 0.2s ease-out, opacity 0.2s ease-out;
 	box-shadow: 0 0 15px 4px $shadow-color;
 	z-index: 4;
+	transform: translateY(50%);
+	animation-name: Open;
+	animation-duration: 0.2s;
+}
+
+@keyframes Open {
+	from {
+		transform: translateY(calc(50% + 20px));
+		opacity: 0;
+	}
+	to {
+		transform: translateY(50%);
+		opacity: 1;
+	}
 }
 
 @supports not (backdrop-filter: none) {
@@ -65,7 +78,7 @@
 }
 
 .dropped-down-closed {
-	transform: translateY(calc(100% + calc($button-padding / 4) - 20px));
+	transform: translateY(calc(50% - 20px));
 	opacity: 0;
 	z-index: -99;
 }
@@ -104,4 +117,14 @@
 	content: attr(data-icon);
 	font-family: $icon-font;
 	font-weight: inherit;
+}
+
+.seperate-layer {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	top: 0;
+	left: 0;
+	z-index: 101;
+	pointer-events: none;
 }

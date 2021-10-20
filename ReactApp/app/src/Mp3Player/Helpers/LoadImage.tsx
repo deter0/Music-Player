@@ -25,7 +25,6 @@ const Load = async (Url: string) => {
 			// Blobs are slow for some reason
 			// const Blob = B64toBlob(Response.data);
 			// const BlobUrl = URL.createObjectURL(Blob);
-			console.log(Response.data);
 			Resolve(`data:image/jpeg;base64,${Response.data}`);
 		} catch (error) {
 			console.error(error);

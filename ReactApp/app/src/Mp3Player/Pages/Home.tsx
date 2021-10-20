@@ -4,6 +4,9 @@ import Horizontal from '../Components/HorizontalScroller'
 import VerticalSongs from "../Components/VerticalSongs";
 
 export default class Index extends Component {
+	state = {
+		SelectedIndex: 0
+	}
 	render() {
 		return (
 			<div>
@@ -15,18 +18,18 @@ export default class Index extends Component {
 				<Horizontal Url="/albums/range" />
 				<VerticalSongs Url="/songs/range" />
 				<div style={{ padding: "24px", display: 'flex', alignItems: "flex-start", rowGap: "14px", justifyContent: "flex-start", flexDirection: "column" }}>
-					<DropDown Label="Drop down" Items={[
+					<DropDown SelectedIndex={this.state.SelectedIndex} Callback={(SelectedIndex) => { this.setState({ SelectedIndex: SelectedIndex }) }} Label="Drop down" Items={[
 						{
 							Icon: "sort_by_alpha",
-							Text: "Sort alphabetically",
+							Label: "Sort alphabetically",
 						},
 						{
 							Icon: "shuffle",
-							Text: "Sort randomly",
+							Label: "Sort randomly",
 						},
 						{
 							Icon: "favorite_border",
-							Text: "Sort by liked",
+							Label: "Sort by liked",
 						}
 					]} />
 					<button>Example button</button>

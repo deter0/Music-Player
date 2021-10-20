@@ -1,18 +1,22 @@
 import React, { Component } from 'react'
+import Vector2 from '../Helpers/Vector2';
 
+import * as DropDowns from "./DropDowns";
 import "./DropDown.scss";
 
 //TODO(deter): Make the dropdown menu on a seperate layer so it doesn't interfere with any other elements
 interface Props {
 	style?: { [index: string]: any };
 	Label: string,
-	Items: { Icon: string, Text: string }[],
+	Items: DropDowns.Item[],
 	SelectedIndex?: number,
 	IsNotSelectable?: boolean,
 	Icon?: string,
 	IconSize?: string,
-	className?: string
+	className?: string,
+	Callback: DropDowns.Callback
 }
+let DropDownCount = 0;
 export default class DropDown extends Component<Props> {
 	state = {
 		Opened: false,
@@ -27,8 +31,11 @@ export default class DropDown extends Component<Props> {
 			}
 		})
 	}
+	Id: number;
 	constructor(Props: Props) {
 		super(Props);
+		DropDownCount++;
+		this.Id = DropDownCount;
 		if (this.props.SelectedIndex) {
 			this.state.Selected = this.props.SelectedIndex;
 		}
@@ -39,26 +46,20 @@ export default class DropDown extends Component<Props> {
 				className={(this.props.className ? this.props.className + " " : "") + "dropdown"}
 				data-icon={this.props.Icon || (this.state.Opened ? `expand_less` : `expand_more`)}
 				data-icon-size={this.props.IconSize || `14px`}
-				onMouseUp={() => this.setState({ Opened: !this.state.Opened })}
+				onClick={() => {
+					let Element = document.getElementById(`dropdown-${this.Id}`);
+					if (Element) {
+						let Bounds = Element.getBoundingClientRect();
+						window.CreateDropdown(this.props.Items, new Vector2(Bounds.top, Bounds.left), this.props.Callback, this.props.SelectedIndex);
+					} else {
+						alert("No element");
+					}
+				}}
 				onMouseEnter={() => this.setState({ Hovering: true })}
 				onMouseLeave={() => this.setState({ Hovering: false })}
+				id={`dropdown-${this.Id}`}
 				style={this.props.style}>
 				{this.props.Label}
-				<div
-					className={`${this.state.Opened === false ? "dropped-down-closed" : ""} dropped-down`}>
-					{this.props.Items.map((Item, Index) => {
-						return <button
-							key={Index}
-							onClick={() => this.setState({ Selected: this.props.IsNotSelectable ? this.props.SelectedIndex : Index })}
-							onFocus={() => this.setState({ Opened: true })}
-							onBlur={() => this.setState({ Opened: false })}
-							className={`${Index === this.state.Selected ? "drop-down-option-selected" : ""} drop-down-option`}
-							data-icon={Item.Icon}
-						>
-							{Item.Text}
-						</button>
-					})}
-				</div>
 			</button>
 		)
 	}

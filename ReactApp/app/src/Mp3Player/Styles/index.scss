@@ -114,6 +114,7 @@ input {
 	font-size: 1em;
 	outline: none;
 	transition: border $background-transition;
+	max-width: 100%;
 }
 
 input:focus {
