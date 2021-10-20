@@ -41,12 +41,8 @@ export default class VerticalSong extends Component<Props> {
 		this.WatchForLoad();
 	}
 	WatchForLoad() {
-		if (this.state.ImageRef.current && IsVisible(this.state.ImageRef.current)) {
-			this.LoadImage();
-		} else {
-			setTimeout(() => {
-				this.WatchForLoad();
-			}, 200);
+		if (this.state.ImageRef.current) { // TODO(deter): Make a more optimized loading with maybe `octree`s?
+			// this.LoadImage();
 		}
 	}
 	Like() {
