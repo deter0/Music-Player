@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import "./VerticalSong.scss";
 import * as Types from "../Types";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
-import LoadImage from "../Helpers/LoadImage";
+import * as LoadImage from "../Helpers/LoadImage";
 
 // import DropDown from "./DropDown";
 
 import "./VerticalSongs.scss";
-import IsVisible from '../Helpers/IsVisible';
 import ImageLoader from './ImageLoader';
 import DropDown from './DropDown';
 
@@ -25,16 +24,34 @@ export default class VerticalSong extends Component<Props> {
 		super(props);
 		this.state.Liked = props.Item.Liked || false;
 	}
-	async LoadImage() {
+	ImageId: number | undefined;
+	async LoadImage(NewImage?: boolean) {
+		if (NewImage && this.ImageId) {
+			LoadImage.ClearImage(this.ImageId);
+			this.setState({ Image: "" });
+		}
 		if (this.props.Item.ImageData) {
-			this.setState({ Image: await LoadImage(this.props.Item.ImageData) });
+			if (!this.ImageId) {
+				this.ImageId = await LoadImage.default(this.props.Item.ImageData);
+			}
+			let ImageData = LoadImage.GetImageFromId(this.ImageId);
+			if (ImageData) {
+				this.setState({ Image: ImageData.Image });
+				ImageData.OnUnload = () => {
+					// this.setState({ Image: "" });
+					this.state.Image = "";
+				}
+			} else {
+				this.ImageId = undefined;
+				this.LoadImage();
+			}
 		}
 	}
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.ImageData !== this.props.Item.ImageData) {
 			if (this.state.Image !== "") {
 				this.setState({ Image: "" });
-				this.LoadImage();
+				this.LoadImage(true);
 			}
 		}
 	}
@@ -45,6 +62,11 @@ export default class VerticalSong extends Component<Props> {
 		if (this.state.ImageRef.current) { // TODO(deter): Make a more optimized loading with maybe `octree`s?
 			this.LoadImage();
 		}
+	}
+	componentWillUnmount() {
+		this.setState({ Image: "" });
+		if (this.ImageId)
+			LoadImage.ClearImage(this.ImageId);
 	}
 	Like() {
 		window.API.post(`/songs/like`, {

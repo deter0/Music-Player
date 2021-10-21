@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Router as BrowserRouter, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
+import Nav from "./Components/Nav";
 import "./Styles/index.scss";
 import Home from "./Pages/Home";
 
@@ -28,28 +29,18 @@ window.History = createBrowserHistory();
 
 export default class App extends Component {
 	PageContainer: React.RefObject<HTMLDivElement>;
-	state = {
-		src: "",
-		oldSrc: "",
-		back: false
-	}
 	constructor(props: any) {
 		super(props);
 		this.PageContainer = React.createRef();
 	}
 	render() {
-		const frontImage = this.state.back ? this.state.oldSrc : this.state.src;
-		const backImage = this.state.back ? this.state.src : this.state.oldSrc;
-
 		return (
 			<BrowserRouter history={window.History}>
-				<img style={(this.state.back ? { opacity: 0, backgroundImage: `url(${frontImage})` } : { opacity: 1, backgroundImage: `url(${frontImage})` })} draggable={false} alt="" className="underlaying-image" />
-				<img style={this.state.back ? { opacity: 1, backgroundImage: `url(${backImage})` } : { opacity: 0, backgroundImage: `url(${backImage})` }} draggable={false} alt="" className="underlaying-image" />
 				{/* <Search /> */}
 				<div className="playing-layout">
 					<div className="layout">
 						<DropDowns />
-						{/* <LeftBar /> */}
+						<Nav />
 						<div ref={this.PageContainer} className="page-container">
 							<div id="page-animation-container" className="page-animation-container">
 								<Route component={Home} exact={true} path="/home" />

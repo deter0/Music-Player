@@ -1,7 +1,8 @@
-Client/node_modules
+Client/node_modules/
 Client/out/
 ReactApp/node_modules/
 ReactApp/app/node_modules/
 Server/node_modules/
 Server/dist/
 Server/Data/
+Server/Data/Ratings.json

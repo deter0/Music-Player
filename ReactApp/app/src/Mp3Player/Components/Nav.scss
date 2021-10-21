@@ -1,0 +1,93 @@
+@import "../Styles/Variables.scss";
+
+.nav {
+	position: fixed;
+	width: $navigation-size;
+	height: 100vh;
+	background-color: transparentize($color: $navigation-background, $amount: 0.95);
+	z-index: 500;
+	flex-shrink: 0;
+	padding: $button-padding;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
+	row-gap: 4px;
+}
+
+@media (max-width: 900px) {
+	.nav {
+		width: $navigation-size-small;
+	}
+	.page-container {
+		padding-left: $navigation-size-small !important;
+	}
+	.nav h1,
+	.nav-item {
+		color: transparent;
+		width: fit-content;
+	}
+	.nav-text {
+		display: none;
+		width: 0;
+	}
+}
+
+@media (max-width: 500px) {
+	.nav {
+		width: 100vh;
+		height: $navigation-size-small;
+		flex-direction: row;
+		column-gap: 4px;
+		background-color: transparentize($color: $navigation-background, $amount: 0.9);
+		backdrop-filter: blur(12px);
+	}
+	.nav-item {
+		width: 40px !important;
+	}
+	.page-container {
+		padding-top: $navigation-size-small !important;
+		padding-left: 0 !important;
+	}
+}
+
+.nav h1 {
+	width: 100%;
+	font-size: $text-size-1;
+	font-weight: 500;
+	padding: 0 $button-padding;
+	margin-top: $button-padding;
+}
+
+.nav-text {
+	font-weight: 500;
+}
+
+.nav-item {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	column-gap: 8px;
+	height: 40px;
+	width: 100%;
+	padding: $button-padding;
+	border-radius: $border-radius-sharp;
+	color: transparentize($text-color, 0.2);
+	text-decoration: none !important;
+	font-size: $button-font-size;
+	font-weight: 500;
+	transition: background $background-transition;
+}
+
+.nav-item span {
+	font-size: 1rem !important;
+}
+
+.nav-item:hover {
+	background-color: transparentize($navigation-accent, 0.9);
+}
+
+.nav-item[data-active] {
+	background-color: $navigation-accent;
+	color: scale-color($text-color, $red: 100%, $blue: 100%, $green: 100%);
+}

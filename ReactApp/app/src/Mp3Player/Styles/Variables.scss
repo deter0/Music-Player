@@ -19,8 +19,8 @@ $purple: rgb(94, 92, 230);
 $pink: rgb(255, 55, 95);
 
 /* Colors */
-$background: white;
-$text-color: $black;
+$background: $black;
+$text-color: white;
 $button-background: transparent;
 $special-button-background: $purple; /* Important buttons */
 $border-color: transparentize(lighten($special-button-background, 20%), 0.4); /* Main border color */
@@ -39,10 +39,16 @@ $button-padding: 12px;
 $icon-font: "Material Icons", $font;
 $vertical-songs-height: 70px;
 
+$navigation-size: 325px;
+$navigation-size-small: 63px;
+$navigation-background: $purple;
+$navigation-accent: $navigation-background;
+
 /* Borders */
 $border-radius: 12px; /* Images */
 $border-radius-alt: 12px; /* Buttons and such */
 $border-radius-round: 40px;
+$border-radius-sharp: 4px;
 
 /* Font sizes */
 $text-size-1: 1rem;

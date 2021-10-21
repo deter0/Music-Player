@@ -18,11 +18,6 @@ export default class DropDowns extends Component {
 	state: { Items: { Items: Item[], Position: Vector2, Callback: Callback, SelectedIndex?: number }[] } = { Items: [] };
 	componentDidMount() {
 		window.CreateDropdown = (Items, Position, Callback: Callback, SelectedIndex) => {
-			let ViewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
-			let Right = Position.y + 225;
-			if (Right >= ViewportWidth - 225) {
-				Position.y = ViewportWidth - 225;
-			}
 			this.setState({
 				Items: this.state.Items.concat({ Items: Items, Position: Position, Callback: Callback, SelectedIndex: SelectedIndex })
 			})
@@ -64,8 +59,10 @@ export class DropDown extends Component<Props> {
 		Opened: true,
 		Hovering: false,
 		Selected: 0,
-		HoveringTrigger: false
+		HoveringTrigger: false,
+		Position: new Vector2()
 	};
+	Ref = React.createRef<HTMLDivElement>();
 	Mounted = false;
 	componentDidMount() {
 		this.Mounted = true;
@@ -77,6 +74,7 @@ export class DropDown extends Component<Props> {
 				}, 200);
 			}
 		})
+		this.FixPosition();
 	}
 	componentWillUnmount() {
 		this.Mounted = false;
@@ -86,11 +84,29 @@ export class DropDown extends Component<Props> {
 		if (this.props.SelectedIndex) {
 			this.state.Selected = this.props.SelectedIndex;
 		}
+		this.state.Position = this.props.Position;
 	}
 	componentDidUpdate() {
 		if (!this.state.Opened) {
 			if (this.state.Selected !== this.props.SelectedIndex) {
 				this.Closed();
+			}
+		}
+	}
+	FixPosition() {
+		if (this.Ref.current) {
+			let Bounds = this.Ref.current.getBoundingClientRect();
+			let ViewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
+			let Right = Bounds.right;
+			let Left = Bounds.left;
+			if (Right > ViewportWidth) {
+				this.setState({
+					Position: new Vector2(this.state.Position.x, ViewportWidth - (Bounds.width * 1.2))
+				});
+			} else if (Left < 0) {
+				this.setState({
+					Position: new Vector2(this.state.Position.x, (Bounds.width * 1.2))
+				});
 			}
 		}
 	}
@@ -103,10 +119,12 @@ export class DropDown extends Component<Props> {
 		return (
 			<div
 				style={{
-					top: this.props.Position.x,
-					left: this.props.Position.y
+					top: this.state.Position.x,
+					left: this.state.Position.y
 				}}
-				className={`${this.state.Opened === false ? "dropped-down-closed" : ""} dropped-down`}>
+				className={`${this.state.Opened === false ? "dropped-down-closed" : ""} dropped-down`}
+				ref={this.Ref}
+			>
 				{this.props.Items.map((Item, Index) => {
 					return <button
 						key={Index}

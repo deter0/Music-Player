@@ -18,14 +18,57 @@
 // 	return blob;
 // }
 
+// There is a memory leak with loading images so this is a fix
+var ImageId = 0;
+const MAX_SIZE = 60;
+interface Data {
+	Image: string;
+	Id: number;
+	OnUnload?: () => (void),
+	ClearImage: (Id: number) => (void)
+};
+const Images: Data[] = [];
+const ImagesLookup: { [index: string]: number } = {}; // number is image's index
+const PushData = (Data: Data) => {
+	Images.push(Data);
+	ImagesLookup[Data.Id] = Images.length - 1;
+}
+setInterval(() => {
+	let Amount = Images.length - MAX_SIZE;
+	if (Images.length >= MAX_SIZE) {
+		for (let i = 0; i < Amount; i++) {
+			console.log("Clearing image");
+			if (Images[0]) {
+				if (Images[0].OnUnload)
+					Images[0].OnUnload();
+				delete ImagesLookup[Images[0].Id];
+				Images.splice(0, 1);
+			}
+		}
+	}
+}, 16);
+export const ClearImage = (Id: number) => {
+	if (ImagesLookup[Id]) {
+		// Since this function is not called here we don't need to fire this function
+		// if (Images[0].OnUnload)
+		// 	Images[0].OnUnload();
+		Images.splice(ImagesLookup[Id], 1);
+		delete ImagesLookup[Images[0].Id];
+		console.log("Cleared image");
+	}
+}
+export function GetImageFromId(Id: number): (Data | undefined) {
+	return Images[ImagesLookup[Id]];
+}
 const Load = async (Url: string) => {
-	return new Promise<string>(async (Resolve, Reject) => {
+	return new Promise<number>(async (Resolve, Reject) => {
 		try {
 			const Response = await window.API.get(Url);
-			// Blobs are slow for some reason
-			// const Blob = B64toBlob(Response.data);
-			// const BlobUrl = URL.createObjectURL(Blob);
-			Resolve(`data:image/jpeg;base64,${Response.data}`);
+			const ImageData = (`data:image/jpeg;base64,${Response.data}`);
+			const Id = ImageId + 1;
+			ImageId++; // Ensure no duplicate ids
+			PushData({ Image: ImageData, Id: Id, ClearImage: ClearImage });
+			Resolve(Id);
 		} catch (error) {
 			console.error(error);
 			Reject(error);

@@ -6,7 +6,7 @@ import IsVisible from '../Helpers/IsVisible';
 import "./HorizontalScroller.scss";
 import Signal from '../Signal';
 import Vector2 from '../Helpers/Vector2';
-import LoadImage from "../Helpers/LoadImage";
+import * as LoadImage from "../Helpers/LoadImage";
 import GetUTC from '../Helpers/GetUTC';
 import Lerp from '../Helpers/Lerp';
 import ImageLoader from './ImageLoader';
@@ -181,18 +181,34 @@ export class Album extends Component<AlbumProps> {
 			}, 200);
 		}
 	}
-	LoadImage() {
-		return new Promise<boolean>(async (Resolve, Reject) => {
-			LoadImage(this.props.Item.Cover).then(Response => {
-				this.setState({
-					Image: Response
-				});
-				Resolve(true);
-			}).catch(Error => {
-				this.Errored = true;
-				Reject(Error);
-			});
-		})
+	ImageId: number | undefined;
+	async LoadImage(NewImage?: boolean) {
+		if (NewImage && this.ImageId) {
+			LoadImage.ClearImage(this.ImageId);
+			this.setState({ Image: "" });
+		}
+		if (this.props.Item.Cover) {
+			if (!this.ImageId) {
+				this.ImageId = await LoadImage.default(this.props.Item.Cover);
+			}
+			let ImageData = LoadImage.GetImageFromId(this.ImageId);
+			if (ImageData) {
+				this.setState({ Image: ImageData.Image });
+				ImageData.OnUnload = () => {
+					// this.setState({ Image: "" });
+					this.state.Image = "";
+				}
+			} else {
+				this.ImageId = undefined;
+				this.LoadImage();
+			}
+		}
+	}
+	componentWillUnmount() {
+		if (this.ImageId) {
+			LoadImage.ClearImage(this.ImageId);
+			this.state.Image = "";
+		}
 	}
 	render() {
 		return <li onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
