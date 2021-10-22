@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom';
 
@@ -19,7 +20,9 @@ class Main extends Component {
 }
 class ConfigureSpotify extends Component {
 	state = {
-		IsVisible: false
+		IsVisible: false,
+		ClientId: "",
+		ClientSecret: ""
 	};
 	OnSubmit(Event: React.FormEvent<HTMLFormElement>) {
 		Event.preventDefault();
@@ -49,14 +52,32 @@ class ConfigureSpotify extends Component {
 			}
 		}
 	}
+	componentDidMount() {
+		window.API.get("/spotify/info").then((Response: AxiosResponse<{ ClientId: string, ClientSecret: string }>) => {
+			this.setState({
+				ClientId: Response.data.ClientId,
+				ClientSecret: Response.data.ClientSecret,
+			});
+			let ClientId = document.getElementById("client-id") as HTMLInputElement;
+			let ClientSecret = document.getElementById("client-secret") as HTMLInputElement;
+			if (ClientId) {
+				ClientId.value = this.state.ClientId;
+			}
+			if (ClientSecret) {
+				ClientSecret.value = this.state.ClientSecret;
+			}
+		});
+	}
 	render() {
 		return <div className="page-padding">
 			<h1>Spotify login</h1>
 			<form onSubmit={(event) => this.OnSubmit(event)} autoCorrect="off" autoComplete="off" spellCheck={false}>
 				<h1 className="label">Client ID: </h1>
-				<input maxLength={60} spellCheck={false} placeholder="Client ID:" id="client-id"></input>
+				<input maxLength={60} spellCheck={false} placeholder={`Client ID: ${this.state.ClientId}`} id="client-id"></input>
 				<h1 className="label">Client Secret: </h1>
-				<input maxLength={60} placeholder="Client Secret:" id="client-secret" type={this.state.IsVisible ? "text" : "password"} />
+				<input maxLength={60} placeholder={
+					`Client Secret: ${this.state.IsVisible ? this.state.ClientSecret : "•".repeat(this.state.ClientSecret.length)}`
+				} id="client-secret" type={this.state.IsVisible ? "text" : "password"} />
 				<p className="checkbox-label">
 					Show Client Secret
 					<input onClick={() => this.setState({ IsVisible: !this.state.IsVisible })} type="checkbox" />

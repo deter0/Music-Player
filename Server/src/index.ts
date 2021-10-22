@@ -34,7 +34,7 @@ const GetUTC = () => {
 (async () => {
 	try {
 		const RequiredFolders = ["Data", "Songs"];
-		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json"];
+		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json"];
 		const Path = path.join(__dirname, '../');
 		const Files = await fs.readdirSync(Path);
 
