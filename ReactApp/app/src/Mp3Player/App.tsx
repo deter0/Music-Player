@@ -9,6 +9,7 @@ import Home from "./Pages/Home";
 import Shortcuts from "./Shortcuts/Shortcuts";
 import axios, { AxiosInstance } from 'axios';
 import DropDowns from './Components/DropDowns';
+import Download from './Pages/Download';
 
 const API = axios.create({
 	baseURL: "http://192.168.2.12:8080/",
@@ -44,8 +45,7 @@ export default class App extends Component {
 						<div ref={this.PageContainer} className="page-container">
 							<div id="page-animation-container" className="page-animation-container">
 								<Route component={Home} exact={true} path="/home" />
-								{/* <Route component={Genres} path="/genres" />
-								<Route component={Song} path="/song" /> */}
+								<Route component={Download} exact={false} path="/download" />
 							</div>
 						</div>
 					</div>

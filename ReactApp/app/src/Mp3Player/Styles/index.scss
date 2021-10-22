@@ -31,7 +31,8 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+p {
 	margin: 0;
 }
 
@@ -63,7 +64,8 @@ h6 {
 	}
 }
 
-button {
+button,
+.button {
 	padding: $button-padding;
 	font-family: inherit;
 	border: none;
@@ -79,7 +81,79 @@ button {
 	outline: none;
 }
 
-button:focus {
+h3 {
+	margin-top: 14px;
+}
+
+.help-image {
+	max-width: 100%;
+}
+
+.page-padding {
+	padding: 24px;
+}
+
+.button {
+	text-decoration: none;
+}
+
+.label {
+	font-size: $text-size-1;
+	color: $text-color;
+	font-weight: 400;
+	opacity: 40%;
+	margin-top: 12px;
+}
+
+.info-link {
+	font-size: 12px;
+	margin: 0;
+	color: $blue;
+	cursor: pointer;
+	font-weight: 300;
+	width: 100%;
+	text-align: right;
+	display: block;
+}
+
+input[type="checkbox"] {
+	font-size: $button-font-size;
+	background: $background;
+}
+
+.checkbox-label {
+	width: fit-content;
+	margin: 0 !important;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	flex-direction: row-reverse;
+	column-gap: 6px;
+	color: transparentize($color: $text-color, $amount: 0.8);
+}
+
+a {
+	color: $blue;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+form {
+	width: fit-content;
+	height: fit-content;
+}
+
+.form-buttons {
+	width: 100%;
+	display: flex;
+	margin-top: $button-padding;
+	align-items: center;
+	justify-content: flex-end;
+	column-gap: calc($button-padding / 2);
+}
+
+button:focus,
+.button:focus {
 	box-shadow: 0 0 6px 6px transparentize($border-color, 0.5), 0 0 0 2px $border-color;
 }
 
@@ -126,6 +200,8 @@ input {
 	outline: none;
 	transition: border $background-transition;
 	max-width: 100%;
+	user-select: text;
+	-webkit-user-select: text;
 }
 
 input:focus {

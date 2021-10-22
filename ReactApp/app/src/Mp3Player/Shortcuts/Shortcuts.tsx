@@ -61,6 +61,8 @@ class Shortcuts {
 		this.ShortcutData = InitalizeBindings();
 
 		OnKeyDown.connect((event) => {
+			if (!event || !event.key)
+				return;
 			const key = event.key.toLowerCase();
 
 			if (this.keysDown.indexOf(key) === -1) {
@@ -85,6 +87,8 @@ class Shortcuts {
 			};
 		});
 		OnKeyUp.connect((event) => {
+			if (!event || !event.key)
+				return;
 			const key = event.key.toLowerCase();
 
 			this.keysDown = this.keysDown.filter((value) => {
