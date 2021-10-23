@@ -65,9 +65,10 @@ const Load = async (Url: string) => {
 		try {
 			ImageId++; // Ensure no duplicate ids
 			const Id = ImageId + 1;
-			if (Url.indexOf("http://localhost") === -1) {
+			if (Url.indexOf("/songs/thumbnail") === -1) {
 				PushData({ Image: Url, Id: Id, ClearImage: ClearImage });
 				Resolve(Id);
+				return;
 			}
 			console.log(Url);
 			const Response = await window.API.get(Url);

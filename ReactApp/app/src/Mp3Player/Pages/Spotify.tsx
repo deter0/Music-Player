@@ -5,6 +5,7 @@ import * as Types from "../Types";
 import HorizontalScroller from "../Components/HorizontalScroller";
 
 import "./Spotify.scss";
+import VerticalSongs from '../Components/VerticalSongs';
 
 class SpotifyProfile extends Component {
 	state: { Profile?: Types.SpotifyProfile } = {};
@@ -26,9 +27,8 @@ class SpotifyProfile extends Component {
 	}
 }
 
-declare type SpotifySearchResults = Types.SpotifySearchResults;
 class SpotifySearch extends Component {
-	state: { Results: Types.Album[] } = { Results: [] }
+	state: { Albums: Types.Album[], Songs: Types.Song[] } = { Albums: [], Songs: [] }
 
 	LastSearch = 0;
 	UpdateResults(Event: React.FormEvent<HTMLInputElement>, Callbacked?: boolean) {
@@ -43,7 +43,7 @@ class SpotifySearch extends Component {
 				}
 			}).then(((Response: AxiosResponse<any>) => { // Typescript bug? Cant put type gives weird error
 				this.setState({
-					Results: Response.data.Albums.map((Data: Types.SpotifyAlbum): Types.Album => {
+					Albums: Response.data.Albums.map((Data: Types.SpotifyAlbum): Types.Album => {
 						return {
 							Artist: Data.Artists[0]?.Name,
 							Title: Data.Name,
@@ -51,9 +51,23 @@ class SpotifySearch extends Component {
 							Cover: Data.Images[0]?.Url,
 							Id: Data.Id
 						};
+					}),
+					Songs: Response.data.Songs.map((Data: Types.SpotifySong): Types.Song => {
+						return {
+							Artist: Data.Artists[0]?.Name,
+							Title: Data.Name,
+							ImageData: Data.Images[0]?.Url,
+							Id: Data.Id,
+							Duration: Data.Duration || 60,
+							ImageFormat: "",
+							Identifier: "",
+							Album: Data.Album,
+							CoverIndex: "",
+							AlbumId: "0"
+						};
 					})
 				});
-				console.log(this.state.Results);
+				console.log(this.state.Songs);
 			})).catch(Error => {
 				console.error(Error);
 			})
@@ -69,7 +83,13 @@ class SpotifySearch extends Component {
 				<input onInput={(Event) => this.UpdateResults(Event)} className="search" placeholder="Search Spotify..." />
 			</div>
 			{/* <h1>{this.state.Results}</h1> */}
-			<HorizontalScroller Items={this.state.Results} />
+			<HorizontalScroller Items={this.state.Albums} />
+			<VerticalSongs Options={[
+				{
+					Icon: "download",
+					Label: "Download"
+				}
+			]} Items={this.state.Songs} NoPages={true} />
 		</div>
 	}
 }

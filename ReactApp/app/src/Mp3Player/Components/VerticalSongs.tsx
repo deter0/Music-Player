@@ -5,7 +5,9 @@ import VerticalSong from "./VerticalSong";
 
 interface Props {
 	Items?: Types.Song[],
-	Url?: string
+	Url?: string,
+	NoPages?: boolean;
+	Options?: { Icon: string; Label: string }[];
 }
 export default class VerticalSongs extends Component<Props> {
 	state: {
@@ -22,10 +24,15 @@ export default class VerticalSongs extends Component<Props> {
 		}
 	}
 
+	componentDidUpdate(OldProps: Props) {
+		if (OldProps.Items !== this.props.Items) {
+			this.ItemsConstructor();
+		}
+	}
+
 	ItemsConstructor() {
 		if (this.props.Items) {
-			// eslint-disable-next-line react/no-direct-mutation-state
-			this.state.Items = this.props.Items;
+			this.setState({ Items: this.props.Items });
 		}
 	}
 
@@ -72,14 +79,16 @@ export default class VerticalSongs extends Component<Props> {
 			<div className="songs-container">
 				{
 					this.state.Items.map((Item, Index) => {
-						return <VerticalSong key={Index} Item={Item} Index={Index + this.Index} />
+						return <VerticalSong Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
 					})
 				}
-				<div className="songs-action">
-					<button className="button-highlight" onClick={() => this.PreviousPage()}><span className="material-icons">arrow_back</span>Previous Page</button>
-					<button className="button-highlight"><span className="material-icons">layers</span>Pages</button>
-					<button className="button-highlight" onClick={() => this.NextPage()}>Next Page<span className="material-icons">arrow_forward</span></button>
-				</div>
+				{
+					!this.props.NoPages && <div className="songs-action">
+						<button className="button-highlight" onClick={() => this.PreviousPage()}><span className="material-icons">arrow_back</span>Previous Page</button>
+						<button className="button-highlight"><span className="material-icons">layers</span>Pages</button>
+						<button className="button-highlight" onClick={() => this.NextPage()}>Next Page<span className="material-icons">arrow_forward</span></button>
+					</div>
+				}
 			</div>
 		)
 	}

@@ -12,7 +12,8 @@ import DropDown from './DropDown';
 
 interface Props {
 	Item: Types.Song,
-	Index: number
+	Index: number;
+	Options?: { Icon: string; Label: string }[];
 };
 export default class VerticalSong extends Component<Props> {
 	state = {
@@ -26,6 +27,10 @@ export default class VerticalSong extends Component<Props> {
 	}
 	ImageId: number | undefined;
 	async LoadImage(NewImage?: boolean) {
+		if (this.props.Item.ImageData?.indexOf("/song/thumbnail") === -1) {
+			this.setState({ Image: this.props.Item.ImageData });
+			return;
+		}
 		if (NewImage && this.ImageId) {
 			LoadImage.ClearImage(this.ImageId);
 			this.setState({ Image: "" });
@@ -49,10 +54,8 @@ export default class VerticalSong extends Component<Props> {
 	}
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.ImageData !== this.props.Item.ImageData) {
-			if (this.state.Image !== "") {
-				this.setState({ Image: "" });
-				this.LoadImage(true);
-			}
+			this.setState({ Image: "" });
+			this.LoadImage(true);
 		}
 	}
 	componentDidMount() {
@@ -95,7 +98,7 @@ export default class VerticalSong extends Component<Props> {
 				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
 				{/* <button className="song-options material-icons">more_horiz</button> */}
-				<DropDown className="song-options" style={{ padding: 0, border: "none" }} Label="" Icon="more_horiz" SelectedIndex={9999} Callback={(SelectedIndex) => { console.log(SelectedIndex) }} Items={[
+				<DropDown className="song-options" style={{ padding: 0, border: "none" }} Label="" Icon="more_horiz" SelectedIndex={9999} Callback={(SelectedIndex) => { console.log(SelectedIndex) }} Items={this.props.Options || [
 					{
 						Icon: this.state.Liked === false ? "favorite_border" : "favorite",
 						Label: this.state.Liked === true ? "Unlike" : "Like",

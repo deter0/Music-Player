@@ -74,6 +74,8 @@ export type SpotifySong = {
 	}[];
 	Name: string;
 	ReleaseDate: string;
+	Album: string;
+	Duration: number;
 };
 
 export type SpotifySearchResults = {

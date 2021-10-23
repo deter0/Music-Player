@@ -164,7 +164,7 @@ export class Album extends Component<AlbumProps> {
 	componentDidUpdate(OldProps: AlbumProps) {
 		if (this.props.Item.Cover !== OldProps.Item.Cover) {
 			this.setState({ Image: "" });
-			this.WatchForLoad();
+			this.LoadImage();
 		}
 	}
 	constructor(props: AlbumProps) {
@@ -186,6 +186,10 @@ export class Album extends Component<AlbumProps> {
 	}
 	ImageId: number | undefined;
 	async LoadImage(NewImage?: boolean) {
+		if (this.props.Item.Cover.indexOf("/song/thumbnail") === -1) {
+			this.setState({ Image: this.props.Item.Cover });
+			return;
+		}
 		if (NewImage && this.ImageId) {
 			LoadImage.ClearImage(this.ImageId);
 			this.setState({ Image: "" });

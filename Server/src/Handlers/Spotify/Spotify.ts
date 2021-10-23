@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import FormData from "form-data";
 import QueryString from "querystring";
 
 import fs from "fs";
@@ -10,7 +9,6 @@ import * as Types from "../../Types";
 const SCOPES = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read user-follow-read user-library-read';
 const REDIRECT_URL = 'http://localhost:8080/spotify/callback';
 
-declare type SearchResults = Types.SpotifySearchResults;
 export default class Spotify {
 	// TODO(deter): Save
 	ClientId?: string;
@@ -83,7 +81,6 @@ export default class Spotify {
 		return new Promise<Types.SpotifySearchResults>(async (Resolve, Reject) => {
 			if (this.IsAuthorized()) {
 				try {
-					console.log("Sending");
 					const Response: AxiosResponse<any> = await axios.get("https://api.spotify.com/v1/search", {
 						headers: {
 							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
@@ -93,6 +90,7 @@ export default class Spotify {
 							type: "album,artist,playlist,track"
 						}
 					});
+					console.log(Response.data.tracks.items[0]);
 					let Results: Types.SpotifySearchResults = {
 						Query: Query,
 						Albums: Response.data.albums.items.map(
@@ -140,6 +138,8 @@ export default class Spotify {
 									}) : [],
 									Name: Item.name,
 									ReleaseDate: Item.release_date,
+									Album: Item.album.name,
+									Duration: Item.duration_ms / 1000
 								};
 							})
 					};
