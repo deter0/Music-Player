@@ -33,7 +33,7 @@ export default class SpotifyRouter {
 				Response.status(200);
 			}
 
-			Response.redirect("http://192.168.2.13:3000/download");
+			Response.redirect("http://localhost:3000/download/spotify");
 			// Response.sendStatus(200);
 		});
 		this.Router.get('/info', (Request, Response) => {
@@ -45,12 +45,25 @@ export default class SpotifyRouter {
 		this.Router.get('/search', async (Request, Response) => {
 			let Query = Request.query.Query as string;
 			if (Query) {
-				let SearchResponse = await this.Spotify.Search(Query);
-				if (typeof (SearchResponse) === "number") {
-					Response.sendStatus(401);
-				} else {
+				this.Spotify.Search(Query).then(SearchResponse => {
 					Response.json(SearchResponse);
-				}
+				}).catch(ErrorCode => {
+					Response.sendStatus(ErrorCode);
+				});
+			}
+		});
+		this.Router.get("/profile", (Request, Response) => {
+			this.Spotify.GetUserProfile().then(Profile => {
+				Response.json(Profile);
+			}).catch(ErrorCode => {
+				Response.sendStatus(ErrorCode);
+			});
+		});
+		this.Router.get("/authorized", (Request, Response) => {
+			if (this.Spotify.IsAuthorized()) {
+				Response.send(true);
+			} else {
+				Response.send(false);
 			}
 		})
 	}

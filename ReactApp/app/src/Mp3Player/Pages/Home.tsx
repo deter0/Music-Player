@@ -9,7 +9,7 @@ export default class Index extends Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="page-padding-top">
 				{/* <i className="ms-Icon ms-Icon--Installation" aria-hidden="true"></i> */}
 				<p className="context-title-container">
 					<span className="context-title">Context Title</span>

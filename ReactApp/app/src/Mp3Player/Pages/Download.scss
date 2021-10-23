@@ -9,6 +9,8 @@
 	column-gap: 14px;
 }
 
-.buttons button {
+.buttons button,
+.buttons a {
 	width: 100%;
+	text-align: center;
 }

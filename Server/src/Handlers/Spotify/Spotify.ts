@@ -73,32 +73,61 @@ export default class Spotify {
 		console.log("Saved Info!");
 	}
 	//?(deter):API
-	VerifyToken() {
+	IsAuthorized() {
 		return this.Auth;
 	}
 
 	async Search(Query: string) {
-		if (this.VerifyToken()) {
-			try {
-				console.log("Sending");
-				const Response = await axios.get("https://api.spotify.com/v1/search", {
-					headers: {
-						Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
-					},
-					params: {
-						q: Query,
-						type: "album,artist,playlist,track"
-					}
-				});
-				console.log("RESPONSE!", Response.data);
-				return Response.data;
-			} catch (error) {
-				console.error(error);
-				return 500;
+		return new Promise<any>(async (Resolve, Reject) => {
+			if (this.IsAuthorized()) {
+				try {
+					console.log("Sending");
+					const Response = await axios.get("https://api.spotify.com/v1/search", {
+						headers: {
+							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
+						},
+						params: {
+							q: Query,
+							type: "album,artist,playlist,track"
+						}
+					});
+					console.log("RESPONSE!", Response.data);
+					Resolve(Response.data);
+				} catch (error) {
+					console.error(error);
+					Reject(500);
+				}
+			} else {
+				console.log("Couldn't verify", this.IsAuthorized());
+				Reject(401);
 			}
-		} else {
-			console.log("Couldn't verify", this.VerifyToken());
-			return 401;
-		}
+		});
+	}
+
+	GetUserProfile() {
+		return new Promise<Types.SpotifyProfile>(async (Resolve, Reject) => {
+			if (this.IsAuthorized()) {
+				try {
+					let Response: AxiosResponse<any> = await axios.get("https://api.spotify.com/v1/me", {
+						headers: {
+							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
+						},
+					});
+					let Profile: Types.SpotifyProfile = {
+						DisplayName: Response.data.display_name as string,
+						Country: Response.data.ca as string,
+						ExplicitContentFilter: Response.data.explicit_content.filter_enabled as boolean,
+						Id: Response.data.id as string,
+						ProfilePicture: Response.data.images[0].url as string
+					};
+					Resolve(Profile);
+				} catch (Error) {
+					console.error(Error);
+					Reject(500);
+				}
+			} else {
+				Reject(401);
+			}
+		})
 	}
 }

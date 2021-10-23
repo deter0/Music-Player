@@ -36,3 +36,11 @@ export class RatingT {
 };
 export type Ratings = { [index: string]: RatingT };
 export type GetSongRating = (Song: Song) => (RatingT);
+
+export type SpotifyProfile = {
+	ProfilePicture: string;
+	DisplayName: string;
+	ExplicitContentFilter: boolean;
+	Id: string;
+	Country: string;
+};

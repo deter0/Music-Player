@@ -1,0 +1,40 @@
+@import "../Styles/Variables.scss";
+
+$height: 20px;
+.spotify-profile {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: fit-content;
+	height: $height;
+	padding: 6px;
+	box-sizing: content-box;
+	column-gap: 8px;
+	border-radius: $border-radius;
+	margin-left: 16px;
+	transition: background $background-transition;
+}
+
+.spotify-profile-container {
+	display: flex;
+	align-items: center;
+	height: fit-content;
+	position: absolute;
+	top: calc(24px);
+	right: 15px;
+	z-index: 900;
+}
+
+.spotify-profile:hover {
+	background: $transparent-border;
+}
+
+.spotify-profile-picture {
+	height: $height;
+	width: $height;
+	border-radius: $border-radius;
+}
+
+.logged-in-as {
+	display: inline-block;
+}

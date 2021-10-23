@@ -1,18 +1,26 @@
 import { AxiosResponse } from 'axios';
 import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom';
+import Spotify from "./Spotify";
 
 import "./Download.scss";
 class Main extends Component {
+	state = { Authorized: false };
+	componentDidMount() {
+		window.API.get("/spotify/authorized").then(Response => {
+			this.setState({ Authorized: Response.data });
+			console.log(Response.data, typeof (Response.data));
+		});
+	}
 	render() {
-		return <div>
+		return <div className="page-padding-top">
 			<p className="context-title-container">
 				<span className="context-title">Downloads</span>
 				<span className="context-title-icon material-icons">file_downloads</span>
 			</p>
 
 			<div className="buttons">
-				<Link to="/download/spotify-config" className="button-highlight button">Configure Spotify application</Link>
+				<Link to={this.state.Authorized ? "/download/spotify" : "/download/spotify-config"} className="button-highlight button">{this.state.Authorized ? "Go to spotify" : "Configure spotify settings"}</Link>
 				<button>Youtube search</button>
 			</div>
 		</div>
@@ -124,6 +132,7 @@ export default class Download extends Component {
 			<>
 				<Route path="/download" component={Main} exact={true}></Route>
 				<Route path="/download/spotify-config" component={ConfigureSpotify} exact={true}></Route>
+				<Route path="/download/spotify" component={Spotify} />
 			</>
 		)
 	}
