@@ -9,6 +9,8 @@ import * as Types from "../../Types";
 
 const SCOPES = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read user-follow-read user-library-read';
 const REDIRECT_URL = 'http://localhost:8080/spotify/callback';
+
+declare type SearchResults = Types.SpotifySearchResults;
 export default class Spotify {
 	// TODO(deter): Save
 	ClientId?: string;
@@ -78,11 +80,11 @@ export default class Spotify {
 	}
 
 	async Search(Query: string) {
-		return new Promise<any>(async (Resolve, Reject) => {
+		return new Promise<Types.SpotifySearchResults>(async (Resolve, Reject) => {
 			if (this.IsAuthorized()) {
 				try {
 					console.log("Sending");
-					const Response = await axios.get("https://api.spotify.com/v1/search", {
+					const Response: AxiosResponse<any> = await axios.get("https://api.spotify.com/v1/search", {
 						headers: {
 							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
 						},
@@ -91,8 +93,57 @@ export default class Spotify {
 							type: "album,artist,playlist,track"
 						}
 					});
-					console.log("RESPONSE!", Response.data);
-					Resolve(Response.data);
+					let Results: Types.SpotifySearchResults = {
+						Query: Query,
+						Albums: Response.data.albums.items.map(
+							function (Item: any): Types.SpotifyAlbum {
+								return {
+									Artists: Item.artists.map((Artist: any) => {
+										return {
+											Id: Artist.id,
+											Name: Artist.name
+										};
+									}),
+									Id: Item.id,
+									Images: Item.images ? Item.images.map((image: any) => {
+										return {
+											Width: image.width,
+											Height: image.height,
+											Url: image.url
+										};
+									}) : [],
+									Name: Item.name,
+									ReleaseDate: Item.release_date,
+									TotalTracks: Item.total_tracks
+								};
+							}),
+						Songs: Response.data.tracks.items.map(
+							function (Item: any): Types.SpotifySong {
+								if (!Item.album.images) {
+									console.log("NO IMAGE");
+									console.log(Item);
+								}
+								return {
+									Artists: Item.artists.map((Artist: any) => {
+										return {
+											Id: Artist.id,
+											Name: Artist.name
+										};
+									}),
+									Id: Item.id,
+									Images: Item.album ? Item.album.images.map((image: any) => {
+										return {
+											Width: image.width,
+											Height: image.height,
+											Url: image.url
+										};
+									}) : [],
+									Name: Item.name,
+									ReleaseDate: Item.release_date,
+								};
+							})
+					};
+					Resolve(Results);
 				} catch (error) {
 					console.error(error);
 					Reject(500);

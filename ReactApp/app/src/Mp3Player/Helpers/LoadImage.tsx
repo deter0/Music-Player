@@ -63,10 +63,15 @@ export function GetImageFromId(Id: number): (Data | undefined) {
 const Load = async (Url: string) => {
 	return new Promise<number>(async (Resolve, Reject) => {
 		try {
+			ImageId++; // Ensure no duplicate ids
+			const Id = ImageId + 1;
+			if (Url.indexOf("http://localhost") === -1) {
+				PushData({ Image: Url, Id: Id, ClearImage: ClearImage });
+				Resolve(Id);
+			}
+			console.log(Url);
 			const Response = await window.API.get(Url);
 			const ImageData = (`data:image/jpeg;base64,${Response.data}`);
-			const Id = ImageId + 1;
-			ImageId++; // Ensure no duplicate ids
 			PushData({ Image: ImageData, Id: Id, ClearImage: ClearImage });
 			Resolve(Id);
 		} catch (error) {

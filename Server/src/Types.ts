@@ -64,3 +64,40 @@ export type SpotifyProfile = {
 	Id: string;
 	Country: string;
 };
+
+export type SpotifyAlbum = {
+	Artists: {
+		Id: string;
+		Name: string;
+	}[];
+	Id: string;
+	Images: {
+		Width: number;
+		Height: number;
+		Url: string;
+	}[];
+	Name: string;
+	ReleaseDate: string;
+	TotalTracks: number;
+};
+
+export type SpotifySong = {
+	Artists: {
+		Id: string;
+		Name: string;
+	}[];
+	Id: string;
+	Images: {
+		Width: number;
+		Height: number;
+		Url: string;
+	}[];
+	Name: string;
+	ReleaseDate: string;
+};
+
+export type SpotifySearchResults = {
+	Query: string;
+	Albums: SpotifyAlbum[];
+	Songs: SpotifySong[];
+}

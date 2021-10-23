@@ -77,7 +77,10 @@ export default class VerticalScroller extends Component<Props, State, {}> {
 		});
 	}
 
-	componentDidUpdate() {
+	componentDidUpdate(OldProps: Props) {
+		if (OldProps.Items && (JSON.stringify(OldProps.Items) !== JSON.stringify(this.props.Items))) {
+			this.ItemsConstructor();
+		}
 		if (this.props.Url) {
 			if (this.Scroller.current) {
 				this.Scroller.current.onscroll = () => {

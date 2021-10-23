@@ -42,7 +42,7 @@ export default class SpotifyRouter {
 				ClientSecret: this.Spotify.ClientSecret
 			});
 		});
-		this.Router.get('/search', async (Request, Response) => {
+		this.Router.post('/search', async (Request, Response) => {
 			let Query = Request.query.Query as string;
 			if (Query) {
 				this.Spotify.Search(Query).then(SearchResponse => {
@@ -50,6 +50,8 @@ export default class SpotifyRouter {
 				}).catch(ErrorCode => {
 					Response.sendStatus(ErrorCode);
 				});
+			} else {
+				Response.status(400).send("No query");
 			}
 		});
 		this.Router.get("/profile", (Request, Response) => {
