@@ -27,11 +27,16 @@ class Main extends Component {
 	}
 }
 class ConfigureSpotify extends Component {
-	state = {
-		IsVisible: false,
-		ClientId: "",
-		ClientSecret: ""
-	};
+	state: {
+		IsVisible: boolean,
+		ClientId: string,
+		ClientSecret: string,
+		Error?: string
+	} = {
+			IsVisible: false,
+			ClientId: "",
+			ClientSecret: "",
+		};
 	OnSubmit(Event: React.FormEvent<HTMLFormElement>) {
 		Event.preventDefault();
 		let ClientId = document.getElementById("client-id") as HTMLInputElement;
@@ -75,11 +80,18 @@ class ConfigureSpotify extends Component {
 				ClientSecret.value = this.state.ClientSecret;
 			}
 		});
+
+		const UrlParams = new URLSearchParams(window.location.search);
+		let Error = UrlParams.get("error");
+		if (Error) {
+			this.setState({ Error: Error });
+		}
 	}
 	render() {
 		return <div className="page-padding">
 			<h1>Spotify login</h1>
 			<form onSubmit={(event) => this.OnSubmit(event)} autoCorrect="off" autoComplete="off" spellCheck={false}>
+				{this.state.Error && <p>{this.state.Error}</p>}
 				<h1 className="label">Client ID: </h1>
 				<input maxLength={60} spellCheck={false} placeholder={`Client ID: ${this.state.ClientId}`} id="client-id"></input>
 				<h1 className="label">Client Secret: </h1>

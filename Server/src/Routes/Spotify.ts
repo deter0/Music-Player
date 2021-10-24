@@ -26,8 +26,10 @@ export default class SpotifyRouter {
 			let State = Request.query.state as string;
 			let Code = Request.query.code as string;
 
-			if (Error && !Code) {
-				Response.status(500).send(Error);
+			if (Error) {
+				console.log("Error");
+				Response.redirect(`http://localhost:3000/download/spotify?error=${Error}`);
+				return;
 			} else {
 				this.Spotify.Callback(Code, State);
 				Response.status(200);

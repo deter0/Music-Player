@@ -26,10 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const port = 8080; // default port to listen
 
-const GetUTC = () => {
-	const now = new Date();
-	return now.getUTCSeconds() + now.getUTCMilliseconds() / 1000;
-}
+import GetUTC from './GetUTC';
 
 (async () => {
 	try {
@@ -85,7 +82,8 @@ app.listen(port, () => {
 
 const G = new Graph("Memory", process.stdout.columns - 30);
 setInterval(() => {
-	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
-	G.PushData(Memory);
-	G.Print();
+	// const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
+	// G.PushData(Memory);
+	// G.Print();
+	// console.log(GetUTC());
 }, 100);

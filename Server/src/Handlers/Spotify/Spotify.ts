@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 
 import * as Types from "../../Types";
+import GetUTC from "../../GetUTC";
 
 const SCOPES = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read user-follow-read user-library-read';
 const REDIRECT_URL = 'http://localhost:8080/spotify/callback';
@@ -20,7 +21,7 @@ export default class Spotify {
 
 		this.SaveClientInfo();
 	}
-	Auth?: { access_token: string; token_type: string; expires_in: number; refresh_token: string; scope: string };
+	Auth?: { access_token: string; token_type: string; expires_in: number; refresh_token: string; scope: string, recieved_at: number };
 	async Callback(Code: string, State: string) { // Use router
 		let Data = {
 			grant_type: "authorization_code",
@@ -37,7 +38,10 @@ export default class Spotify {
 			},
 			data: QueryString.stringify(Data)//TODO(deter): Fix deprecation
 		}).then((Response: AxiosResponse<typeof this.Auth>) => {
-			this.Auth = Response.data;
+			let Auth = Response.data;
+			Auth.recieved_at = GetUTC();
+			this.Auth = Auth as typeof this.Auth;
+			this.SaveClientInfo();
 			console.log("Authorized", this.Auth);
 		}).catch(error => {
 			console.log(error);
@@ -45,6 +49,44 @@ export default class Spotify {
 	}
 	constructor() {
 		this.ReadClientInfo();
+		// TODO(load saved token);
+		setInterval(() => {
+			this.ValidateTokenExpiration();
+		}, 1000);
+	}
+
+	ValidateTokenExpiration() {
+		if (this.IsAuthorized()) {
+			let ElapsedTime = GetUTC() - this.Auth.recieved_at;
+			if (ElapsedTime >= (this.Auth.expires_in / 60 - 10)) { // Margin
+				this.RefreshToken();
+			}
+		}
+	}
+
+	RefreshToken() {
+		axios({
+			method: 'post',
+			url: "https://accounts.spotify.com/api/token",
+			headers: {
+				"Authorization": 'Basic ' + (Buffer.from(this.ClientId + ':' + this.ClientSecret).toString('base64')),
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			data: QueryString.stringify({
+				grant_type: "refresh_token",
+				refresh_token: this.Auth.refresh_token
+			})
+		}).then(Response => {
+			console.log("refreshed token");
+			let Auth = Response.data as typeof this.Auth;
+			Auth.recieved_at = GetUTC();
+			this.Auth = Auth;
+			this.SaveClientInfo();
+		}).catch(Error => {
+			this.Auth = null;
+			console.log("Error refreshing token");
+			console.error(Error);
+		});
 	}
 
 	private async ReadClientInfo() {
@@ -61,12 +103,17 @@ export default class Spotify {
 
 		this.ClientId = ClientInfo.ClientId;
 		this.ClientSecret = ClientInfo.ClientSecret;
+		if (ClientInfo.Auth) {
+			this.Auth = ClientInfo.Auth as typeof this.Auth;
+			this.ValidateTokenExpiration();
+		}
 	}
 
 	private async SaveClientInfo() {
 		let Data = {
 			ClientId: this.ClientId,
-			ClientSecret: this.ClientSecret
+			ClientSecret: this.ClientSecret,
+			Auth: this.Auth
 		};
 		console.log("saving", JSON.stringify(Data));
 		await fs.writeFileSync(path.join(__dirname, "../../../Data/Info.json"), JSON.stringify(Data), 'utf-8');
