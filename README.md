@@ -1,8 +1,8 @@
 **TODO**(deter):
-	Playlist UI
-	Artist UI
-	Song Page UI
-	SongPage Backend
-	Artist Page UI
-	ArtistPage Backend
-	Local Search Page UI
+&nbsp;&nbsp;&nbsp;&nbsp;Playlist UI<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Artist UI<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Song Page UI<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;SongPage Backend<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Artist Page UI<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ArtistPage Backend<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Local Search Page UI<br/>
