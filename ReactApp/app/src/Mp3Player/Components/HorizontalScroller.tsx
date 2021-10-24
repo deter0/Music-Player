@@ -50,14 +50,12 @@ export default class VerticalScroller extends Component<Props, State, {}> {
 				let Real = this.Scroller.current.scrollLeft;
 				let Callback = () => {
 					let DeltaTime = GetUTC() - Last;
-					console.log(DeltaTime);
 					if (this.Scroller.current) {
 						let Difference = X - MouseLocation.x;
 						X = MouseLocation.x;
 
 						Real += Difference;
 						Real = Math.max(Real, 0);
-						console.log(Real);
 						this.Scroller.current.scrollLeft =
 							Lerp(
 								this.Scroller.current.scrollLeft,
@@ -186,7 +184,7 @@ export class Album extends Component<AlbumProps> {
 	}
 	ImageId: number | undefined;
 	async LoadImage(NewImage?: boolean) {
-		if (this.props.Item.Cover.indexOf("/song/thumbnail") === -1) {
+		if (this.props.Item && this.props.Item.Cover && !this.props.Item.Cover.startsWith("/")) {
 			this.setState({ Image: this.props.Item.Cover });
 			return;
 		}

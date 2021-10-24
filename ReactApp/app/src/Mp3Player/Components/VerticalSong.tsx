@@ -27,7 +27,7 @@ export default class VerticalSong extends Component<Props> {
 	}
 	ImageId: number | undefined;
 	async LoadImage(NewImage?: boolean) {
-		if (this.props.Item.ImageData?.indexOf("/song/thumbnail") === -1) {
+		if (this.props.Item && this.props.Item.ImageData && !this.props.Item.ImageData.startsWith("/")) {
 			this.setState({ Image: this.props.Item.ImageData });
 			return;
 		}

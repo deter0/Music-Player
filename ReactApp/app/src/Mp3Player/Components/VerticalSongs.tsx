@@ -43,7 +43,6 @@ export default class VerticalSongs extends Component<Props> {
 			if (this.Index + (Shift || 0) >= 0) {
 				this.Index += (Shift || 0);
 			}
-			console.log(this.Index);
 			window.API.get(this.props.Url, {
 				params: {
 					From: this.Index,

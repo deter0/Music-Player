@@ -83,9 +83,9 @@ app.listen(port, () => {
 	console.log(`server started at "http://localhost:${port}/ping"`);
 });
 
-// const G = new Graph("Memory", process.stdout.columns - 30);
-// setInterval(() => {
-// 	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
-// 	G.PushData(Memory);
-// 	G.Print();
-// }, 1000);
+const G = new Graph("Memory", process.stdout.columns - 30);
+setInterval(() => {
+	const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
+	G.PushData(Memory);
+	G.Print();
+}, 100);

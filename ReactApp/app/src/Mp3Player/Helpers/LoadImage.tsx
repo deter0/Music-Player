@@ -70,7 +70,6 @@ const Load = async (Url: string) => {
 				Resolve(Id);
 				return;
 			}
-			console.log(Url);
 			const Response = await window.API.get(Url);
 			const ImageData = (`data:image/jpeg;base64,${Response.data}`);
 			PushData({ Image: ImageData, Id: Id, ClearImage: ClearImage });

@@ -32,6 +32,7 @@ class SpotifySearch extends Component {
 
 	LastSearch = 0;
 	UpdateResults(Event: React.FormEvent<HTMLInputElement>, Callbacked?: boolean) {
+		console.log("Updating!");
 		if ((GetUTC() - this.LastSearch) > 1) {
 			this.LastSearch = GetUTC();
 			let Target = Event.target as HTMLInputElement;
