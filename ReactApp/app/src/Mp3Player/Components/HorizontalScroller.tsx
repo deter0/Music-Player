@@ -34,12 +34,12 @@ export default class VerticalScroller extends Component<Props, State, {}> {
 		}
 
 		let MouseLocation = new Vector2();
-		document.addEventListener("mousemove", (Event) => {
+		window.addEventListener("mousemove", (Event) => {
 			MouseLocation.x = Event.clientX;
 			MouseLocation.y = Event.clientY;
 		});
 		let MouseUp = false;
-		document.addEventListener("mouseup", () => {
+		window.addEventListener("mouseup", () => {
 			MouseUp = true;
 		});
 		this.OnMouseDown.connect((args) => {
