@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import QueryString from "querystring";
 
 import fs from "fs";
 import path from "path";
@@ -28,6 +27,7 @@ export default class Spotify {
 			code: Code,
 			redirect_uri: REDIRECT_URL
 		};
+		let UrlParams = new URLSearchParams(Data);
 
 		axios({
 			method: "post",
@@ -36,7 +36,7 @@ export default class Spotify {
 				'Authorization': 'Basic ' + (Buffer.from(this.ClientId + ':' + this.ClientSecret).toString('base64')),
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
-			data: QueryString.stringify(Data)//TODO(deter): Fix deprecation
+			data: UrlParams.toString()
 		}).then((Response: AxiosResponse<typeof this.Auth>) => {
 			let Auth = Response.data;
 			Auth.recieved_at = GetUTC();
@@ -65,6 +65,11 @@ export default class Spotify {
 	}
 
 	RefreshToken() {
+		let Params = {
+			grant_type: "refresh_token",
+			refresh_token: this.Auth.refresh_token
+		};
+		let UrlParams = new URLSearchParams(Params);
 		axios({
 			method: 'post',
 			url: "https://accounts.spotify.com/api/token",
@@ -72,10 +77,10 @@ export default class Spotify {
 				"Authorization": 'Basic ' + (Buffer.from(this.ClientId + ':' + this.ClientSecret).toString('base64')),
 				"Content-Type": "application/x-www-form-urlencoded"
 			},
-			data: QueryString.stringify({
+			data: UrlParams.toString()/*QueryString.stringify({
 				grant_type: "refresh_token",
 				refresh_token: this.Auth.refresh_token
-			})
+			})*/
 		}).then(Response => {
 			console.log("refreshed token");
 			let Auth = Response.data as typeof this.Auth;
