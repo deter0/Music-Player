@@ -83,3 +83,13 @@ export type SpotifySearchResults = {
 	Albums: SpotifyAlbum[];
 	Songs: SpotifySong[];
 }
+
+export interface Artist {
+	Name: string;
+	AlbumsId: string[];
+	Banner?: string;
+	Cover?: string;
+}
+
+export type ArtistLookup = { [key: string]: Artist };
+export type ArtistArray = Artist[];
