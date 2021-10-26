@@ -65,6 +65,10 @@ export default class Spotify {
 	}
 
 	RefreshToken() {
+		if (!this.Auth || !this.Auth.refresh_token) {
+			this.Auth = null;
+			return;
+		}
 		let Params = {
 			grant_type: "refresh_token",
 			refresh_token: this.Auth.refresh_token
