@@ -67,7 +67,7 @@ const SongLookup: Types.SongLookup = {};
 const AlbumLookup: Types.AlbumLookup = {};
 const SongImages: Types.SongImages = {};
 const ArtistLookup: Types.ArtistLookup = {};
-const ArtistArray: Types.ArtistArray = {};
+const ArtistArray: Types.ArtistArray = [];
 
 app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, Path).Router);
 app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);

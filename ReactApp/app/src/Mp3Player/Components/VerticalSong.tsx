@@ -54,8 +54,8 @@ export default class VerticalSong extends Component<Props> {
 	}
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.ImageData !== this.props.Item.ImageData) {
-			this.setState({ Image: "" });
-			this.LoadImage(true);
+			this.LoadImage();
+			this.forceUpdate();
 		}
 	}
 	componentDidMount() {

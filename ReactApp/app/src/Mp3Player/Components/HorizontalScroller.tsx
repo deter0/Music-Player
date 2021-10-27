@@ -18,7 +18,7 @@ interface Props {
 interface State {
 	Items: Types.Album[]
 };
-export default class VerticalScroller extends Component<Props, State, {}> {
+export default class HorizontalScroller extends Component<Props, State, {}> {
 	state: State = {
 		Items: []
 	};
