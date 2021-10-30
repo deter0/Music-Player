@@ -5,7 +5,6 @@
 	width: $navigation-size;
 	height: 100vh;
 	background-color: transparentize($color: $navigation-background, $amount: 0.95);
-	z-index: 500;
 	flex-shrink: 0;
 	padding: $button-padding;
 	display: flex;

@@ -95,6 +95,9 @@ export default class VerticalSong extends Component<Props> {
 				this.Like();
 				this.setState({ Liked: !this.state.Liked })
 				break;
+			case (1):
+				window.PlaySong(this.props.Item);
+				break;
 		}
 	}
 	render() {

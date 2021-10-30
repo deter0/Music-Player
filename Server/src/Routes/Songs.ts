@@ -2,6 +2,7 @@ import { Router } from "express";
 import Songs from "../Handlers/Song/Songs";
 import Ratings from "../Handlers/Song/Rating/Rating";
 import * as Types from "../Types";
+import path from "path";
 
 export default class SongsRouter {
 	Songs: Songs;
@@ -58,6 +59,23 @@ export default class SongsRouter {
 				Response.sendStatus(500);
 			});
 		});
+
+		this.Router.get("/raw", async (Request, Response) => {
+			let Identifier = Request.query.Identifier as string;
+			if (!Identifier) {
+				Response.sendStatus(400);
+				return;
+			}
+			// try {
+			// 	let Song = await this.Songs.GetRawSong(Identifier);
+			// 	Response.send(Song);
+			// } catch (error) {
+			// 	Response.status(500).send(error);
+			// }
+			Response.sendFile(path.join(this.Songs.Path, Identifier), (Error) => {
+				console.error(Error);
+			});
+		})
 
 		this.Router.get("/thumbnail", async (Request, Response) => {
 			const Identifier = Request.query.Identifier as string;

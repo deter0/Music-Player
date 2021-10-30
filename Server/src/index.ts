@@ -78,8 +78,8 @@ app.use("/spotify", new SpotifyRouter().Router);
 const LocalIps = GetLocalNetworks();
 const Ip = LocalIps.wlp2s0[0];
 // NOTE(deter): Changing to local server because I'm going to be working on this at my school.
-app.listen(port, () => {
-	console.log(`server started at "http://localhost:${port}/ping"`);
+app.listen(port, Ip, () => {
+	console.log(`server started at "http://${Ip}:${port}/ping"`);
 });
 
 const G = new Graph("Memory", process.stdout.columns - 30);

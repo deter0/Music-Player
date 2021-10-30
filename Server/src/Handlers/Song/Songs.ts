@@ -138,6 +138,16 @@ export default class Songs {
 		}
 	}
 
+	async GetRawSong(Identifier: string, Path?: string) {
+		if (!Path && this.Path) {
+			Path = this.Path;
+		} else {
+			Path = path.join(__dirname, '../Songs');
+		}
+		Path = path.join(Path, Identifier);
+		return fs.readFileSync(Path);
+	}
+
 	async GetSongs(From: number, To: number, Path?: string) {
 		return new Promise<Song[]>(async (resolve, reject) => {
 			const Songs = new Array<Song>();
