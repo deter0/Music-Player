@@ -51,6 +51,29 @@ $spacing: 60px;
 @media (max-width: 1100px) {
 	.player {
 		width: calc(100vw - $navigation-size-small - $spacing);
+		height: 90px;
+	}
+	.player-icon {
+		font-size: 20px;
+		padding: 4px !important;
+	}
+	.player-icon-small {
+		font-size: 24px !important;
+	}
+	.player-section {
+		column-gap: 2px !important;
+	}
+	.player-song-image {
+		width: 60px !important;
+		height: 60px !important;
+	}
+	.player-song-title {
+		font-size: 0.8rem !important;
+		margin-left: 6px;
+	}
+	.player-song-artist {
+		font-size: 0.7rem !important;
+		margin-left: 6px;
 	}
 }
 
@@ -78,8 +101,8 @@ $spacing: 60px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	column-gap: 14px;
-	width: 33.333333%;
+	column-gap: 4px;
+	width: fit-content;
 }
 
 .player-icon {
@@ -91,7 +114,7 @@ $spacing: 60px;
 	border: transparent;
 
 	border-radius: 100%;
-	padding: 10px;
+	padding: 6px;
 
 	width: fit-content;
 	height: fit-content;
@@ -101,6 +124,15 @@ $spacing: 60px;
 	font-size: 30px;
 }
 
+.player-icon-extra-small {
+	font-size: 20px;
+}
+
+.player-icon-color {
+	color: $highlight;
+	opacity: 1 !important;
+}
+
 .player-icon:hover,
 .player-icon:focus {
 	opacity: 100%;
@@ -108,6 +140,7 @@ $spacing: 60px;
 }
 
 .player-info {
+	width: 66%;
 	justify-content: flex-start;
 }
 

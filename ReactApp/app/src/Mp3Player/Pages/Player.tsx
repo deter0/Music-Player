@@ -27,7 +27,11 @@ export default class Player extends Component {
 	componentDidMount() {
 		window.PlaySong = (Song) => {
 			if (this.Audio.current) {
-				this.Audio.current.play();
+				try {
+					this.Audio.current.play();
+				} catch (error) {
+					console.warn(error); // IOS Error for some reason, but it still works
+				}
 			}
 			this.setState({ Song: Song, AudioSrc: `http://192.168.2.12:8080/songs/raw?Identifier=${Song.Identifier}` });
 			this.LoadImage(true);
@@ -131,10 +135,31 @@ export default class Player extends Component {
 		}
 	}
 
+	Like() {
+		if (!this.state.Song)
+			return;
+		let PreviousState = this.state.Song.Liked;
+		window.API.post(`/songs/like`, {
+			Id: this.state.Song.Id,
+			Liked: !this.state.Song.Liked
+		}).then(Response => {
+			console.log("Set liked");
+		}).catch(error => {
+			this.setState({ Liked: PreviousState });
+			console.error(error);
+		});
+		let NewSong = this.state.Song;
+		NewSong.Liked = !PreviousState;
+		this.setState({ Song: NewSong });
+	}
+
 	render() {
 		return (
 			<div className="player">
-				<audio src={this.state.AudioSrc} ref={this.Audio} autoPlay={true} />
+				{/* @ts-ignore */}
+				<audio src={this.state.AudioSrc} type="audio/x-m4a" ref={this.Audio} autoPlay={true}>
+					<source src={this.state.AudioSrc} type="audio/x-m4a" />
+				</audio>
 				<div onMouseDown={(Event) => this.OnMouseDown(Event)} onClick={(Event) => this.Seek(Event)} className="progress-outer">
 					<div
 						style={{
@@ -150,11 +175,12 @@ export default class Player extends Component {
 					</div>
 				</div>
 				<div className="player-section">
+					<button onClick={() => this.Like()} className={`${this.state.Song?.Liked ? "player-icon-color" : ""} player-icon-extra-small player-icon material-icons`}>{this.state.Song?.Liked ? "favorite" : "favorite_outline"}</button>
 					<button className="player-icon-small player-icon material-icons">first_page</button>
 					<button onClick={() => this.Pause()} className="player-icon material-icons">{(this.state.Paused || this.state.AudioSrc === "") ? "play_arrow" : "pause"}</button>
 					<button className="player-icon-small player-icon material-icons">last_page</button>
 				</div>
-				<div className="player-section"></div>
+				{/* <div className="player-section"></div> */}
 			</div>
 		)
 	}

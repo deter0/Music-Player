@@ -40,6 +40,7 @@
 		column-gap: 4px;
 		background-color: transparentize($color: $navigation-background, $amount: 0.9);
 		backdrop-filter: blur(12px);
+		z-index: 10000;
 	}
 	.nav h1 {
 		display: none;
