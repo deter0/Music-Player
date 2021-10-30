@@ -37,9 +37,38 @@ export default class Player extends Component {
 			if (this.Audio.current) {
 				let Percentage = this.Audio.current.currentTime / this.Audio.current.duration;
 				this.setState({ Percentage: Percentage * 100 });
-				console.log(Percentage);
 			}
 		}, 500);
+
+		window.addEventListener("mouseup", () => {
+			this.MouseUp = true;
+		})
+	}
+
+	MouseUp = false;
+	OnMouseDown(Event: React.MouseEvent) {
+		let Target = Event.target as HTMLDivElement;
+		if (Target) {
+			if (this.Audio.current) {
+				this.MouseUp = false;
+				let Callback = () => {
+					if (this.Audio.current) {
+						let MouseX = window.MouseLocation.x;
+						let Rect = Target.getBoundingClientRect();
+						let Offset = 1 - ((Rect.right - MouseX) / Rect.width);
+						if (this.Audio.current && this.Audio.current.duration) {
+							this.setState({ Percentage: Offset * 100 });
+						}
+						if (!this.MouseUp) {
+							requestAnimationFrame(() => Callback());
+						} else {
+							this.Audio.current.currentTime = this.Audio.current.duration * Offset;
+						}
+					}
+				}
+				requestAnimationFrame(() => Callback());
+			}
+		}
 	}
 
 	ImageId?: number;
@@ -78,11 +107,35 @@ export default class Player extends Component {
 		}
 	}
 
+	Seek(Event: React.MouseEvent) {
+		let Target = Event.target as HTMLDivElement;
+		if (Target) {
+			let MouseX = window.MouseLocation.x;
+			let Rect = Target.getBoundingClientRect();
+			let Offset = 1 - ((Rect.right - MouseX) / Rect.width);
+			if (this.Audio.current && this.Audio.current.duration) {
+				this.Audio.current.currentTime = this.Audio.current.duration * Offset;
+				this.setState({ Percentage: this.Audio.current.currentTime / this.Audio.current.duration * 100 });
+			}
+		}
+	}
+
+	Pause(Override?: boolean) {
+		if (this.Audio.current) {
+			if (Override || this.state.Paused) {
+				this.Audio.current.play();
+			} else {
+				this.Audio.current.pause();
+			}
+			this.setState({ Paused: Override || this.Audio.current.paused });
+		}
+	}
+
 	render() {
 		return (
 			<div className="player">
 				<audio src={this.state.AudioSrc} ref={this.Audio} autoPlay={true} />
-				<div className="progress-outer">
+				<div onMouseDown={(Event) => this.OnMouseDown(Event)} onClick={(Event) => this.Seek(Event)} className="progress-outer">
 					<div
 						style={{
 							width: `${this.state.Percentage}%`
@@ -98,16 +151,7 @@ export default class Player extends Component {
 				</div>
 				<div className="player-section">
 					<button className="player-icon-small player-icon material-icons">first_page</button>
-					<button onClick={() => {
-						if (this.Audio.current) {
-							if (this.state.Paused) {
-								this.Audio.current.play();
-							} else {
-								this.Audio.current.pause();
-							}
-							this.setState({ Paused: this.Audio.current.paused });
-						}
-					}} className="player-icon material-icons">{(this.state.Paused || this.state.AudioSrc === "") ? "play_arrow" : "pause"}</button>
+					<button onClick={() => this.Pause()} className="player-icon material-icons">{(this.state.Paused || this.state.AudioSrc === "") ? "play_arrow" : "pause"}</button>
 					<button className="player-icon-small player-icon material-icons">last_page</button>
 				</div>
 				<div className="player-section"></div>

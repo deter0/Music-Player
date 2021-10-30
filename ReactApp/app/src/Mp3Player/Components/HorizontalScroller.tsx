@@ -19,6 +19,13 @@ interface Props {
 interface State {
 	Items: Types.Album[];
 };
+
+declare global {
+	interface Window {
+		MouseLocation: Vector2
+	}
+}
+
 export default class HorizontalScroller extends Component<Props, State, {}> {
 	state: State = {
 		Items: []
@@ -35,6 +42,7 @@ export default class HorizontalScroller extends Component<Props, State, {}> {
 		}
 
 		let MouseLocation = new Vector2();
+		window.MouseLocation = MouseLocation;
 		window.addEventListener("mousemove", (Event) => {
 			MouseLocation.x = Event.clientX;
 			MouseLocation.y = Event.clientY;

@@ -43,8 +43,9 @@ $spacing: 60px;
 	position: absolute;
 	top: 0;
 	left: 0;
+	pointer-events: none;
 
-	transition: width 0.33s cubic-bezier(0.65, 0, 0.35, 1);
+	transition: width 0.16s ease-out;
 }
 
 @media (max-width: 1100px) {
@@ -82,7 +83,7 @@ $spacing: 60px;
 }
 
 .player-icon {
-	font-size: 50px;
+	font-size: 40px;
 	opacity: 60%;
 	cursor: pointer;
 	transition: opacity $background-transition, background $background-transition;
@@ -90,7 +91,7 @@ $spacing: 60px;
 	border: transparent;
 
 	border-radius: 100%;
-	padding: 4px;
+	padding: 10px;
 
 	width: fit-content;
 	height: fit-content;
