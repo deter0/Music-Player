@@ -103,20 +103,31 @@ export default class Songs {
 			const FilePath = `${Path}/${Identifier}`;
 			const Metadata = await MusicMetadata.parseFile(FilePath);
 			const Cover = MusicMetadata.selectCover(Metadata.common.picture);
-			const CoverIndex = sha256(`${Metadata.common.title},${Metadata.common.artist},${Metadata.common.album},${Metadata.format.duration}`);
-			if (!this.SongImages[CoverIndex] && !DontSaveImage) {
-				const CoverData = `data:${Cover.format};base64,${Cover.data.toString('base64')}`;
-				this.SongImages[CoverIndex] = CoverData;
+
+			const Title = Metadata.common.title || Identifier;
+			const Artist = Metadata.common.artist || "Unkown";
+			const Album = Metadata.common.album || Title;
+			const Duration = Metadata.format.duration || 0;
+
+			let CoverIndex;
+			if (Cover) {
+				const CoverIndex = sha256(`${Title},${Artist},${Album},${Duration}`);
+				if (!this.SongImages[CoverIndex] && !DontSaveImage) {
+					const CoverData = `data:${Cover.format};base64,${Cover.data.toString('base64')}`;
+					this.SongImages[CoverIndex] = CoverData;
+				}
+			} else {
+				console.log(Metadata);
 			}
 			const song = new Song(
-				Metadata.common.artist,
-				Metadata.common.title,
+				Artist,
+				Title,
 				Identifier,
 				CoverIndex,
-				Metadata.format.duration,
-				Metadata.common.album,
-				Cover.format,
-				`/songs/thumbnail?Identifier=${Identifier}`,
+				Duration,
+				Album,
+				Cover ? Cover.format : "none",
+				Cover ? `/songs/thumbnail?Identifier=${Identifier}` : "https://st4.depositphotos.com/14953852/22772/v/600/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg",
 			);
 			song.Liked = (await this.Ratings.GetSongRating(song)).UserLiked;
 			song.Codec = Metadata.format.codec;
@@ -176,7 +187,7 @@ export default class Songs {
 						Title: Song.Album,
 						Artist: Song.Artist,
 						Songs: [],
-						Cover: `/songs/thumbnail?Identifier=${FileNames[i]}`,
+						Cover: Song.ImageData || `/songs/thumbnail?Identifier=${FileNames[i]}`,
 						Id: Id
 					}
 					this.AlbumArray.push(this.AlbumLookup[Id]);

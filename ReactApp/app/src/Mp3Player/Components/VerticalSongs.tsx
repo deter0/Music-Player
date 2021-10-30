@@ -46,6 +46,7 @@ export default class VerticalSongs extends Component<Props> {
 			if (this.Index + (Shift || 0) >= 0) {
 				this.Index += (Shift || 0);
 			}
+			console.log("requesting from", this.Index, this.Index + 50);
 			window.API.get(this.props.Url, {
 				params: {
 					From: this.Index,
@@ -54,6 +55,7 @@ export default class VerticalSongs extends Component<Props> {
 			}).then((Response: AxiosResponse<Types.Song[]>) => {
 				this.setState({ Items: (Response.data) });
 				this.Index += Response.data.length;
+				console.log(Response.data.length);
 				if (Response.data.length <= 0) {
 					this.Completed = true;
 				}

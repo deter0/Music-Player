@@ -77,12 +77,14 @@ export default class VerticalSong extends Component<Props> {
 			LoadImage.ClearImage(this.ImageId);
 	}
 	Like() {
+		let PreviousState = this.state.Liked;
 		window.API.post(`/songs/like`, {
 			Id: this.props.Item.Id,
 			Liked: !this.state.Liked
 		}).then(Response => {
 			console.log("Set liked");
 		}).catch(error => {
+			this.setState({ Liked: PreviousState });
 			console.error(error);
 		});
 	}
