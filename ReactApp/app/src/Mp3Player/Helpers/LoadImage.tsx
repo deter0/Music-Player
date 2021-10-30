@@ -20,7 +20,7 @@
 
 // There is a memory leak with loading images so this is a fix
 var ImageId = 0;
-const MAX_SIZE = 60;
+const MAX_SIZE = 160;
 interface Data {
 	Image: string;
 	Id: number;

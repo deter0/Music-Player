@@ -26,7 +26,10 @@ export default class VerticalSongs extends Component<Props> {
 
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Items !== this.props.Items) {
-			this.ItemsConstructor();
+			this.setState({ Items: [] });
+			setTimeout(() => {
+				this.ItemsConstructor();
+			}, 17);
 		}
 	}
 

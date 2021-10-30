@@ -77,14 +77,11 @@ export default class HorizontalScroller extends Component<Props, State, {}> {
 
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Items && (JSON.stringify(OldProps.Items) !== JSON.stringify(this.props.Items))) {
-			this.ItemsConstructor();
-		}
-		if (this.props.Url) {
-			if (this.Scroller.current) {
-				this.Scroller.current.onscroll = () => {
-					console.log(this.Scroller.current?.getBoundingClientRect(), this.Scroller.current?.scrollLeft);
-				}
-			}
+			this.setState({ Items: [] });
+
+			setTimeout(() => {
+				this.ItemsConstructor();
+			}, 17);
 		}
 		if (this.Scroller.current) {
 			this.Scroller.current.onscroll = () => {
@@ -159,10 +156,9 @@ export class Album extends Component<AlbumProps> {
 		Image: ""
 	};
 	Image: React.RefObject<HTMLImageElement>;
-	componentDidUpdate(OldProps: AlbumProps) {
-		if (this.props.Item.Cover !== OldProps.Item.Cover) {
-			this.setState({ Image: "" });
-			this.LoadImage();
+	componentDidUpdate(Props: AlbumProps) {
+		if (Props.Item.Id !== this.props.Item.Id) {
+			this.LoadImage(true);
 		}
 	}
 	constructor(props: AlbumProps) {
@@ -200,7 +196,6 @@ export class Album extends Component<AlbumProps> {
 			if (ImageData) {
 				this.setState({ Image: ImageData.Image });
 				ImageData.OnUnload = () => {
-					// this.setState({ Image: "" });
 					this.state.Image = "";
 				}
 			} else {

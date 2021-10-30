@@ -6,19 +6,24 @@ import * as Types from "../Types";
 export default class Search extends Component {
 	state: { Songs: Types.Song[], Albums: Types.Album[] } = { Songs: [], Albums: [] };
 	OnInput(Event: React.FormEvent<HTMLInputElement>) {
+		let Query = (Event.target as HTMLInputElement).value;
 		window.API.post("/search/songs", undefined, {
 			params: {
-				Query: (Event.target as HTMLInputElement).value.trim()
+				Query: Query.trim()
 			}
 		}).then(Response => {
-			this.setState({ Songs: Response.data });
+			if (Query === (Event.target as HTMLInputElement).value) {
+				this.setState({ Songs: Response.data });
+			}
 		});
 		window.API.post("/search/albums", undefined, {
 			params: {
 				Query: (Event.target as HTMLInputElement).value.trim()
 			}
 		}).then(Response => {
-			this.setState({ Albums: Response.data });
+			if (Query === (Event.target as HTMLInputElement).value) {
+				this.setState({ Albums: Response.data });
+			}
 		});
 	}
 	render() {

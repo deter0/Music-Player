@@ -27,6 +27,7 @@ export default class VerticalSong extends Component<Props> {
 	}
 	ImageId: number | undefined;
 	async LoadImage(NewImage?: boolean) {
+		let RequestedImage = this.props.Item.ImageData;
 		if (this.props.Item && this.props.Item.ImageData && !this.props.Item.ImageData.startsWith("/")) {
 			this.setState({ Image: this.props.Item.ImageData });
 			return;
@@ -41,6 +42,11 @@ export default class VerticalSong extends Component<Props> {
 			}
 			let ImageData = LoadImage.GetImageFromId(this.ImageId);
 			if (ImageData) {
+				if (this.props.Item.ImageData !== RequestedImage) {
+					LoadImage.ClearImage(this.ImageId);
+					console.log("Dropped late image");
+					return;
+				}
 				this.setState({ Image: ImageData.Image });
 				ImageData.OnUnload = () => {
 					// this.setState({ Image: "" });
@@ -53,9 +59,8 @@ export default class VerticalSong extends Component<Props> {
 		}
 	}
 	componentDidUpdate(OldProps: Props) {
-		if (OldProps.Item.ImageData !== this.props.Item.ImageData) {
-			this.LoadImage();
-			this.forceUpdate();
+		if (OldProps.Item.Identifier !== this.props.Item.Identifier) {
+			this.LoadImage(true);
 		}
 	}
 	componentDidMount() {
@@ -81,6 +86,14 @@ export default class VerticalSong extends Component<Props> {
 			console.error(error);
 		});
 	}
+	SelectedDropDownOption(Option: number) {
+		switch (Option) {
+			case (0):
+				this.Like();
+				this.setState({ Liked: !this.state.Liked })
+				break;
+		}
+	}
 	render() {
 		return (
 			<div className="song-container">
@@ -98,7 +111,7 @@ export default class VerticalSong extends Component<Props> {
 				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
 				{/* <button className="song-options material-icons">more_horiz</button> */}
-				<DropDown className="song-options" style={{ padding: 0, border: "none" }} Label="" Icon="more_horiz" SelectedIndex={9999} Callback={(SelectedIndex) => { console.log(SelectedIndex) }} Items={this.props.Options || [
+				<DropDown className="song-options" style={{ padding: 0, border: "none" }} Label="" Icon="more_horiz" SelectedIndex={9999} Callback={(SelectedIndex) => this.SelectedDropDownOption(SelectedIndex)} Items={this.props.Options || [
 					{
 						Icon: this.state.Liked === false ? "favorite_border" : "favorite",
 						Label: this.state.Liked === true ? "Unlike" : "Like",
