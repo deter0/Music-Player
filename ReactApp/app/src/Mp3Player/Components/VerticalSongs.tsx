@@ -8,6 +8,8 @@ interface Props {
 	Url?: string,
 	NoPages?: boolean;
 	Options?: { Icon: string; Label: string }[];
+	style?: { [index: string]: any };
+	songStyle?: { [index: string]: any };
 }
 export default class VerticalSongs extends Component<Props> {
 	state: {
@@ -80,10 +82,10 @@ export default class VerticalSongs extends Component<Props> {
 
 	render() {
 		return (
-			<div className="songs-container">
+			<div style={this.props.style} className="songs-container">
 				{
 					this.state.Items.map((Item, Index) => {
-						return <VerticalSong Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
+						return <VerticalSong style={this.props.songStyle} Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
 					})
 				}
 				{

@@ -14,6 +14,7 @@ interface Props {
 	Item: Types.Song,
 	Index: number;
 	Options?: { Icon: string; Label: string }[];
+	style?: { [index: string]: any };
 };
 export default class VerticalSong extends Component<Props> {
 	state = {
@@ -98,7 +99,7 @@ export default class VerticalSong extends Component<Props> {
 	}
 	render() {
 		return (
-			<div className="song-container">
+			<div className="song-container" style={this.props.style}>
 				<ImageLoader className="song-image" Loading={this.state.Image === ""} ImageElement={
 					<img ref={this.state.ImageRef} draggable={false} className="song-image" src={this.state.Image} alt="" />
 				} />

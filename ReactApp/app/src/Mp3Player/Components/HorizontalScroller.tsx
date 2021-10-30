@@ -13,10 +13,11 @@ import ImageLoader from './ImageLoader';
 
 interface Props {
 	Items?: Types.Album[],
-	Url?: string
+	Url?: string,
+	style?: { [index: string]: any };
 };
 interface State {
-	Items: Types.Album[]
+	Items: Types.Album[];
 };
 export default class HorizontalScroller extends Component<Props, State, {}> {
 	state: State = {
@@ -137,7 +138,7 @@ export default class HorizontalScroller extends Component<Props, State, {}> {
 	render() {
 		let isTouchDevice = 'ontouchstart' in document.documentElement;
 		return (
-			<ul ref={this.Scroller} style={{ overflowX: isTouchDevice ? "auto" : "hidden", paddingBottom: isTouchDevice ? "8px" : "" }} className="vertical-scroller-container">
+			<ul ref={this.Scroller} style={{ overflowX: isTouchDevice ? "auto" : "hidden", paddingBottom: isTouchDevice ? "8px" : "", ...this.props.style }} className="vertical-scroller-container">
 				{(this.state.Items).map((AlbumItem, index) => {
 					return <Album OnMouseDown={this.OnMouseDown} key={index} Item={AlbumItem} />
 				})}
