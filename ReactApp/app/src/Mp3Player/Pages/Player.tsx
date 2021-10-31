@@ -26,6 +26,7 @@ export default class Player extends Component {
 	Audio = React.createRef<HTMLAudioElement>();
 	componentDidMount() {
 		window.PlaySong = (Song) => {
+			this.setState({ Song: Song, AudioSrc: `http://192.168.2.12:8080/songs/raw?Identifier=${Song.Identifier}` });
 			if (this.Audio.current) {
 				try {
 					this.Audio.current.play();
@@ -33,7 +34,12 @@ export default class Player extends Component {
 					console.warn(error); // IOS Error for some reason, but it still works
 				}
 			}
-			this.setState({ Song: Song, AudioSrc: `http://192.168.2.12:8080/songs/raw?Identifier=${Song.Identifier}` });
+			window.API.post("/playback", {
+				Data: { Song: Song },
+				Method: "Play"
+			}).then(Response => {
+				console.log("Set playback state");
+			});
 			this.LoadImage(true);
 		}
 
@@ -46,6 +52,24 @@ export default class Player extends Component {
 
 		window.addEventListener("mouseup", () => {
 			this.MouseUp = true;
+		});
+
+		window.API.get("/playback").then((Response: any) => {
+			const Song = Response.data.Song as Types.Song;
+			if (!Song)
+				return;
+			const Callback = () => {
+				if (this.Audio.current) {
+					this.Audio.current.currentTime = Response.data.CurrentTime
+					this.setState({ Song: Song, AudioSrc: `http://192.168.2.12:8080/songs/raw?Identifier=${Song.Identifier}` });
+					this.Audio.current.play();
+					this.Pause(true);
+					this.LoadImage();
+				} else {
+					setTimeout(Callback, 200);
+				}
+			}
+			Callback();
 		})
 	}
 
@@ -132,6 +156,12 @@ export default class Player extends Component {
 				this.Audio.current.pause();
 			}
 			this.setState({ Paused: Override || this.Audio.current.paused });
+			window.API.post("/playback", {
+				Data: { Song: this.state.Song },
+				Method: this.state.Paused ? "UnPause" : "Pause"
+			}).then(Response => {
+				console.log("Set playback state");
+			});
 		}
 	}
 

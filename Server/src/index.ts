@@ -27,11 +27,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const port = 8080; // default port to listen
 
 import GetUTC from './GetUTC';
+import PlaybackRouter from './Routes/Playback';
 
 (async () => {
 	try {
 		const RequiredFolders = ["Data", "Songs"];
-		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json"];
+		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json", "Data/Playback.json"];
 		const Path = path.join(__dirname, '../');
 		const Files = await fs.readdirSync(Path);
 
@@ -73,6 +74,7 @@ app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray,
 app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
 app.use("/spotify", new SpotifyRouter().Router);
+app.use("/playback", new PlaybackRouter().Router);
 
 // start the Express server
 const LocalIps = GetLocalNetworks();
