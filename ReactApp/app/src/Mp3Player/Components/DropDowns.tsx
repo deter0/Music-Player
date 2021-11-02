@@ -87,14 +87,14 @@ export class DropDown extends Component<Props> {
 		this.state.Position = this.props.Position;
 	}
 	componentDidUpdate() {
-		if (!this.state.Opened) {
+		if (!this.state.Opened && this.Mounted) {
 			if (this.state.Selected !== this.props.SelectedIndex) {
 				this.Closed();
 			}
 		}
 	}
 	FixPosition() {
-		if (this.Ref.current) {
+		if (this.Ref.current && this.Mounted) {
 			let Bounds = this.Ref.current.getBoundingClientRect();
 			let ViewportWidth = Math.max(document.documentElement.clientWidth, window.innerWidth);
 			let Right = Bounds.right;
@@ -112,7 +112,8 @@ export class DropDown extends Component<Props> {
 	}
 	Closed = () => {
 		setTimeout(() => {
-			this.props.Remove(this.props.Index, this.state.Selected);
+			if (this.Mounted)
+				this.props.Remove(this.props.Index, this.state.Selected);
 		}, 200);
 	}
 	render() {
