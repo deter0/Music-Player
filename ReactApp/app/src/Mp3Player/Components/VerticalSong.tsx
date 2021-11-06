@@ -80,7 +80,7 @@ export default class VerticalSong extends Component<Props> {
 	Like() {
 		let PreviousState = this.state.Liked;
 		window.API.post(`/songs/like`, {
-			Id: this.props.Item.Id,
+			Identifier: this.props.Item.Identifier,
 			Liked: !this.state.Liked
 		}).then(Response => {
 			console.log("Set liked");

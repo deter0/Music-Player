@@ -12,6 +12,7 @@ import DropDowns from './Components/DropDowns';
 import Download from './Pages/Download';
 import Search from './Pages/Search';
 import Player from './Pages/Player';
+import Library from './Pages/Library/Library';
 
 const API = axios.create({
 	baseURL: "http://192.168.2.12:8080/",
@@ -50,6 +51,7 @@ export default class App extends Component {
 									<Route component={Home} exact={true} path="/home" />
 									<Route component={Download} exact={false} path="/download" />
 									<Route component={Search} exact={false} path="/search" />
+									<Route component={Library} exact={false} path="/library" />
 								</div>
 							</div>
 						</div>

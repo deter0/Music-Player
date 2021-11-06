@@ -27,9 +27,14 @@ export const GetUniqueId = (Song: Types.Song) => {
 export default class Ratings {
 	Ratings: Types.Ratings = {};
 	Path?: string;
-	constructor(Path?: string) {
+
+	SongLookup: Types.SongLookup;
+	SongPath?: string;
+	constructor(SongLookup: Types.SongLookup, Path?: string) {
+		this.SongPath = Path;
 		this.Path = path.join(__dirname, "Data/Ratings.json");
 		this.LoadRatings();
+		this.SongLookup = SongLookup;
 		RatingsClass = this;
 	}
 	async LoadRatings() {
@@ -44,12 +49,12 @@ export default class Ratings {
 		this.Ratings = Ratings;
 	}
 	GetUniqueId = GetUniqueId;
-	async SetRating(Id: string, Liked: boolean) {
-		if (!this.Ratings[Id])
-			this.Ratings[Id] = new Rating()
+	async SetRating(Identifier: string, Liked: boolean) {
+		if (!this.Ratings[Identifier])
+			this.Ratings[Identifier] = new Rating()
 
-		this.Ratings[Id].UserLiked = Liked;
-		console.log("SetRating", Id, Liked);
+		this.Ratings[Identifier].UserLiked = Liked;
+		console.log("SetRating", Identifier, Liked);
 		await this.SaveRatings();
 	}
 	async SaveRatings() {
@@ -75,6 +80,30 @@ export default class Ratings {
 		await this.SaveRatings();
 	}
 	GetSongRating(Song: Types.Song) {
-		return this.Ratings[GetUniqueId(Song)] || new Rating();
+		return this.Ratings[Song.Identifier] || new Rating();
+	}
+
+	// * Liked song library
+	async GetSongs(From: number, To: number) {
+		if (this.Ratings) {
+			const Songs: Types.Song[] = [];
+			let Index = 0;
+			for (const Identifier in this.Ratings) {
+				if (Index >= From && Index <= To)
+					if (this.Ratings[Identifier]) {
+						const Song = this.SongLookup[this.SongPath + Identifier];
+						if (Song) {
+							let SongRating = this.GetSongRating(Song);
+							if (Song && SongRating.UserLiked) {
+								Song.Liked = SongRating.UserLiked;
+								Songs.push(Song);
+							}
+						}
+					}
+			}
+			return Songs;
+		} else {
+			return [];
+		}
 	}
 }

@@ -18,6 +18,11 @@ const Paths: Path[] = [
 		label: "Search"
 	},
 	{
+		icon: "favorite_outline",
+		to: "/library/liked",
+		label: "Liked"
+	},
+	{
 		icon: "file_download",
 		to: "/download",
 		label: "Download"

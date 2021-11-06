@@ -170,7 +170,7 @@ export default class Player extends Component {
 			return;
 		let PreviousState = this.state.Song.Liked;
 		window.API.post(`/songs/like`, {
-			Id: this.state.Song.Id,
+			Identifier: this.state.Song.Identifier,
 			Liked: !this.state.Song.Liked
 		}).then(Response => {
 			console.log("Set liked");

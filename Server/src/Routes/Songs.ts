@@ -16,7 +16,7 @@ export default class SongsRouter {
 		AlbumLookup: Types.AlbumLookup,
 		Path?: string
 	) {
-		this.Ratings = new Ratings();
+		this.Ratings = new Ratings(SongLookup, Path);
 		this.Songs = new Songs(SongArray, SongLookup, SongImages, this.Ratings, AlbumArray, AlbumLookup, Path);
 		this.Router = Router();
 
@@ -50,9 +50,13 @@ export default class SongsRouter {
 		});
 
 		this.Router.post("/like", (Request, Response) => {
-			const Id = Request.body.Id as string;
+			const Identifier = Request.body.Identifier as string;
 			const Liked = Request.body.Liked as boolean;
-			this.Ratings.SetRating(Id, Liked).then(() => {
+			if (!Identifier) {
+				Response.status(400).send("Missing identifier");
+				return;
+			}
+			this.Ratings.SetRating(Identifier, Liked).then(() => {
 				Response.sendStatus(200);
 			}).catch(error => {
 				console.log(error);
@@ -66,12 +70,6 @@ export default class SongsRouter {
 				Response.sendStatus(400);
 				return;
 			}
-			// try {
-			// 	let Song = await this.Songs.GetRawSong(Identifier);
-			// 	Response.send(Song);
-			// } catch (error) {
-			// 	Response.status(500).send(error);
-			// }
 			Response.sendFile(path.join(this.Songs.Path, Identifier), (Error) => {
 				console.error(Error);
 			});
@@ -91,5 +89,23 @@ export default class SongsRouter {
 				Response.sendStatus(400);
 			}
 		});
+
+		this.Router.get("/liked", (Request, Response) => {
+			let From = Request.query.From as string;
+			let To = Request.query.To as string;
+			console.log(From, To);
+			if (From && To) {
+				this.Ratings.GetSongs(parseInt(From), parseInt(To)).then(Songs => {
+					console.log("!");
+					Response.json(Songs);
+				}).catch(error => {
+					console.log("x");
+					console.error(error);
+					Response.sendStatus(500);
+				});
+			} else {
+				Response.sendStatus(400);
+			}
+		})
 	}
 }
