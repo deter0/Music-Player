@@ -6,35 +6,39 @@ import "./Nav.scss";
 
 const OnLinkClick = new Signal<number>();
 interface Path { icon: string; to: string; label: string };
-const Paths: Path[] = [
-	{
-		icon: "home",
-		to: "/home",
-		label: "Home"
-	},
-	{
-		icon: "search",
-		to: "/search",
-		label: "Search"
-	},
-	{
-		icon: "favorite_outline",
-		to: "/library/liked",
-		label: "Liked"
-	},
-	{
-		icon: "file_download",
-		to: "/download",
-		label: "Download"
-	}
-]
-const Others: Path[] = [
-	{
-		icon: "settings",
-		to: "/settings",
-		label: "Settings"
-	},
-]
+const Paths: { [key: string]: Path[] } = {
+	"": [
+		{
+			icon: "home",
+			to: "/home",
+			label: "Home"
+		},
+		{
+			icon: "search",
+			to: "/search",
+			label: "Search"
+		},
+		{
+			icon: "file_download",
+			to: "/download",
+			label: "Download"
+		}
+	],
+	"Library": [
+		{
+			icon: "favorite_outline",
+			to: "/library/liked",
+			label: "Liked"
+		},
+	],
+	"Other": [
+		{
+			icon: "settings",
+			to: "/settings",
+			label: "Settings"
+		}
+	]
+}
 interface Props { Path: string; Data: Path };
 class NavItem extends Component<Props> {
 	render() {
@@ -64,15 +68,16 @@ export default class Nav extends Component {
 		})
 	}
 	render() {
+		let Render = [];
+		for (const Key in Paths) {
+			Render.push(<h1>{Key}</h1>);
+			Render.push(Paths[Key].map(Data => {
+				return <NavItem Path={this.state.Path} Data={Data} />
+			}));
+		}
 		return (
 			<nav className="nav">
-				{Paths.map((Data, index) => {
-					return <NavItem key={index} Path={this.state.Path} Data={Data} />
-				})}
-				<h1>Other</h1>
-				{Others.map((Data, index) => {
-					return <NavItem key={index} Path={this.state.Path} Data={Data} />
-				})}
+				{Render}
 			</nav>
 		)
 	}
