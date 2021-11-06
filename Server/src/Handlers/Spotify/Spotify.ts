@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from "axios";
+import { spawn } from "child_process";
 
 import fs from "fs";
 import path from "path";
@@ -236,5 +237,14 @@ export default class Spotify {
 				Reject(401);
 			}
 		})
+	}
+
+	Download(Id: string, Path: string) {
+		console.log("Downloading", Id, Path);
+		const PythonProcess = spawn("python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
+		PythonProcess.stdout.on('data', (data) => {
+			console.log(data.toString());
+			// Do something with the data returned from python script
+		});
 	}
 }

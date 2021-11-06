@@ -89,7 +89,9 @@ export default class Ratings {
 			const Songs: Types.Song[] = [];
 			let Index = 0;
 			for (const Identifier in this.Ratings) {
-				if (Index >= From && Index <= To)
+				if (Index >= From && Index < To) {
+					Index++;
+					console.log(Index, From, To);
 					if (this.Ratings[Identifier]) {
 						const Song = this.SongLookup[this.SongPath + Identifier];
 						if (Song) {
@@ -100,6 +102,7 @@ export default class Ratings {
 							}
 						}
 					}
+				}
 			}
 			return Songs;
 		} else {

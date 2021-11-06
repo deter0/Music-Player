@@ -3,6 +3,8 @@ import React, { Component } from 'react'
 import * as Types from "../Types";
 import VerticalSong from "./VerticalSong";
 
+const PAGE_SIZE = 12;
+
 interface Props {
 	Items?: Types.Song[],
 	Url?: string,
@@ -45,14 +47,11 @@ export default class VerticalSongs extends Component<Props> {
 	Completed = false;
 	UrlConstructor(Shift?: number) {
 		if (this.props.Url && !this.Completed) {
-			if (this.Index + (Shift || 0) >= 0) {
-				this.Index += (Shift || 0);
-			}
-			console.log("requesting from", this.Index, this.Index + 50);
+			this.Index += Shift || 0;
 			window.API.get(this.props.Url, {
 				params: {
 					From: this.Index,
-					To: this.Index + 50
+					To: this.Index + PAGE_SIZE
 				}
 			}).then((Response: AxiosResponse<Types.Song[]>) => {
 				this.setState({ Items: (Response.data) });
@@ -76,7 +75,11 @@ export default class VerticalSongs extends Component<Props> {
 
 	PreviousPage() {
 		if (this.props.Url) {
-			this.UrlConstructor(-50);
+			console.log(this.Index);
+			this.Index -= PAGE_SIZE;
+			this.Completed = false;
+			this.UrlConstructor();
+			console.log(this.Index);
 		}
 	}
 

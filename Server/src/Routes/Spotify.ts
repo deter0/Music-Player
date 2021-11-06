@@ -69,6 +69,16 @@ export default class SpotifyRouter {
 			} else {
 				Response.send(false);
 			}
-		})
+		});
+		this.Router.get("/download", (Request, Response) => {
+			let Id = Request.query.Id as string;
+			let Path = Request.query.Path as string;
+			if (Id && Path) {
+				this.Spotify.Download(Id, Path);
+				Response.sendStatus(200);
+			} else {
+				Response.status(400).send("No id or path");
+			}
+		});
 	}
 }

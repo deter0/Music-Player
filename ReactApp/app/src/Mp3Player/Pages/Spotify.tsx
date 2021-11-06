@@ -43,6 +43,7 @@ class SpotifySearch extends Component {
 					Query: Query.trim().substr(0, 200)
 				}
 			}).then(((Response: AxiosResponse<any>) => { // Typescript bug? Cant put type gives weird error
+				console.log(Response.data.Songs);
 				this.setState({
 					Albums: Response.data.Albums.map((Data: Types.SpotifyAlbum): Types.Album => {
 						return {

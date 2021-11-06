@@ -6,3 +6,5 @@ Server/node_modules/
 Server/dist/
 Server/Data/
 Server/Data/Ratings.json
+SpotifyDownloader/__pycache__/
+*.env
