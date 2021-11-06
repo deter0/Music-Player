@@ -1,5 +1,3 @@
-*Sorry for not working on this guys, my mom got arrested and my cat died*
-
 # Music Player (Mp3, M4A, WAV)<br/>
 #### WARNING: WORK IN PROGRESS<br/>
 
