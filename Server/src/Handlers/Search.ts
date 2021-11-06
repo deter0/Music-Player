@@ -35,6 +35,11 @@ export default class Search {
 
 		this.SongSearch = new Fuse(SongArray, SongSearchOptions);
 		this.AlbumSearch = new Fuse(AlbumArray, AlbumSearchOptions);
+		const _global = global as any;
+		_global.UpdateSearch = () => {
+			this.SongSearch.setCollection(this.SongArray);
+			this.AlbumSearch.setCollection(this.AlbumArray);
+		};
 	}
 	SearchSongs(Query: string, From?: number, To?: number) {
 		Query = Query.trim().substr(0, 50);

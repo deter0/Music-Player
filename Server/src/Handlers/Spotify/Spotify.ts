@@ -242,9 +242,18 @@ export default class Spotify {
 	Download(Id: string, Path: string) {
 		console.log("Downloading", Id, Path);
 		const PythonProcess = spawn("python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
-		PythonProcess.stdout.on('data', (data) => {
-			console.log(data.toString());
-			// Do something with the data returned from python script
+		PythonProcess.on("error", (Error: any) => {
+			console.error(Error);
+		});
+		PythonProcess.on("stdout", (Data: any) => {
+			let Line = Data.toString() as string;
+			console.log("Log", Line);
+		});
+		PythonProcess.on("exit", (Code: number) => {
+			console.log("Downloaded", Id, Path);
+			const _global = global as any;
+			_global.CacheSong(Id, Path);
+			console.log("Cached");
 		});
 	}
 }

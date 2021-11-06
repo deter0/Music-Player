@@ -76,6 +76,8 @@ export default class Songs {
 			]);
 			table.printTable();
 		});
+		const _global = global as any;
+		_global.CacheSong = this.CacheSong.bind(this);
 	}
 
 	async GetSong(Identifier: string, Path?: string, DontSaveImage?: boolean, DontLookup?: boolean) {
@@ -185,29 +187,35 @@ export default class Songs {
 		}
 		const FileNames = fs.readdirSync(this.Path);
 		for (let i = 0; i < FileNames.length; i++) {
-			const Song = await this.GetSong(FileNames[i], this.Path, true);
-			if (!Song) {
-				continue;
-			}
-			if (Song.Album) {
-				let Id = sha256(Song.Album + Song.Artist);
-				let Album = this.AlbumLookup[Id];
-				if (!Album) {
-					this.AlbumLookup[Id] = {
-						Title: Song.Album,
-						Artist: Song.Artist,
-						Songs: [],
-						Cover: Song.ImageData || `/songs/thumbnail?Identifier=${FileNames[i]}`,
-						Id: Id
-					}
-					this.AlbumArray.push(this.AlbumLookup[Id]);
-				}
-				Album = this.AlbumLookup[Id];
-				Album.Songs.push(Song);
-			}
-			this.SongLookup[this.Path + FileNames[i]] = Song;
-			this.SongArray.push(Song);
+			this.CacheSong(FileNames[i]);
 		}
+	}
+
+	async CacheSong(Identifier: string) {
+		const Song = await this.GetSong(Identifier, this.Path, true);
+		if (!Song) {
+			return;
+		}
+		if (Song.Album) {
+			let Id = sha256(Song.Album + Song.Artist);
+			let Album = this.AlbumLookup[Id];
+			if (!Album) {
+				this.AlbumLookup[Id] = {
+					Title: Song.Album,
+					Artist: Song.Artist,
+					Songs: [],
+					Cover: Song.ImageData || `/songs/thumbnail?Identifier=${Identifier}`,
+					Id: Id
+				}
+				this.AlbumArray.push(this.AlbumLookup[Id]);
+			}
+			Album = this.AlbumLookup[Id];
+			Album.Songs.push(Song);
+		}
+		this.SongLookup[this.Path + Identifier] = Song;
+		this.SongArray.push(Song);
+		const _global = global as any;
+		_global.UpdateSearch();
 	}
 
 	async GetSongImage(Identifier: string, Path?: string) {
