@@ -61,11 +61,14 @@ export default class Nav extends Component {
 	}
 	componentDidMount() {
 		this.UpdatePath();
-		OnLinkClick.connect(() => {
-			setTimeout(() => {
-				this.UpdatePath();
-			}, 16);
-		})
+		// OnLinkClick.connect(() => {
+		// 	setTimeout(() => {
+		// 		this.UpdatePath();
+		// 	}, 16);
+		// });
+		setInterval(() => {
+			this.UpdatePath();
+		}, 100);
 	}
 	render() {
 		let Render = [];
