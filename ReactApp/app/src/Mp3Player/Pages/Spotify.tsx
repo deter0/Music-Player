@@ -43,7 +43,6 @@ class SpotifySearch extends Component {
 					Query: Query.trim().substr(0, 200)
 				}
 			}).then(((Response: AxiosResponse<any>) => { // Typescript bug? Cant put type gives weird error
-				console.log(Response.data.Songs);
 				this.setState({
 					Albums: Response.data.Albums.map((Data: Types.SpotifyAlbum): Types.Album => {
 						return {
@@ -86,7 +85,15 @@ class SpotifySearch extends Component {
 			</div>
 			{/* <h1>{this.state.Results}</h1> */}
 			<HorizontalScroller Items={this.state.Albums} />
-			<VerticalSongs Options={[
+			<VerticalSongs OptionsCallback={(Index, Props) => {
+				let Id = Props.Item.Id;
+				window.API.get("/spotify/download", {
+					params: {
+						Id: Id,
+						Path: "/home/deter/Music/Liked"
+					}
+				}) //TODO(deter): Change to POST
+			}} Options={[
 				{
 					Icon: "download",
 					Label: "Download"
@@ -111,6 +118,9 @@ export default class Spotify extends Component {
 				<span className="context-title">Spotify</span>
 				<span className="context-title-icon material-icons">music_note</span>
 				{/* TODO(deter): Add spotify svg's */}
+			</p>
+			<p className="context-title-container">
+				<span style={{ paddingLeft: 24, marginBottom: 24 }}>Slow Downloads? I can't do anything about that because it's on youtube's end.</span>
 			</p>
 			<SpotifyProfile />
 			<SpotifySearch />

@@ -10,11 +10,12 @@ import "./VerticalSongs.scss";
 import ImageLoader from './ImageLoader';
 import DropDown from './DropDown';
 
-interface Props {
+export interface Props {
 	Item: Types.Song,
 	Index: number;
 	Options?: { Icon: string; Label: string }[];
 	style?: { [index: string]: any };
+	OptionsCallback?: (Index: number, Props: Props) => void
 };
 export default class VerticalSong extends Component<Props> {
 	state = {
@@ -90,14 +91,18 @@ export default class VerticalSong extends Component<Props> {
 		});
 	}
 	SelectedDropDownOption(Option: number) {
-		switch (Option) {
-			case (0):
-				this.Like();
-				this.setState({ Liked: !this.state.Liked })
-				break;
-			case (1):
-				window.PlaySong(this.props.Item);
-				break;
+		if (this.props.OptionsCallback)
+			this.props.OptionsCallback(Option, this.props);
+		else {
+			switch (Option) {
+				case (0):
+					this.Like();
+					this.setState({ Liked: !this.state.Liked })
+					break;
+				case (1):
+					window.PlaySong(this.props.Item);
+					break;
+			}
 		}
 	}
 	render() {

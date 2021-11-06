@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import React, { Component } from 'react'
 import * as Types from "../Types";
-import VerticalSong from "./VerticalSong";
+import * as VerticalSong from "./VerticalSong";
 
 const PAGE_SIZE = 12;
 
@@ -12,6 +12,7 @@ interface Props {
 	Options?: { Icon: string; Label: string }[];
 	style?: { [index: string]: any };
 	songStyle?: { [index: string]: any };
+	OptionsCallback?: (Index: number, Props: VerticalSong.Props) => void;
 }
 export default class VerticalSongs extends Component<Props> {
 	state: {
@@ -88,7 +89,8 @@ export default class VerticalSongs extends Component<Props> {
 			<div style={this.props.style} className="songs-container">
 				{
 					this.state.Items.map((Item, Index) => {
-						return <VerticalSong style={this.props.songStyle} Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
+						// eslint-disable-next-line react/jsx-pascal-case
+						return <VerticalSong.default OptionsCallback={this.props.OptionsCallback} style={this.props.songStyle} Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
 					})
 				}
 				{
