@@ -1,4 +1,6 @@
-# Music Player<br/>
+*Sorry for not working on this guys, my mom got arrested and my cat died*
+
+# Music Player (Mp3, M4A, WAV)<br/>
 #### WARNING: WORK IN PROGRESS<br/>
 
 Please note that **a name has not been decided** and "Music Player" is not the final name.<br/>
