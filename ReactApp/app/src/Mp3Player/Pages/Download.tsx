@@ -4,14 +4,25 @@ import { Link, Route } from 'react-router-dom';
 import Spotify from "./Spotify";
 import * as Types from "../Types";
 import "./Download.scss";
+import SecondsToHMS from '../Helpers/SecondsToHMS';
 
 type SongDownload = { Status: string, Percentage: number, Rate: number, Song: Types.SpotifySong, ETA: number };
 
 class SongDownloadC extends Component<{ Data: SongDownload }> {
 	render() {
-		return <div>
-			<h1>{this.props.Data.Song.Name}</h1>
-			<h2>{this.props.Data.Status} {this.props.Data.Percentage}%</h2>
+		return <div className="download-container">
+			<div className="download-info-container">
+				<img src={this.props.Data.Song.Images[0].Url} alt="thumbnail" className="song-info-img" />
+				<div>
+					<h1 className="song-info-main">{this.props.Data.Song.Name}</h1>
+					<h1 className="song-info-alt">{this.props.Data.Song.Artists[0].Name}</h1>
+				</div>
+			</div>
+			<div className="download-status-container">
+				<h1 className="download-status">{this.props.Data.Status} {this.props.Data.Status !== "Completed" ? ` • ETA: ${SecondsToHMS(this.props.Data.ETA)}` : ""}</h1>
+				<h2 className="download-percentage">{this.props.Data.Status !== "Completed" ? `${this.props.Data.ETA} KB/S • ` : ""} {this.props.Data.Percentage}%</h2>
+			</div>
+			<div className="download-progress-outer"><div style={{ width: `${this.props.Data.Percentage}%` }} className="download-progress-inner"></div></div>
 		</div>
 	}
 }
@@ -33,13 +44,13 @@ class Main extends Component {
 		// }, 1000);
 		Connection.onmessage = (Message) => {
 			let Data = JSON.parse(Message.data);
-			console.log("Updating downloads");
 			if (Data.Downloads) {
-				this.setState({
-					Downloads: (Data.Downloads as SongDownload[]).map((Download) => {
-						return <SongDownloadC Data={Download} />
-					})
-				});
+				if (this.Mounted)
+					this.setState({
+						Downloads: (Data.Downloads as SongDownload[]).map((Download) => {
+							return <SongDownloadC Data={Download} />
+						})
+					});
 			}
 		};
 	}
@@ -68,7 +79,9 @@ class Main extends Component {
 				<button>Youtube search</button>
 			</div>
 
-			{this.state.Downloads}
+			<div className="downloads-container">
+				{this.state.Downloads}
+			</div>
 		</div>
 	}
 }
