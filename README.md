@@ -8,6 +8,7 @@ Please note that **a name has not been decided** and "Music Player" is not the f
 1. Spotify Download (and Youtube Download)<br/>
 	- [x] Integrate https://github.com/piyx/YoutubeSpotifyDL
 	- [x] Downloads page
+	- [x] Add a "Download" button to the songs
 	- [ ] Add a "Download" button to the playlist
 	- [ ] Add a "Download" button to the albums
 	- [ ] Youtube link download

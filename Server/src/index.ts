@@ -73,7 +73,7 @@ const ArtistArray: Types.ArtistArray = [];
 app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, Path).Router);
 app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
-app.use("/spotify", new SpotifyRouter().Router);
+app.use("/spotify", new SpotifyRouter(Path).Router);
 app.use("/playback", new PlaybackRouter().Router);
 
 // start the Express server

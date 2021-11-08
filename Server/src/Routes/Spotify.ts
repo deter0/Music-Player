@@ -8,7 +8,9 @@ const wss = new WebSocketServer({ port: 8081 });
 export default class SpotifyRouter {
 	Router = Router();
 	Spotify = new Spotify();
-	constructor() {
+	Path: string;
+	constructor(Path: string) {
+		this.Path = Path;
 		this.Router.post("/set", (Request, Response) => {
 			let ClientId = Request.body.ClientId as string;
 			let ClientSecret = Request.body.ClientSecret as string;
@@ -78,7 +80,7 @@ export default class SpotifyRouter {
 			let Id = Request.query.Id as string;
 			let Path = Request.query.Path as string;
 			if (Id && Path) {
-				this.Spotify.Download(Id, Path);
+				this.Spotify.Download(Id, this.Path || Path);
 				Response.sendStatus(200);
 			} else {
 				Response.status(400).send("No id or path");
