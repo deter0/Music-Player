@@ -1,6 +1,10 @@
 import { Router } from "express";
 import Spotify from "../Handlers/Spotify/Spotify";
 
+import { WebSocketServer } from "ws";
+
+const wss = new WebSocketServer({ port: 8081 });
+
 export default class SpotifyRouter {
 	Router = Router();
 	Spotify = new Spotify();
@@ -79,6 +83,29 @@ export default class SpotifyRouter {
 			} else {
 				Response.status(400).send("No id or path");
 			}
+		});
+		this.Router.get("/Downloads", (Request, Response) => {
+			Response.json(this.Spotify.Downloads);
+		});
+		let ConnectionCount = 0;
+		wss.on('connection', (ws) => {
+			ConnectionCount++;
+			let Connected = ConnectionCount;
+			ws.on('message', (message) => {
+				console.log('received: %s', message);
+			});
+
+			let Callback = () => {
+				if (Connected === ConnectionCount) {
+					ws.send(JSON.stringify({
+						Downloads: this.Spotify.Downloads
+					}));
+					setTimeout(Callback, 250);
+				} else {
+					ws.close();
+				}
+			}
+			Callback();
 		});
 	}
 }

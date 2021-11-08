@@ -239,21 +239,110 @@ export default class Spotify {
 		})
 	}
 
-	Download(Id: string, Path: string) {
-		console.log("Downloading", Id, Path);
-		const PythonProcess = spawn("python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
-		PythonProcess.on("error", (Error: any) => {
+	GetSong(Id: string) {
+		return new Promise<Types.SpotifySong>(async (Resolve, Reject) => {
+			if (this.IsAuthorized()) {
+				try {
+					let Response: AxiosResponse<any> = await axios.get(`https://api.spotify.com/v1/tracks/${Id}`, {
+						headers: {
+							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
+						}
+					});
+					let Song: Types.SpotifySong = {
+						Artists: Response.data.artists.map((Artist: any) => {
+							return {
+								Id: Artist.id,
+								Name: Artist.name
+							};
+						}),
+						Id: Response.data.id,
+						Images: Response.data.album ? Response.data.album.images.map((image: any) => {
+							return {
+								Width: image.width,
+								Height: image.height,
+								Url: image.url
+							};
+						}) : [],
+						Name: Response.data.name,
+						ReleaseDate: Response.data.release_date,
+						Album: Response.data.album.name,
+						Duration: Response.data.duration_ms / 1000
+					};
+					Resolve(Song);
+				} catch (Error) {
+					console.error(Error);
+					Reject(Error);
+				}
+			}
+		});
+	}
+	Downloads: { Status: string, Percentage: number, Rate: number, Song: Types.SpotifySong, ETA: number }[] = [];
+	async Download(Id: string, Path: string) {
+		this.GetSong(Id).then(Song => {
+			const Download = {
+				Status: "Queued",
+				Percentage: 0,
+				Rate: 0,
+				Song: Song,
+				ETA: 0
+			};
+			this.Downloads.push(Download);
+			try {
+				const PythonProcess = spawn("python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
+				PythonProcess.on("error", (Error: any) => {
+					console.error(Error);
+				});
+				const _global = global as any;
+				PythonProcess.stdout.on("data", (Data: any) => {
+					let Line = Data.toString() as string;
+					if (Line.indexOf("ETA") !== -1) {
+						let Data = {
+							Percentage: 0,
+							Speed: 0,
+							Eta: 0
+						}
+						let Split = Line.split("[");
+						for (let i = 0; i < Split.length; i++) {
+							let Input = Split[i];
+							let NumStr = Input.match(/[\d.,]+/);
+							if (NumStr && NumStr[0]) {
+								let Num = parseFloat(NumStr[0]);
+								if (Input.indexOf("%") !== -1) {
+									Data.Percentage = Num;
+								} else if (Input.indexOf("KB/s") !== -1) {
+									Data.Speed = Num;
+								} else if (Input.indexOf("secs") !== -1) {
+									Data.Eta = Num;
+								}
+							}
+						}
+						if (Data.Percentage) {
+							Download.Percentage = Data.Percentage;
+							Download.Rate = Data.Speed;
+							Download.ETA = Data.Eta;
+						}
+					} else if (Line.indexOf("Downloading") !== -1) {
+						this.Downloads[this.Downloads.indexOf(Download)].Status = "Downloading";
+					}
+				});
+				PythonProcess.on("exit", (Code: number) => {
+					if (Code === 0) {
+						let SongName = `${Song.Artists[0].Name} ${Song.Name}`.replace(/[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*/, "");
+						_global.CacheSong(`${SongName}.m4a`, Path);
+						console.log("Downloaded", Song.Name + ".m4a", Path);
+						this.Downloads[this.Downloads.indexOf(Download)].Status = "Completed";
+						this.Downloads[this.Downloads.indexOf(Download)].Percentage = 100;
+					} else {
+						console.error("Error code dowloading", Code);
+						this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: Code ${Code}`;
+					}
+				});
+			} catch (error) {
+				console.error("ERror dowloading", error);
+				this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: ${error}`;
+			}
+		}).catch(Error => {
 			console.error(Error);
-		});
-		PythonProcess.on("stdout", (Data: any) => {
-			let Line = Data.toString() as string;
-			console.log("Log", Line);
-		});
-		PythonProcess.on("exit", (Code: number) => {
-			console.log("Downloaded", Id, Path);
-			const _global = global as any;
-			_global.CacheSong(Id, Path);
-			console.log("Cached");
 		});
 	}
 }

@@ -2,14 +2,58 @@ import { AxiosResponse } from 'axios';
 import React, { Component } from 'react'
 import { Link, Route } from 'react-router-dom';
 import Spotify from "./Spotify";
-
+import * as Types from "../Types";
 import "./Download.scss";
+
+type SongDownload = { Status: string, Percentage: number, Rate: number, Song: Types.SpotifySong, ETA: number };
+
+class SongDownloadC extends Component<{ Data: SongDownload }> {
+	render() {
+		return <div>
+			<h1>{this.props.Data.Song.Name}</h1>
+			<h2>{this.props.Data.Status} {this.props.Data.Percentage}%</h2>
+		</div>
+	}
+}
+
+var Connection = new WebSocket('ws://localhost:8081', ['soap', 'xmpp']);
 class Main extends Component {
-	state = { Authorized: false };
+	state = { Authorized: false, Downloads: [] };
 	componentDidMount() {
 		window.API.get("/spotify/authorized").then(Response => {
 			this.setState({ Authorized: Response.data });
 			console.log(Response.data, typeof (Response.data));
+		});
+
+		this.Mounted = true;
+		// setInterval(() => {
+		// 	if (this.Mounted) {
+		// 		this.UpdateDownloads();
+		// 	}
+		// }, 1000);
+		Connection.onmessage = (Message) => {
+			let Data = JSON.parse(Message.data);
+			console.log("Updating downloads");
+			if (Data.Downloads) {
+				this.setState({
+					Downloads: (Data.Downloads as SongDownload[]).map((Download) => {
+						return <SongDownloadC Data={Download} />
+					})
+				});
+			}
+		};
+	}
+	componentWillUnmount() {
+		this.Mounted = false;
+	}
+	Mounted = false;
+	UpdateDownloads() {
+		window.API.get("/spotify/downloads").then(Response => {
+			this.setState({
+				Downloads: (Response.data as SongDownload[]).map(Download => {
+					return <SongDownloadC Data={Download} />
+				})
+			});
 		});
 	}
 	render() {
@@ -23,6 +67,8 @@ class Main extends Component {
 				<Link to={this.state.Authorized ? "/download/spotify" : "/download/spotify-config"} className="button-highlight button">{this.state.Authorized ? "Go to spotify" : "Configure spotify settings"}</Link>
 				<button>Youtube search</button>
 			</div>
+
+			{this.state.Downloads}
 		</div>
 	}
 }
