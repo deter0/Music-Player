@@ -6,10 +6,12 @@ import path from "path";
 
 import * as Types from "../../Types";
 import GetUTC from "../../GetUTC";
+import * as index from "../../index";
 
 const SCOPES = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read user-follow-read user-library-read';
-const REDIRECT_URL = 'http://localhost:8080/spotify/callback';
+const REDIRECT_URL = `http://localhost:${index.PORT || 9091}/spotify/callback`;
 
+console.log("REDIRECT URL: " + REDIRECT_URL)
 export default class Spotify {
 	// TODO(deter): Save
 	ClientId?: string;

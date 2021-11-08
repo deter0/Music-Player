@@ -24,7 +24,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const PORT = 8080; // default port to listen
+export const PORT = 9091; // default port to listen
 
 import GetUTC from './GetUTC';
 import PlaybackRouter from './Routes/Playback';

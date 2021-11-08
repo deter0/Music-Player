@@ -6,6 +6,8 @@ import * as Types from "../Types";
 import "./Download.scss";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
 
+import * as App from "../App";
+
 type SongDownload = { Status: string, Percentage: number, Rate: number, Song: Types.SpotifySong, ETA: number };
 
 class SongDownloadC extends Component<{ Data: SongDownload }> {
@@ -109,7 +111,7 @@ class ConfigureSpotify extends Component {
 					ClientSecret: ClientSecret.value.trim()
 				}).then(() => {
 					const SCOPES = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read user-follow-read user-library-read';
-					const REDIRECT_URL = 'http://localhost:8080/spotify/callback';
+					const REDIRECT_URL = `http://localhost:${App.Port || 9091}/spotify/callback`;
 
 					let Params = new URLSearchParams({
 						response_type: 'code', // ?

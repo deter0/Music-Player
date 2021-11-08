@@ -14,8 +14,9 @@ import Search from './Pages/Search';
 import Player from './Pages/Player';
 import Library from './Pages/Library/Library';
 
+export const Port = 9091;
 const API = axios.create({
-	baseURL: "http://192.168.2.12:8080/",
+	baseURL: `http://localhost:${Port}/`,
 	timeout: 10000
 });
 
