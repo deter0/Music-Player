@@ -187,7 +187,7 @@ export default class Player extends Component {
 		return (
 			<div className="player">
 				{/* @ts-ignore */}
-				<audio src={this.state.AudioSrc} type="audio/x-m4a" ref={this.Audio} autoPlay={true}>
+				<audio crossOrigin="anonymous" src={this.state.AudioSrc} type="audio/x-m4a" ref={this.Audio} autoPlay={true}>
 					<source src={this.state.AudioSrc} type="audio/x-m4a" />
 				</audio>
 				<div onMouseDown={(Event) => this.OnMouseDown(Event)} onClick={(Event) => this.Seek(Event)} className="progress-outer">

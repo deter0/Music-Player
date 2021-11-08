@@ -73,6 +73,10 @@
 	margin-top: 14px;
 }
 
+.download-container-errored {
+	filter: brightness(0.4) saturate(0.5);
+}
+
 .download-progress-outer {
 	height: 4px;
 	width: 100%;

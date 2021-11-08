@@ -10,9 +10,9 @@ type SongDownload = { Status: string, Percentage: number, Rate: number, Song: Ty
 
 class SongDownloadC extends Component<{ Data: SongDownload }> {
 	render() {
-		return <div className="download-container">
+		return <div className={`${this.props.Data.Status.indexOf("Error") !== -1 ? "download-container-errored" : ""} download-container`}>
 			<div className="download-info-container">
-				<img src={this.props.Data.Song.Images[0].Url} alt="thumbnail" className="song-info-img" />
+				<img src={this.props.Data.Song.Images[1] ? this.props.Data.Song.Images[1].Url : this.props.Data.Song.Images[0].Url} alt="thumbnail" className="song-info-img" />
 				<div>
 					<h1 className="song-info-main">{this.props.Data.Song.Name}</h1>
 					<h1 className="song-info-alt">{this.props.Data.Song.Artists[0].Name}</h1>
