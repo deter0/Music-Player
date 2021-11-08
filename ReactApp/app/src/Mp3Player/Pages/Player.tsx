@@ -26,7 +26,7 @@ export default class Player extends Component {
 	Audio = React.createRef<HTMLAudioElement>();
 	componentDidMount() {
 		window.PlaySong = (Song) => {
-			this.setState({ Song: Song, AudioSrc: `http://192.168.2.12:8080/songs/raw?Identifier=${Song.Identifier}` });
+			this.setState({ Song: Song, AudioSrc: `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}` });
 			if (this.Audio.current) {
 				try {
 					this.Audio.current.play();
@@ -61,7 +61,7 @@ export default class Player extends Component {
 			const Callback = () => {
 				if (this.Audio.current) {
 					this.Audio.current.currentTime = Response.data.CurrentTime
-					this.setState({ Song: Song, AudioSrc: `http://192.168.2.12:8080/songs/raw?Identifier=${Song.Identifier}` });
+					this.setState({ Song: Song, AudioSrc: `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}` });
 					this.Audio.current.play();
 					this.Pause(true);
 					this.LoadImage();
