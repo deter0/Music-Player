@@ -24,7 +24,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-const port = 8080; // default port to listen
+const PORT = 8080; // default port to listen
 
 import GetUTC from './GetUTC';
 import PlaybackRouter from './Routes/Playback';
@@ -77,11 +77,11 @@ app.use("/spotify", new SpotifyRouter(Path).Router);
 app.use("/playback", new PlaybackRouter().Router);
 
 // start the Express server
-const LocalIps = GetLocalNetworks();
-const Ip = LocalIps.wlp2s0[0];
+// const LocalIps = GetLocalNetworks();
+// const Ip = LocalIps.wlp2s0[0];
 // NOTE(deter): Changing to local server because I'm going to be working on this at my school.
-app.listen(port, () => {
-	console.log(`server started at "http://${Ip}:${port}/ping"`);
+app.listen(PORT, () => {
+	console.log(`server started at "http://localhost:${PORT}/ping"`);
 });
 
 const G = new Graph("Memory", process.stdout.columns - 30);
