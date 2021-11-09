@@ -34,6 +34,25 @@ export default class Player extends Component {
 					console.warn(error); // IOS Error for some reason, but it still works
 				}
 			}
+			if ('mediaSession' in navigator) {
+				navigator.mediaSession.metadata = new MediaMetadata({
+					title: Song.Title,
+					artist: Song.Artist,
+					album: Song.Album,
+					artwork: [
+						{ src: `http://localhost:9091/songs/image?Identifier=${Song.Identifier}`, sizes: '512x512', type: 'image/jpeg' },
+					]
+				});
+
+				navigator.mediaSession.setActionHandler('play', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('pause', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('stop', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('seekbackward', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('seekforward', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('seekto', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('previoustrack', function () { /* Code excerpted. */ });
+				navigator.mediaSession.setActionHandler('nexttrack', function () { /* Code excerpted. */ });
+			}
 			window.API.post("/playback", {
 				Data: { Song: Song },
 				Method: "Play"

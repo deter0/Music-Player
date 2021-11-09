@@ -165,65 +165,22 @@ export class Album extends Component<AlbumProps> {
 	state = {
 		Image: ""
 	};
-	Image: React.RefObject<HTMLImageElement>;
 	componentDidUpdate(Props: AlbumProps) {
 		if (Props.Item.Id !== this.props.Item.Id) {
-			this.LoadImage(true);
+			this.LoadImage();
 		}
 	}
-	constructor(props: AlbumProps) {
-		super(props);
-		this.Image = React.createRef<HTMLImageElement>();
-		this.WatchForLoad();
+	componentDidMount() {
+		this.LoadImage();
 	}
 	Errored = false;
-	WatchForLoad() {
-		if (this.Image.current && IsVisible(this.Image.current)) {
-			this.LoadImage().catch(() => {
-				this.Errored = true;
-			});
-		} else if (!this.Errored) {
-			setTimeout(() => {
-				this.WatchForLoad();
-			}, 200);
-		}
-	}
-	ImageId: number | undefined;
-	async LoadImage(NewImage?: boolean) {
-		if (this.props.Item && this.props.Item.Cover && !this.props.Item.Cover.startsWith("/")) {
-			this.setState({ Image: this.props.Item.Cover });
-			return;
-		}
-		if (NewImage && this.ImageId) {
-			LoadImage.ClearImage(this.ImageId);
-			this.setState({ Image: "" });
-		}
-		if (this.props.Item.Cover) {
-			if (!this.ImageId) {
-				this.ImageId = await LoadImage.default(this.props.Item.Cover);
-			}
-			let ImageData = LoadImage.GetImageFromId(this.ImageId);
-			if (ImageData) {
-				this.setState({ Image: ImageData.Image });
-				ImageData.OnUnload = () => {
-					this.state.Image = "";
-				}
-			} else {
-				this.ImageId = undefined;
-				this.LoadImage();
-			}
-		}
-	}
-	componentWillUnmount() {
-		if (this.ImageId) {
-			LoadImage.ClearImage(this.ImageId);
-			this.state.Image = "";
-		}
+	async LoadImage() {
+		this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Songs[0].Identifier}` });
 	}
 	render() {
 		return <li onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
 			<ImageLoader className="album-cover" Loading={this.state.Image === ""} ImageElement={
-				<img ref={this.Image} draggable={false} className="album-cover" src={this.state.Image} alt="" />
+				<img loading="lazy" draggable={false} className="album-cover" src={this.state.Image} alt="" />
 			} />
 			<h1 className="album-title">{this.props.Item.Title}</h1>
 			<h2 className="album-artist">{this.props.Item.Artist}</h2>

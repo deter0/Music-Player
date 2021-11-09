@@ -3,6 +3,7 @@ import Songs from "../Handlers/Song/Songs";
 import Ratings from "../Handlers/Song/Rating/Rating";
 import * as Types from "../Types";
 import path from "path";
+import fs from "fs";
 
 export default class SongsRouter {
 	Songs: Songs;
@@ -102,6 +103,33 @@ export default class SongsRouter {
 					console.log("x");
 					console.error(error);
 					Response.sendStatus(500);
+				});
+			} else {
+				Response.sendStatus(400);
+			}
+		});
+
+		this.Router.get("/image", async (Request, Response) => {
+			let Identfier = Request.query.Identifier as string;
+			if (Identfier) {
+				this.Songs.GetSongImagePng(Identfier).then(Image => {
+					Response.type("jpeg").sendFile(Image, (error) => {
+						if (error) {
+							console.error(error);
+							if (error.toString().includes("ENOENT")) {
+								Response.sendStatus(404);
+							} else {
+								Response.sendStatus(500);
+							}
+						}
+					});
+				}).catch(error => {
+					console.error(error);
+					if (error.toString().includes("ENOENT")) {
+						Response.sendStatus(404);
+					} else {
+						Response.sendStatus(500);
+					}
 				});
 			} else {
 				Response.sendStatus(400);

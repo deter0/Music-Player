@@ -5,6 +5,7 @@ ReactApp/app/node_modules/
 Server/node_modules/
 Server/dist/
 Server/Data/
+Server/Temp/
 Server/Data/Ratings.json
 SpotifyDownloader/__pycache__/
 *.env

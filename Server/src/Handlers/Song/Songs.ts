@@ -225,4 +225,37 @@ export default class Songs {
 		const CoverData = Cover.data.toString('base64');//`data:${Cover.format};base64,${Cover.data.toString('base64')}`;
 		return CoverData;
 	}
+
+	PictureId = 0;
+	MaxPictureId = 10;
+	async GetSongImagePng(Identifier: string, Path?: string) {
+		return new Promise<string>(async (resolve, reject) => {
+			const FilePath = `${Path || this.Path}/${Identifier}`;
+			const OutPath = path.join(__dirname, "../../../Temp");
+			if (!fs.existsSync(OutPath)) {
+				fs.mkdirSync(OutPath);
+			}
+			const OutFile = path.join(OutPath, `song_image_${this.PictureId}.jpeg`);
+			this.PictureId++;
+			if (this.PictureId > this.MaxPictureId) {
+				this.PictureId = 0;
+			}
+			MusicMetadata.parseFile(FilePath).then(Metadata => {
+				const Cover = MusicMetadata.selectCover(Metadata.common.picture);
+				const CoverData = Cover.data.toString('base64');//`data:${Cover.format};base64,${Cover.data.toString('base64')}`;
+				const binaryData = Buffer.from(CoverData, 'base64').toString('binary');
+
+				fs.writeFile(OutFile, binaryData, "binary", function (err) {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(OutFile);
+					}
+				});
+			}).catch(error => {
+				console.error(error);
+				reject(error);
+			});
+		});
+	}
 }

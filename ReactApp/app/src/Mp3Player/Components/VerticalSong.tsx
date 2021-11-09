@@ -21,57 +21,22 @@ export default class VerticalSong extends Component<Props> {
 	state = {
 		Image: "",
 		Liked: false,
-		ImageRef: React.createRef<HTMLImageElement>()
 	}
 	constructor(props: Props) {
 		super(props);
 		this.state.Liked = props.Item.Liked || false;
 	}
 	ImageId: number | undefined;
-	async LoadImage(NewImage?: boolean) {
-		let RequestedImage = this.props.Item.ImageData;
-		if (this.props.Item && this.props.Item.ImageData && !this.props.Item.ImageData.startsWith("/")) {
-			this.setState({ Image: this.props.Item.ImageData });
-			return;
-		}
-		if (NewImage && this.ImageId) {
-			LoadImage.ClearImage(this.ImageId);
-			this.setState({ Image: "" });
-		}
-		if (this.props.Item.ImageData) {
-			if (!this.ImageId) {
-				this.ImageId = await LoadImage.default(this.props.Item.ImageData);
-			}
-			let ImageData = LoadImage.GetImageFromId(this.ImageId);
-			if (ImageData) {
-				if (this.props.Item.ImageData !== RequestedImage) {
-					LoadImage.ClearImage(this.ImageId);
-					console.log("Dropped late image");
-					return;
-				}
-				this.setState({ Image: ImageData.Image });
-				ImageData.OnUnload = () => {
-					// this.setState({ Image: "" });
-					this.state.Image = "";
-				}
-			} else {
-				this.ImageId = undefined;
-				this.LoadImage();
-			}
-		}
+	async LoadImage() {
+		this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Identifier}` });
 	}
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.Identifier !== this.props.Item.Identifier) {
-			this.LoadImage(true);
+			this.LoadImage();
 		}
 	}
 	componentDidMount() {
-		this.WatchForLoad();
-	}
-	WatchForLoad() {
-		if (this.state.ImageRef.current) { // TODO(deter): Make a more optimized loading with maybe `octree`s?
-			this.LoadImage();
-		}
+		this.LoadImage();
 	}
 	componentWillUnmount() {
 		this.setState({ Image: "" });
@@ -122,7 +87,7 @@ export default class VerticalSong extends Component<Props> {
 		return (
 			<div className="song-container" style={this.props.style}>
 				<ImageLoader className="song-image" Loading={this.state.Image === ""} ImageElement={
-					<img ref={this.state.ImageRef} draggable={false} className="song-image" src={this.state.Image} alt="" />
+					<img loading="lazy" draggable={false} className="song-image" src={this.state.Image} alt="" />
 				} />
 				<h1 className="song-index">{this.props.Index + 1 < 10 ? `0${this.props.Index + 1}` : this.props.Index + 1}</h1>
 				<button onClick={() => {
