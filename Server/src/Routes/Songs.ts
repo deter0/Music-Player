@@ -4,6 +4,7 @@ import Ratings from "../Handlers/Song/Rating/Rating";
 import * as Types from "../Types";
 import path from "path";
 import fs from "fs";
+import GetUTC from "../GetUTC";
 
 export default class SongsRouter {
 	Songs: Songs;
@@ -113,7 +114,7 @@ export default class SongsRouter {
 			let Identfier = Request.query.Identifier as string;
 			if (Identfier) {
 				this.Songs.GetSongImagePng(Identfier).then(Image => {
-					Response.type("jpeg").sendFile(Image, (error) => {
+					Response.sendFile(Image, (error) => {
 						if (error) {
 							console.error(error);
 							if (error.toString().includes("ENOENT")) {

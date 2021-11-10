@@ -9,8 +9,29 @@ import cors from 'cors';
 
 import Graph from "./Graph";
 
-import localIpUrl from "local-ip-url";
 import * as Types from "./Types";
+
+// import { spawn } from "child_process";
+// (async () => {
+// 	try {
+// 		let python = spawn("python", ["-V"]);
+// 		python.on("close", (code) => {
+// 			console.log(`python child process exited with code ${code}`);
+// 		});
+// 	} catch (e) { }
+// 	try {
+// 		let python = spawn("python3", ["-V"]);
+// 		python.on("close", (code) => {
+// 			console.log(`python3 child process exited with code ${code}`);
+// 		});
+// 	} catch (e) { }
+// 	try {
+// 		let Python = spawn("Python", ["-V"]);
+// 		Python.on("close", (code) => {
+// 			console.log(`Python child process exited with code ${code}`);
+// 		});
+// 	} catch (e) { }
+// })();
 
 // Routers
 

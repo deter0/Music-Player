@@ -198,7 +198,8 @@ export default class Spotify {
 									Name: Item.name,
 									ReleaseDate: Item.release_date,
 									Album: Item.album.name,
-									Duration: Item.duration_ms / 1000
+									Duration: Item.duration_ms / 1000,
+									ExternalMedia: true
 								};
 							})
 					};

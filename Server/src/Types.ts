@@ -17,7 +17,8 @@ export class Song {
 	ImageData?: string;
 	CoverIndex: string;
 	AlbumId: string;
-	constructor(Artist: string, Title: string, Identifier: string, CoverIndex: string, Duration?: number, Album?: string, ImageFormat?: string, ImageData?: string) {
+	ExternalMedia: boolean;
+	constructor(Artist: string, Title: string, Identifier: string, CoverIndex: string, Duration?: number, Album?: string, ImageFormat?: string, ImageData?: string, ExternalMedia?: boolean) {
 		this.Artist = Artist;
 		this.Title = Title;
 		this.Identifier = Identifier;
@@ -28,6 +29,7 @@ export class Song {
 		this.ImageData = ImageData;
 		this.Id = Ratings_.GetUniqueId(this);
 		this.AlbumId = sha256(this.Album + this.Artist);
+		this.ExternalMedia = ExternalMedia || false;
 	}
 
 	async Update() {
@@ -96,6 +98,7 @@ export type SpotifySong = {
 	ReleaseDate: string;
 	Album: string;
 	Duration: number;
+	ExternalMedia: boolean;
 };
 
 export type SpotifySearchResults = {

@@ -28,7 +28,10 @@ export default class VerticalSong extends Component<Props> {
 	}
 	ImageId: number | undefined;
 	async LoadImage() {
-		this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Identifier}` });
+		if (!this.props.Item.ExternalMedia)
+			this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Identifier}` });
+		else
+			this.setState({ Image: this.props.Item.ImageData });
 	}
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.Identifier !== this.props.Item.Identifier) {
@@ -37,11 +40,6 @@ export default class VerticalSong extends Component<Props> {
 	}
 	componentDidMount() {
 		this.LoadImage();
-	}
-	componentWillUnmount() {
-		this.setState({ Image: "" });
-		if (this.ImageId)
-			LoadImage.ClearImage(this.ImageId);
 	}
 	Like_() {
 		let PreviousState = this.state.Liked;

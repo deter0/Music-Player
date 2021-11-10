@@ -14,6 +14,7 @@ export interface Song {
 	ImageData?: string;
 	CoverIndex: string;
 	AlbumId: string;
+	ExternalMedia?: boolean;
 }
 
 export interface Album {

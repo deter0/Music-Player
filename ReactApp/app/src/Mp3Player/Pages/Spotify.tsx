@@ -57,14 +57,15 @@ class SpotifySearch extends Component {
 						return {
 							Artist: Data.Artists[0]?.Name,
 							Title: Data.Name,
-							ImageData: Data.Images[0]?.Url,
+							ImageData: Data.Images[1]?.Url,
 							Id: Data.Id,
 							Duration: Data.Duration || 60,
 							ImageFormat: "",
 							Identifier: "",
 							Album: Data.Album,
 							CoverIndex: "",
-							AlbumId: "0"
+							AlbumId: "0",
+							ExternalMedia: true
 						};
 					})
 				});

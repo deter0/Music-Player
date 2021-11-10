@@ -175,7 +175,10 @@ export class Album extends Component<AlbumProps> {
 	}
 	Errored = false;
 	async LoadImage() {
-		this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Songs[0].Identifier}` });
+		if (this.props.Item.Songs[0])
+			this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Songs[0].Identifier}` });
+		else
+			this.setState({ Image: this.props.Item.Cover })
 	}
 	render() {
 		return <li onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
