@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import "./Player.scss";
 import * as Types from "../Types";
-import * as LoadImage from "../Helpers/LoadImage";
+import * as App from "../App";
 import * as AudioPlayer_ from "../AudioPlayer";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
 
@@ -117,7 +117,7 @@ export default class Player extends Component {
 	async LoadImage(NewImage?: boolean) {
 		if (this.state.Song)
 			this.setState({
-				Image: `http://localhost:9091/songs/image?Identifier=${this.state.Song.Identifier}`
+				Image: `http://localhost:${App.Port[0]}/songs/image?Identifier=${this.state.Song.Identifier}`
 			});
 	}
 

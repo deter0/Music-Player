@@ -1,3 +1,4 @@
+import * as App from "./App";
 import Signal from "./Signal";
 import { Song } from "./Types";
 
@@ -40,7 +41,7 @@ export default class AudioPlayer {
 	}
 	PlayingSong?: Song;
 	PlaySong(Song: Song) {
-		const Src = `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}`;
+		const Src = `http://localhost:${App.Port[0]}/songs/raw?Identifier=${Song.Identifier}`;
 		this.Audio.pause();
 		this.SetSrc(Src);
 		this.PlayingSong = Song;
@@ -53,7 +54,7 @@ export default class AudioPlayer {
 				artist: Song.Artist,
 				album: Song.Album,
 				artwork: [
-					{ src: `http://localhost:9091/songs/image?Identifier=${Song.Identifier}`, sizes: '512x512', type: 'image/jpeg' },
+					{ src: `http://localhost:${App.Port[0]}/songs/image?Identifier=${Song.Identifier}`, sizes: '512x512', type: 'image/jpeg' },
 				]
 			});
 			console.log("Set metadata");

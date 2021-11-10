@@ -97,6 +97,10 @@ app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
 app.use("/spotify", new SpotifyRouter(Path).Router);
 app.use("/playback", new PlaybackRouter().Router);
 
+app.get("/online", (Request, Response) => {
+	Response.sendStatus(200);
+})
+
 // start the Express server
 // const LocalIps = GetLocalNetworks();
 // const Ip = LocalIps.wlp2s0[0];

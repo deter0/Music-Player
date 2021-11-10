@@ -1,0 +1,23 @@
+@import "../Styles/Variables.scss";
+
+.error-container {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px;
+	background-color: $highlight;
+}
+
+.error-container h1 {
+	font-size: 15px;
+	color: white;
+	font-weight: 500;
+}
+
+.error-container h1 code {
+	font-size: 13px;
+	background-color: $grey;
+	padding: 4px;
+	border-radius: 2px;
+}

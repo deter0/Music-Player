@@ -14,9 +14,11 @@ import Search from './Pages/Search';
 import Player from './Pages/Player';
 import Library from './Pages/Library/Library';
 
-export const Port = 9091;
+import Error from './Components/Error';
+
+export const Port = [9091];
 const API = axios.create({
-	baseURL: `http://localhost:${Port}/`,
+	baseURL: `http://localhost:${Port[0]}/`,
 	timeout: 10000
 });
 
@@ -42,6 +44,7 @@ export default class App extends Component {
 		return (
 			<BrowserRouter history={window.History}>
 				{/* <Search /> */}
+				<Error />
 				<div className="player-layout">
 					<div className="playing-layout">
 						<div className="layout">

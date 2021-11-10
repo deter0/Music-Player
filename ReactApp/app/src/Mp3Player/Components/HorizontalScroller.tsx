@@ -1,12 +1,12 @@
 import { AxiosResponse } from 'axios';
 import React, { Component } from 'react'
 import * as Types from "../Types";
+import * as App from "../App";
 import IsVisible from '../Helpers/IsVisible';
 
 import "./HorizontalScroller.scss";
 import Signal from '../Signal';
 import Vector2 from '../Helpers/Vector2';
-import * as LoadImage from "../Helpers/LoadImage";
 import GetUTC from '../Helpers/GetUTC';
 import Lerp from '../Helpers/Lerp';
 import ImageLoader from './ImageLoader';
@@ -176,7 +176,7 @@ export class Album extends Component<AlbumProps> {
 	Errored = false;
 	async LoadImage() {
 		if (this.props.Item.Songs[0])
-			this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Songs[0].Identifier}` });
+			this.setState({ Image: `http://localhost:${App.Port[0]}/songs/image?Identifier=${this.props.Item.Songs[0].Identifier}` });
 		else
 			this.setState({ Image: this.props.Item.Cover })
 	}

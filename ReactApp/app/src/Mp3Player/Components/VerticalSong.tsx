@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import "./VerticalSong.scss";
 import * as Types from "../Types";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
-import * as LoadImage from "../Helpers/LoadImage";
+import * as App from "../App";
 
 // import DropDown from "./DropDown";
 
@@ -29,7 +29,7 @@ export default class VerticalSong extends Component<Props> {
 	ImageId: number | undefined;
 	async LoadImage() {
 		if (!this.props.Item.ExternalMedia)
-			this.setState({ Image: `http://localhost:9091/songs/image?Identifier=${this.props.Item.Identifier}` });
+			this.setState({ Image: `http://localhost:${App.Port[0]}/songs/image?Identifier=${this.props.Item.Identifier}` });
 		else
 			this.setState({ Image: this.props.Item.ImageData });
 	}
