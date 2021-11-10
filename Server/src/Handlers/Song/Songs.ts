@@ -242,16 +242,20 @@ export default class Songs {
 			}
 			MusicMetadata.parseFile(FilePath).then(Metadata => {
 				const Cover = MusicMetadata.selectCover(Metadata.common.picture);
-				const CoverData = Cover.data.toString('base64');//`data:${Cover.format};base64,${Cover.data.toString('base64')}`;
-				const binaryData = Buffer.from(CoverData, 'base64').toString('binary');
+				if (Cover !== null) {
+					const CoverData = Cover.data.toString('base64');//`data:${Cover.format};base64,${Cover.data.toString('base64')}`;
+					const binaryData = Buffer.from(CoverData, 'base64').toString('binary');
 
-				fs.writeFile(OutFile, binaryData, "binary", function (err) {
-					if (err) {
-						reject(err);
-					} else {
-						resolve(OutFile);
-					}
-				});
+					fs.writeFile(OutFile, binaryData, "binary", function (err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve(OutFile);
+						}
+					});
+				} else {
+					resolve("");
+				}
 			}).catch(error => {
 				console.error(error);
 				reject(error);
