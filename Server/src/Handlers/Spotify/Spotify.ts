@@ -69,7 +69,6 @@ export default class Spotify {
 
 	RefreshToken() {
 		if (!this.Auth || !this.Auth.refresh_token) {
-			this.Auth = null;
 			return;
 		}
 		let Params = {
@@ -115,9 +114,11 @@ export default class Spotify {
 
 		this.ClientId = ClientInfo.ClientId;
 		this.ClientSecret = ClientInfo.ClientSecret;
-		if (ClientInfo.Auth) {
+		if (ClientInfo.Auth as typeof this.Auth) {
 			this.Auth = ClientInfo.Auth as typeof this.Auth;
-			this.ValidateTokenExpiration();
+			console.log("BF", this.Auth);
+			this.RefreshToken();
+			console.log("AF", this.Auth);
 		}
 	}
 
@@ -133,7 +134,7 @@ export default class Spotify {
 	}
 	//?(deter):API
 	IsAuthorized() {
-		return this.Auth;
+		return this.Auth !== undefined && this.Auth !== null;
 	}
 
 	async Search(Query: string) {
@@ -269,7 +270,8 @@ export default class Spotify {
 						Name: Response.data.name,
 						ReleaseDate: Response.data.release_date,
 						Album: Response.data.album.name,
-						Duration: Response.data.duration_ms / 1000
+						Duration: Response.data.duration_ms / 1000,
+						ExternalMedia: true
 					};
 					Resolve(Song);
 				} catch (Error) {
