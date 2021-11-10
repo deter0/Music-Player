@@ -33,6 +33,7 @@ $spacing: 60px;
 	position: absolute;
 	top: 0;
 	left: 0;
+	cursor: pointer;
 }
 
 .progress-inner {
@@ -69,11 +70,11 @@ $spacing: 60px;
 	}
 	.player-song-title {
 		font-size: 0.8rem !important;
-		margin-left: 6px;
+		margin-left: 8px;
 	}
 	.player-song-artist {
 		font-size: 0.7rem !important;
-		margin-left: 6px;
+		margin-left: 8px;
 	}
 }
 
@@ -162,6 +163,7 @@ $spacing: 60px;
 	overflow: hidden;
 	white-space: nowrap;
 	max-width: 100%;
+	margin-left: 12px;
 	text-overflow: ellipsis;
 }
 
@@ -173,6 +175,7 @@ $spacing: 60px;
 	overflow: hidden;
 	white-space: nowrap;
 	max-width: 100%;
+	margin-left: 12px;
 	text-overflow: ellipsis;
 }
 
@@ -180,4 +183,30 @@ $spacing: 60px;
 	width: calc($player-height - $button-padding * 2);
 	height: calc($player-height - $button-padding * 2);
 	border-radius: $border-radius-sharp;
+}
+
+.progress-outer-hover {
+	filter: brightness(1.1);
+}
+
+.progress-tracker-inactive {
+	opacity: 0;
+	transform: scale(0.7);
+}
+
+.progress-tracker {
+	position: fixed;
+	transition: transform 0.15s ease-out, opacity 0.15s;
+	filter: blur(0px);
+	-webkit-font-smoothing: subpixel-antialiased;
+	backface-visibility: hidden;
+	background-color: transparentize($color: $background, $amount: 0.2);
+	backdrop-filter: brightness(0.5) blur(4px);
+	color: $text-color;
+	padding: 6px;
+	font-size: 0.75rem;
+	font-weight: 500;
+	border-radius: $border-radius-sharp;
+	top: 10px;
+	z-index: 2910318391839;
 }

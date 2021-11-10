@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import "./Player.scss";
 import * as Types from "../Types";
 import * as LoadImage from "../Helpers/LoadImage";
+import * as AudioPlayer_ from "../AudioPlayer";
+import SecondsToHMS from '../Helpers/SecondsToHMS';
 
 declare global {
 	interface Window {
@@ -9,178 +11,119 @@ declare global {
 	}
 }
 
+const AudioPlayer = new AudioPlayer_.default("");
 export default class Player extends Component {
 	state: {
 		Song?: Types.Song,
 		Image: string,
 		Percentage: number,
 		AudioSrc: string,
-		Paused: boolean
+		Paused: boolean,
+		HoveringSeek: boolean,
+		MouseX: number
 	} = {
 			Image: "",
 			Percentage: 0,
 			AudioSrc: "",
-			Paused: false
+			Paused: false,
+			HoveringSeek: false,
+			MouseX: 0
 		};
 
-	Audio = React.createRef<HTMLAudioElement>();
 	componentDidMount() {
 		window.PlaySong = (Song) => {
-			this.setState({ Song: Song, AudioSrc: `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}` });
-			if (this.Audio.current) {
-				try {
-					this.Audio.current.play();
-				} catch (error) {
-					console.warn(error); // IOS Error for some reason, but it still works
-				}
-			}
-			if ('mediaSession' in navigator) {
-				navigator.mediaSession.metadata = new MediaMetadata({
-					title: Song.Title,
-					artist: Song.Artist,
-					album: Song.Album,
-					artwork: [
-						{ src: `http://localhost:9091/songs/image?Identifier=${Song.Identifier}`, sizes: '512x512', type: 'image/jpeg' },
-					]
-				});
-
-				navigator.mediaSession.setActionHandler('play', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('pause', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('stop', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('seekbackward', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('seekforward', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('seekto', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('previoustrack', function () { /* Code excerpted. */ });
-				navigator.mediaSession.setActionHandler('nexttrack', function () { /* Code excerpted. */ });
-			}
-			window.API.post("/playback", {
-				Data: { Song: Song },
-				Method: "Play"
-			}).then(Response => {
-				console.log("Set playback state");
-			});
-			this.LoadImage(true);
+			// const AudioSrc = `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}`;
+			// AudioPlayer.SetSrc(AudioSrc);
+			AudioPlayer.PlaySong(Song);
+			this.setState({ Song: Song });
+			this.LoadImage();
 		}
 
-		setInterval(() => {
-			if (this.Audio.current) {
-				let Percentage = this.Audio.current.currentTime / this.Audio.current.duration;
-				this.setState({ Percentage: Percentage * 100 });
+		AudioPlayer.OnPause.connect((State) => {
+			this.setState({
+				Paused: State
+			});
+		})
+
+		AudioPlayer.OnSongChange.connect((Song) => {
+			this.setState({ Song: Song });
+			this.LoadImage();
+		});
+		if (AudioPlayer.GetSong()) {
+			this.setState({ Song: AudioPlayer.GetSong() });
+			this.LoadImage();
+		}
+		this.setState({ Song: AudioPlayer.GetSong() });
+
+		const OnUpdate = AudioPlayer.SubscribeOnTimeUpdate(250);
+		OnUpdate.connect((Time) => {
+			const Song = AudioPlayer.Audio;
+			if (Song) {
+				this.setState({ Percentage: Time / Song.duration * 100 });
 			}
-		}, 500);
+		});
 
 		window.addEventListener("mouseup", () => {
 			this.MouseUp = true;
 		});
 
-		window.API.get("/playback").then((Response: any) => {
-			const Song = Response.data.Song as Types.Song;
-			if (!Song)
-				return;
-			const Callback = () => {
-				if (this.Audio.current) {
-					this.Audio.current.currentTime = Response.data.CurrentTime
-					this.setState({ Song: Song, AudioSrc: `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}` });
-					this.Audio.current.play();
-					this.Pause(true);
-					this.LoadImage();
-				} else {
-					setTimeout(Callback, 200);
+		window.addEventListener("keydown", (Event) => {
+			if (Event.key.toLowerCase() === " ") {
+				Event.preventDefault();
+				AudioPlayer.Pause();
+			}
+		});
+
+		setInterval(() => {
+			if (window.MouseLocation) {
+				let Element = document.getElementById("player-outer-progress");
+				let ProgressTracker = document.getElementById("progress-tracker");
+				if (Element && ProgressTracker) {
+					let Rect = Element.getBoundingClientRect();
+					let Diff = window.MouseLocation.x - Rect.left;
+					let TrackerWidth = ProgressTracker.getBoundingClientRect().width;
+					ProgressTracker.innerText = SecondsToHMS(Math.floor(Diff / Rect.width * AudioPlayer.Audio.duration));
+					Diff -= TrackerWidth / 2;
+					ProgressTracker.style.left = `${Diff / Rect.width * 100}%`;
 				}
 			}
-			Callback();
-		})
+		}, 18)
 	}
+
 
 	MouseUp = false;
 	OnMouseDown(Event: React.MouseEvent) {
 		let Target = Event.target as HTMLDivElement;
 		if (Target) {
-			if (this.Audio.current) {
-				this.MouseUp = false;
-				let Callback = () => {
-					if (this.Audio.current) {
-						let MouseX = window.MouseLocation.x;
-						let Rect = Target.getBoundingClientRect();
-						let Offset = 1 - ((Rect.right - MouseX) / Rect.width);
-						if (this.Audio.current && this.Audio.current.duration) {
-							this.setState({ Percentage: Offset * 100 });
-						}
-						if (!this.MouseUp) {
-							requestAnimationFrame(() => Callback());
-						} else {
-							this.Audio.current.currentTime = this.Audio.current.duration * Offset;
-						}
-					}
+			this.MouseUp = false;
+			let Callback = () => {
+				let MouseX = window.MouseLocation.x;
+				let Rect = Target.getBoundingClientRect();
+				let Offset = 1 - ((Rect.right - MouseX) / Rect.width);
+				// if (this.Audio.current && this.Audio.current.duration) {
+				this.setState({ Percentage: Offset * 100 });
+				// }
+				if (!this.MouseUp) {
+					requestAnimationFrame(() => Callback());
+				} else {
+					const Time = AudioPlayer.Audio.duration * Offset;
+					AudioPlayer.Seek(Time);
 				}
-				requestAnimationFrame(() => Callback());
 			}
+			requestAnimationFrame(() => Callback());
 		}
 	}
 
-	ImageId?: number;
 	async LoadImage(NewImage?: boolean) {
-		if (!this.state.Song)
-			return;
-		let RequestedImage = this.state.Song.ImageData;
-		if (this.state.Song && this.state.Song.ImageData && !this.state.Song.ImageData.startsWith("/")) {
-			this.setState({ Image: this.state.Song.ImageData });
-			return;
-		}
-		if (NewImage && this.ImageId) {
-			LoadImage.ClearImage(this.ImageId);
-			this.setState({ Image: "" });
-		}
-		if (this.state.Song.ImageData) {
-			if (!this.ImageId) {
-				this.ImageId = await LoadImage.default(this.state.Song.ImageData);
-			}
-			let ImageData = LoadImage.GetImageFromId(this.ImageId);
-			if (ImageData) {
-				if (this.state.Song.ImageData !== RequestedImage) {
-					LoadImage.ClearImage(this.ImageId);
-					console.log("Dropped late image");
-					return;
-				}
-				this.setState({ Image: ImageData.Image });
-				ImageData.OnUnload = () => {
-					// this.setState({ Image: "" });
-					this.state.Image = "";
-				}
-			} else {
-				this.ImageId = undefined;
-				this.LoadImage();
-			}
-		}
-	}
-
-	Seek(Event: React.MouseEvent) {
-		let Target = Event.target as HTMLDivElement;
-		if (Target) {
-			let MouseX = window.MouseLocation.x;
-			let Rect = Target.getBoundingClientRect();
-			let Offset = 1 - ((Rect.right - MouseX) / Rect.width);
-			if (this.Audio.current && this.Audio.current.duration) {
-				this.Audio.current.currentTime = this.Audio.current.duration * Offset;
-				this.setState({ Percentage: this.Audio.current.currentTime / this.Audio.current.duration * 100 });
-			}
-		}
-	}
-
-	Pause(Override?: boolean) {
-		if (this.Audio.current) {
-			if (Override || this.state.Paused) {
-				this.Audio.current.play();
-			} else {
-				this.Audio.current.pause();
-			}
-			this.setState({ Paused: Override || this.Audio.current.paused });
-			window.API.post("/playback", {
-				Data: { Song: this.state.Song },
-				Method: this.state.Paused ? "UnPause" : "Pause"
-			}).then(Response => {
-				console.log("Set playback state");
+		if (this.state.Song)
+			this.setState({
+				Image: `http://localhost:9091/songs/image?Identifier=${this.state.Song.Identifier}`
 			});
+	}
+
+	componentDidUpdate() {
+		if (AudioPlayer.GetSong() !== this.state.Song) {
+			this.setState({ Song: AudioPlayer.GetSong() });
 		}
 	}
 
@@ -205,11 +148,18 @@ export default class Player extends Component {
 	render() {
 		return (
 			<div className="player">
-				{/* @ts-ignore */}
-				<audio crossOrigin="anonymous" src={this.state.AudioSrc} type="audio/x-m4a" ref={this.Audio} autoPlay={true}>
-					<source src={this.state.AudioSrc} type="audio/x-m4a" />
-				</audio>
-				<div onMouseDown={(Event) => this.OnMouseDown(Event)} onClick={(Event) => this.Seek(Event)} className="progress-outer">
+				<div
+					id="progress-tracker"
+					style={{ left: `${this.state.MouseX}%` }}
+					className={`${!this.state.HoveringSeek ? "progress-tracker-inactive" : ""} progress-tracker`} >{SecondsToHMS(Math.round(AudioPlayer.Audio.currentTime))}</div>
+				<div
+					id="player-outer-progress"
+					onMouseDown={(Event) => this.OnMouseDown(Event)}
+					onMouseEnter={() => this.setState({ HoveringSeek: true })}
+					onMouseLeave={() => this.setState({ HoveringSeek: false })}
+					data-left={`${this.state.MouseX}%`}
+					className={`${this.state.HoveringSeek ? "progress-outer-hover" : ""} progress-outer`}
+				>
 					<div
 						style={{
 							width: `${this.state.Percentage}%`
@@ -226,7 +176,7 @@ export default class Player extends Component {
 				<div className="player-section">
 					<button onClick={() => this.Like()} className={`${this.state.Song?.Liked ? "player-icon-color" : ""} player-icon-extra-small player-icon material-icons`}>{this.state.Song?.Liked ? "favorite" : "favorite_outline"}</button>
 					<button className="player-icon-small player-icon material-icons">first_page</button>
-					<button onClick={() => this.Pause()} className="player-icon material-icons">{(this.state.Paused || this.state.AudioSrc === "") ? "play_arrow" : "pause"}</button>
+					<button onClick={() => AudioPlayer.Pause()} className="player-icon material-icons">{(this.state.Paused) ? "play_arrow" : "pause"}</button>
 					<button className="player-icon-small player-icon material-icons">last_page</button>
 				</div>
 				{/* <div className="player-section"></div> */}
