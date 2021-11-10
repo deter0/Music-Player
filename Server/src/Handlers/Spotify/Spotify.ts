@@ -216,26 +216,39 @@ export default class Spotify {
 		});
 	}
 
+	UserProfileCache?: {
+		ClientId: string,
+		Data: Types.SpotifyProfile
+	};
 	GetUserProfile() {
 		return new Promise<Types.SpotifyProfile>(async (Resolve, Reject) => {
 			if (this.IsAuthorized()) {
-				try {
-					let Response: AxiosResponse<any> = await axios.get("https://api.spotify.com/v1/me", {
-						headers: {
-							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
-						},
-					});
-					let Profile: Types.SpotifyProfile = {
-						DisplayName: Response.data.display_name as string,
-						Country: Response.data.ca as string,
-						ExplicitContentFilter: Response.data.explicit_content.filter_enabled as boolean,
-						Id: Response.data.id as string,
-						ProfilePicture: Response.data.images[0].url as string
-					};
-					Resolve(Profile);
-				} catch (Error) {
-					console.error(Error);
-					Reject(500);
+				if (this.UserProfileCache && this.UserProfileCache.ClientId === this.ClientId) {
+					console.log("Using profile cache");
+					Resolve(this.UserProfileCache.Data);
+				} else {
+					try {
+						let Response: AxiosResponse<any> = await axios.get("https://api.spotify.com/v1/me", {
+							headers: {
+								Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
+							},
+						});
+						let Profile: Types.SpotifyProfile = {
+							DisplayName: Response.data.display_name as string,
+							Country: Response.data.ca as string,
+							ExplicitContentFilter: Response.data.explicit_content.filter_enabled as boolean,
+							Id: Response.data.id as string,
+							ProfilePicture: Response.data.images[0].url as string
+						};
+						this.UserProfileCache = {
+							ClientId: this.ClientId,
+							Data: Profile
+						};
+						Resolve(Profile);
+					} catch (Error) {
+						console.error(Error);
+						Reject(500);
+					}
 				}
 			} else {
 				Reject(401);
