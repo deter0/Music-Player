@@ -10,11 +10,14 @@ export default class Path extends Component {
 				<h1>Choose path</h1>
 				<form onSubmit={(Event) => {
 					Event.preventDefault();
-					const Element = document.getElementById("path-selection") as HTMLInputElement;
-					if (Element) {
+					const PathElement = document.getElementById("path-selection") as HTMLInputElement;
+					const PythonElement = document.getElementById("python-selection") as HTMLInputElement;
+
+					if (PathElement && PythonElement) {
 						window.API.post("/", {}, {
 							params: {
-								Path: Element.value
+								Path: PathElement.value,
+								Python: PythonElement.value
 							}
 						}).then(Response => {
 							this.setState({ Finished: true });
@@ -26,7 +29,16 @@ export default class Path extends Component {
 				}}>
 					<h3 style={{ fontWeight: 400, marginBottom: 24 }}>This is where your music will be located, any existing music will be also loaded.</h3>
 					<input id="path-selection" style={{ marginRight: 12, marginBottom: 12, width: 600, maxWidth: "80vw" }} placeholder="Enter a path where your music should be..." />
-					<button className="button-highlight">Submit</button>
+
+					<h3 style={{ fontWeight: 400, marginBottom: 24 }}>How do you call Python in your os? For example linux is python3 but on windows it can be Python or python. To check simply run
+						<code>$ Python -v</code> or
+						<code>$ python -v</code> or
+						<code>$ python3 -v</code> or
+						And whichever one does something is the one you should input.
+					</h3>
+					<input id="python-selection" style={{ marginRight: 12, marginBottom: 12, width: 600, maxWidth: "80vw" }}
+						placeholder="'Python', 'python', 'python3' or other..." />
+					<button type="submit" className="button-highlight">Submit</button>
 				</form>
 			</div>
 		)

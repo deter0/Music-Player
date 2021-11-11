@@ -8,19 +8,27 @@ export default class Path {
 	Path?: string;
 	private LoadPath() {
 		try {
-			this.Path = fs.readFileSync(path.join(__dirname, "../../Data/Path.txt"), "utf8");
-			this.Path = this.Path.replace(/\r/g, "");
-			this.Path = this.Path.replace(/\n/g, "");
+			let PInfo = fs.readFileSync(path.join(__dirname, "../../Data/Path.txt"), "utf8");
+			let Data = PInfo.split("\n");
+			this.Path = Data[0];
+			this.Python = Data[1];
 		} catch (error) {
 			if (error.code === "ENOENT") {
 				this.Path = undefined;
 			}
 		}
 	}
-	SetPath(Path: string) {
+	Python?: string;
+	SetPath(Path: string, Python?: string) {
 		return new Promise<string>((resolve, reject) => {
+			Path.replace(/\\/g, "/");
+			Path.replace(/\n/g, "");
+			if (Python) {
+				Python.replace(/[^a-z0-9]/g, "");
+				Python.replace(/\n/g, "");
+			}
 			this.Path = Path;
-			fs.writeFile(path.join(__dirname, "../../Data/Path.txt"), Path, (error) => {
+			fs.writeFile(path.join(__dirname, "../../Data/Path.txt"), `${Path}\n${Python || ""}`, (error) => {
 				if (error) {
 					reject(error);
 				} else {

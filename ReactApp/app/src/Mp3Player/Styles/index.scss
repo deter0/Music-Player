@@ -68,6 +68,14 @@ p {
 	}
 }
 
+code {
+	margin-left: 0.3rem;
+	margin-right: 0.3rem;
+	background-color: $grey;
+	padding: 2px;
+	border-radius: 4px;
+}
+
 button,
 .button {
 	padding: $button-padding;

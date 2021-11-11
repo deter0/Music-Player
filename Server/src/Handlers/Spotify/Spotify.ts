@@ -149,7 +149,7 @@ export default class Spotify {
 							q: Query,
 							type: "album,artist,playlist,track"
 						}
-					});
+					})
 					console.log(Response.data.tracks.items[0]);
 					let Results: Types.SpotifySearchResults = {
 						Query: Query,
@@ -206,8 +206,12 @@ export default class Spotify {
 					};
 					Resolve(Results);
 				} catch (error) {
-					console.error(error);
-					Reject(500);
+					if (error.toString().includes("Unauthorized")) {
+						this.RefreshToken();
+						this.Search(Query).then(Resolve, Reject);
+					} else {
+						Reject(500);
+					}
 				}
 			} else {
 				console.log("Couldn't verify", this.IsAuthorized());
@@ -295,7 +299,7 @@ export default class Spotify {
 		});
 	}
 	Downloads: { Status: string, Percentage: number, Rate: number, Song: Types.SpotifySong, ETA: number }[] = [];
-	async Download(Id: string, Path: string) {
+	async Download(Id: string, Path: string, PythonV?: string) {
 		this.GetSong(Id).then(Song => {
 			const Download = {
 				Status: "Queued",
@@ -307,7 +311,7 @@ export default class Spotify {
 			this.Downloads.push(Download);
 			try {
 				// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
-				const PythonProcess = spawn("python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
+				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
 				PythonProcess.on("error", (Error: any) => {
 					console.error(Error);
 				});

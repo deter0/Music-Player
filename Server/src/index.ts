@@ -99,7 +99,7 @@ const SubscribeRoutes = () => {
 		app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, pathHandler.Path).Router);
 		app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 		app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
-		app.use("/spotify", new SpotifyRouter(pathHandler.Path).Router);
+		app.use("/spotify", new SpotifyRouter(pathHandler.Path, pathHandler.Python).Router);
 		app.use("/playback", new PlaybackRouter().Router);
 	}
 }
@@ -109,8 +109,10 @@ if (pathHandler.Path) {
 }
 app.post("/", (Request, Response) => {
 	let Path = Request.query.Path as string;
+	let Python = Request.query.Python as string;
+
 	if (!pathHandler.Path && Path) {
-		pathHandler.SetPath(Path).then((Path: string) => {
+		pathHandler.SetPath(Path, Python).then((Path: string) => {
 			SubscribeRoutes();
 		});
 		Response.sendStatus(202);
