@@ -4,6 +4,7 @@ import path from "path";
 // import * as LoadData from "./LoadData";
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import * as PathHandler from "./Handlers/Path";
 // import Ratings from './Rating';
 // import { Images } from './Images';
 
@@ -81,8 +82,6 @@ import PlaybackRouter from './Routes/Playback';
 	}
 })();
 
-const Path = `/home/deter/Music/Liked`;
-
 const SongArray: Types.SongArray = [];
 const AlbumArray: Types.AlbumArray = [];
 const SongLookup: Types.SongLookup = {};
@@ -91,16 +90,40 @@ const SongImages: Types.SongImages = {};
 const ArtistLookup: Types.ArtistLookup = {};
 const ArtistArray: Types.ArtistArray = [];
 
-app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, Path).Router);
-app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
-app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
-app.use("/spotify", new SpotifyRouter(Path).Router);
-app.use("/playback", new PlaybackRouter().Router);
+const pathHandler = new PathHandler.default();
 
+var RoutesSubsrcibed = false;
+const SubscribeRoutes = () => {
+	if (!RoutesSubsrcibed) {
+		RoutesSubsrcibed = true;
+		app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, pathHandler.Path).Router);
+		app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
+		app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
+		app.use("/spotify", new SpotifyRouter(pathHandler.Path).Router);
+		app.use("/playback", new PlaybackRouter().Router);
+	}
+}
+
+if (pathHandler.Path) {
+	SubscribeRoutes();
+}
+app.post("/", (Request, Response) => {
+	let Path = Request.query.Path as string;
+	if (!pathHandler.Path && Path) {
+		pathHandler.SetPath(Path).then((Path: string) => {
+			SubscribeRoutes();
+		});
+		Response.sendStatus(202);
+	} else {
+		Response.sendStatus(400);
+	}
+})
+app.get("/path", (Request, Response) => {
+	Response.send(pathHandler.Path !== undefined);
+});
 app.get("/online", (Request, Response) => {
 	Response.sendStatus(200);
-})
-
+});
 // start the Express server
 // const LocalIps = GetLocalNetworks();
 // const Ip = LocalIps.wlp2s0[0];
@@ -109,10 +132,3 @@ app.listen(PORT, () => {
 	console.log(`server started at "http://localhost:${PORT}/ping"`);
 });
 
-const G = new Graph("Memory", process.stdout.columns - 30);
-setInterval(() => {
-	// const Memory = Math.abs(Math.round(process.memoryUsage().heapTotal / 1024 / 1024 * 100) / 100);
-	// G.PushData(Memory);
-	// G.Print();
-	// console.log(GetUTC());
-}, 100);
