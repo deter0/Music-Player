@@ -28,17 +28,30 @@
 	}
 }
 
-.album-title {
+@media (max-width: 460px) {
+	.info-container {
+		flex-direction: column !important;
+	}
+	.album-img {
+		width: 100%;
+		height: auto;
+		margin-right: 0;
+		margin-bottom: 18px;
+	}
+}
+
+.album-page-title {
 	font-size: 2.4rem;
 	font-weight: bold;
 }
 
-.album-artist {
+.album-page-artist {
 	font-size: 1.6rem;
 	display: flex;
+	font-weight: 400;
 	align-items: center;
 }
-.album-artist span {
+.album-page-artist span {
 	margin-right: 4px;
 }
 
@@ -52,10 +65,22 @@
 	flex-wrap: wrap;
 }
 
+.song-count {
+	margin-left: 4px;
+	opacity: 0.5;
+	font-size: 1.1rem;
+}
+
 .songs-text {
 	font-size: 1.5rem;
 	font-weight: 400;
 	padding-left: 24px;
 	margin-top: 18px;
 	margin-bottom: 6px;
+}
+
+.album-icon {
+	background: none !important;
+	border: none !important;
+	font-size: 2rem;
 }

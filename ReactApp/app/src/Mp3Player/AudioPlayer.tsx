@@ -9,7 +9,7 @@ export default class AudioPlayer {
 	OnLoad = new Signal<boolean>();
 	OnSongChange = new Signal<Song>();
 	constructor(src: string) {
-		this.Audio = new Audio(src);
+		this.Audio = document.createElement("audio");
 
 		this.Audio.oncanplaythrough = () => {
 			this.Audio.play();
@@ -29,15 +29,6 @@ export default class AudioPlayer {
 		this.Audio.onloadstart = () => {
 			this.OnLoad.dispatch(false);
 		}
-
-		if ('mediaSession' in navigator) {
-			navigator.mediaSession.setActionHandler('play', () => {
-				this.Pause(true);
-			});
-			navigator.mediaSession.setActionHandler('pause', () => {
-				this.Pause(false);
-			});
-		}
 	}
 	PlayingSong?: Song;
 	PlaySong(Song: Song) {
@@ -47,16 +38,32 @@ export default class AudioPlayer {
 		this.PlayingSong = Song;
 		this.OnSongChange.dispatch(Song);
 		this.Seek(0);
-
+		this.SetMetadata(Song);
+	}
+	SetMetadata(Song: Song) {
 		if ('mediaSession' in navigator) {
-			navigator.mediaSession.metadata = new MediaMetadata({
-				title: Song.Title,
-				artist: Song.Artist,
-				album: Song.Album,
-				artwork: [
-					{ src: `http://localhost:${App.Port[0]}/songs/image?Identifier=${Song.Identifier}`, sizes: '512x512', type: 'image/jpeg' },
-				]
-			});
+			navigator.mediaSession.playbackState = "playing";
+			if ('mediaSession' in navigator) {
+				navigator.mediaSession.metadata = new MediaMetadata({
+					title: 'Unforgettable',
+					artist: 'Nat King Cole',
+					album: 'The Ultimate Collection (Remastered)',
+					artwork: [
+						{ src: 'https://dummyimage.com/96x96', sizes: '96x96', type: 'image/png' },
+						{ src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
+						{ src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
+						{ src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
+						{ src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
+						{ src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
+					]
+				});
+				navigator.mediaSession.setActionHandler('play', () => {
+					this.Pause(true);
+				});
+				navigator.mediaSession.setActionHandler('pause', () => {
+					this.Pause(false);
+				});
+			}
 			console.log("Set metadata");
 			console.log(navigator.mediaSession.metadata);
 		}

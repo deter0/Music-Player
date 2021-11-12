@@ -31,11 +31,12 @@ export default class Album extends Component {
 				<div className="info-container">
 					<img draggable={false} className="album-img" src={`http://localhost:${App.Port[0]}${this.state.Album?.Cover}`} alt="album-cover" />
 					<div className="album-info">
-						<h1 className="album-title">{this.state.Album?.Title}</h1>
-						<h1 className="album-artist"><span className="material-icons">person</span>{this.state.Album?.Artist}</h1>
+						<h1 className="album-page-title">{this.state.Album?.Title}</h1>
+						<h1 className="album-page-artist"><span className="material-icons">person</span>{this.state.Album?.Artist}</h1>
+						<span className="song-count">{this.state.Album?.Songs.length} Songs</span>
 						<div className="button-container">
-							<button className="button-highlight">Add to library</button>
-							<button>Delete</button>
+							<button className="album-icon button-highlight material-icons">favorite_border</button>
+							<button className="album-icon material-icons">delete_outline</button>
 						</div>
 					</div >
 				</div>
