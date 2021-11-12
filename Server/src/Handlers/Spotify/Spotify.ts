@@ -89,9 +89,13 @@ export default class Spotify {
 			})*/
 		}).then(Response => {
 			console.log("refreshed token");
+			const RefreshToken = this.Auth.refresh_token;
 			let Auth = Response.data as typeof this.Auth;
 			Auth.recieved_at = GetUTC();
 			this.Auth = Auth;
+			if (!this.Auth.refresh_token) {
+				this.Auth.refresh_token = RefreshToken;
+			}
 			this.SaveClientInfo();
 		}).catch(Error => {
 			this.Auth = null;
