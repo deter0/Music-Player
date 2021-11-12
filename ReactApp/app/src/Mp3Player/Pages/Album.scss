@@ -1,1 +1,61 @@
 @import "../Styles/Variables.scss";
+
+.info-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	padding: 0 24px;
+}
+
+.album-img {
+	width: 250px;
+	height: 250px;
+	margin-right: 18px;
+	border-radius: $border-radius-sharp;
+}
+
+@media (max-width: 700px) {
+	.album-artist span {
+		font-size: 0;
+	}
+	.album-img {
+		width: 120px;
+		height: 120px;
+	}
+	.album-title,
+	.album-artist {
+		font-size: 1.5rem !important;
+	}
+}
+
+.album-title {
+	font-size: 2.4rem;
+	font-weight: bold;
+}
+
+.album-artist {
+	font-size: 1.6rem;
+	display: flex;
+	align-items: center;
+}
+.album-artist span {
+	margin-right: 4px;
+}
+
+.button-container {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	row-gap: 14px;
+	column-gap: 14px;
+	margin-top: 14px;
+	flex-wrap: wrap;
+}
+
+.songs-text {
+	font-size: 1.5rem;
+	font-weight: 400;
+	padding-left: 24px;
+	margin-top: 18px;
+	margin-bottom: 6px;
+}
