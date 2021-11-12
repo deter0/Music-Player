@@ -115,7 +115,7 @@ export default class SongsRouter {
 			if (Identfier) {
 				this.Songs.GetSongImagePng(Identfier).then(Image => {
 					if (Image !== "") {
-						if (Request.statusCode !== 400 && Request.aborted) {
+						if (!Request.aborted) {
 							Response.sendFile(Image, (error) => {
 								if (error) {
 									console.error(error);
