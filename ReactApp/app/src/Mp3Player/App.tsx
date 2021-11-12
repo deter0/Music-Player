@@ -16,6 +16,7 @@ import Library from './Pages/Library/Library';
 
 import Error from './Components/Error';
 import Path from './Pages/Path';
+import Album from './Pages/Album';
 
 export const Port = [9091];
 const API = axios.create({
@@ -67,6 +68,7 @@ export default class App extends Component {
 										<Route component={Download} exact={false} path="/download" />
 										<Route component={Search} exact={false} path="/search" />
 										<Route component={Library} exact={false} path="/library" />
+										<Route component={Album} exact={false} path="/album" />
 									</div>
 								</div>
 							</div>

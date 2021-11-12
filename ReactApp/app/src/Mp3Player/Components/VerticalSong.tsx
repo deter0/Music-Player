@@ -9,6 +9,7 @@ import * as App from "../App";
 import "./VerticalSongs.scss";
 import ImageLoader from './ImageLoader';
 import DropDown from './DropDown';
+import { Redirect } from 'react-router';
 
 export interface Props {
 	Item: Types.Song,
@@ -21,7 +22,8 @@ export default class VerticalSong extends Component<Props> {
 	state = {
 		Image: "",
 		Liked: false,
-		MouseFocus: false
+		MouseFocus: false,
+		Album: false
 	}
 	constructor(props: Props) {
 		super(props);
@@ -79,11 +81,15 @@ export default class VerticalSong extends Component<Props> {
 				case (1):
 					window.PlaySong(this.props.Item);
 					break;
+				case (3):
+					this.Like();
+					this.setState({ Album: true });
+					break;
 			}
 		}
 	}
 	render() {
-		return (
+		return this.state.Album ? <Redirect to={`/album/${this.props.Item.AlbumId}`} /> : (
 			<div
 				onDoubleClick={() => window.PlaySong(this.props.Item)}
 				onMouseEnter={() => this.setState({ MouseFocus: true })}
@@ -115,6 +121,10 @@ export default class VerticalSong extends Component<Props> {
 					{
 						Icon: "queue",
 						Label: "Add to queue",
+					},
+					{
+						Icon: "library_music",
+						Label: "Go to Album"
 					}
 				]} />
 			</div >

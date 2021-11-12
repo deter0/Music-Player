@@ -129,7 +129,7 @@ export default class Songs {
 				Duration,
 				Album,
 				Cover ? Cover.format : "none",
-				Cover ? `/songs/thumbnail?Identifier=${Identifier}` : "https://st4.depositphotos.com/14953852/22772/v/600/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg",
+				Cover ? `/songs/image?Identifier=${Identifier}` : "https://st4.depositphotos.com/14953852/22772/v/600/depositphotos_227725020-stock-illustration-image-available-icon-flat-vector.jpg",
 			);
 			song.Liked = (await this.Ratings.GetSongRating(song)).UserLiked;
 			song.Codec = Metadata.format.codec;
@@ -214,7 +214,7 @@ export default class Songs {
 					Title: Song.Album,
 					Artist: Song.Artist,
 					Songs: [],
-					Cover: Song.ImageData || `/songs/thumbnail?Identifier=${Identifier}`,
+					Cover: Song.ImageData || `/songs/image?Identifier=${Identifier}`,
 					Id: Id
 				}
 				this.AlbumArray.push(this.AlbumLookup[Id]);

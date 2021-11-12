@@ -35,10 +35,10 @@ export default class Player extends Component {
 			// const AudioSrc = `http://localhost:9091/songs/raw?Identifier=${Song.Identifier}`;
 			// AudioPlayer.SetSrc(AudioSrc);
 			AudioPlayer.PlaySong(Song);
-			this.setState({ Song: Song });
-			setTimeout(() => {
+			this.setState({ Song: Song }, () => {
 				this.LoadImage();
-			}, 100);
+				AudioPlayer.SetMetadata(Song);
+			});
 		}
 
 		AudioPlayer.OnPause.connect((State) => {
@@ -71,8 +71,11 @@ export default class Player extends Component {
 
 		window.addEventListener("keydown", (Event) => {
 			if (Event.key.toLowerCase() === " ") {
-				Event.preventDefault();
-				AudioPlayer.Pause();
+				//@ts-ignore
+				if (Event.target.tagName.toLowerCase() !== "input") {
+					AudioPlayer.Pause();
+					Event.preventDefault();
+				}
 			}
 		});
 

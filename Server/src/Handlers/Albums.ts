@@ -1,4 +1,5 @@
 import * as Types from "../Types";
+import sha256 from "sha256";
 
 export default class Albums {
 	private AlbumArray: Types.AlbumArray;
@@ -20,5 +21,9 @@ export default class Albums {
 	}
 	GetAlbum(AlbumId: string) {
 		return this.AlbumLookup[AlbumId];
+	}
+	GetSongAlbum(Title: string, Album: string) {
+		const Id = sha256(Title + Album);
+		return this.GetAlbum(Id);
 	}
 }

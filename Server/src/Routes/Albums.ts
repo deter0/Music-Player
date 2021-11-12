@@ -18,8 +18,18 @@ export default class AlbumsRouter {
 				Response.json(Albums);
 			}
 		});
-		this.Router.get("/", (Request, Response) => {
-			const Id = Request.query.Identifier as string;
+		this.Router.get("/song", (Request, Response) => {
+			let SongTitle = Request.query.SongTitle as string;
+			let GetSongAlbum = Request.query.GetSongAlbum as string;
+			if (SongTitle && GetSongAlbum) {
+				const Album = this.Albums.GetSongAlbum(SongTitle, GetSongAlbum);
+				Response.json(Album);
+			} else {
+				Response.sendStatus(400);
+			}
+		});
+		this.Router.get("/:Id", (Request, Response) => {
+			const Id = Request.params.Id as string;
 			if (Id) {
 				Response.json(this.Albums.GetAlbum(Id));
 			} else {
