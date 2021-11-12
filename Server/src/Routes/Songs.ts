@@ -110,6 +110,19 @@ export default class SongsRouter {
 			}
 		});
 
+		this.Router.delete("/", (Request, Response) => {
+			const Identifier = Request.query.Identifier as string;
+			if (Identifier) {
+				this.Songs.DeleteSong(Identifier).then(() => {
+					Response.sendStatus(200);
+				}).catch(error => {
+					Response.sendStatus(500);
+				})
+			} else {
+				Response.sendStatus(400);
+			}
+		});
+
 		this.Router.get("/image", async (Request, Response) => {
 			let Identfier = Request.query.Identifier as string;
 			if (Identfier) {

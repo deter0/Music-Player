@@ -4,10 +4,7 @@ import * as Types from "../Types";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
 import * as App from "../App";
 
-// import DropDown from "./DropDown";
-
 import "./VerticalSongs.scss";
-import ImageLoader from './ImageLoader';
 import DropDown from './DropDown';
 import { Redirect } from 'react-router';
 
@@ -23,7 +20,8 @@ export default class VerticalSong extends Component<Props> {
 		Image: "",
 		Liked: false,
 		MouseFocus: false,
-		Album: false
+		Album: false,
+		Deleted: false
 	}
 	constructor(props: Props) {
 		super(props);
@@ -39,6 +37,7 @@ export default class VerticalSong extends Component<Props> {
 	componentDidUpdate(OldProps: Props) {
 		if (OldProps.Item.Identifier !== this.props.Item.Identifier) {
 			this.LoadImage();
+			this.setState({ Liked: this.props.Item.Liked, Deleted: false });
 		}
 	}
 	componentDidMount() {
@@ -85,11 +84,22 @@ export default class VerticalSong extends Component<Props> {
 					this.Like();
 					this.setState({ Album: true });
 					break;
+				case (4):
+					window.API.delete(`/songs/`, {
+						params: {
+							Identifier: this.props.Item.Identifier
+						}
+					}).then(Response => {
+						if (Response.status === 200) {
+							this.setState({ Deleted: true });
+						}
+					});
+					break;
 			}
 		}
 	}
 	render() {
-		return this.state.Album ? <Redirect to={`/album/${this.props.Item.AlbumId}`} /> : (
+		return this.state.Deleted ? null : this.state.Album ? <Redirect to={`/album/${this.props.Item.AlbumId}`} /> : (
 			<div
 				onDoubleClick={() => window.PlaySong(this.props.Item)}
 				onMouseEnter={() => this.setState({ MouseFocus: true })}
@@ -125,6 +135,10 @@ export default class VerticalSong extends Component<Props> {
 					{
 						Icon: "library_music",
 						Label: "Go to Album"
+					},
+					{
+						Icon: "delete_outline",
+						Label: "Delete Song"
 					}
 				]} />
 			</div >

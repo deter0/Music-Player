@@ -190,6 +190,18 @@ export default class Songs {
 			}
 		})
 	}
+	
+	DeleteSong(Identifier: string) {
+		return new Promise((resolve, reject) => {
+			fs.unlink(path.join(this.Path, Identifier), (error) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve(true);
+				}
+			});
+		});
+	}
 
 	async CacheAllSongs() {
 		if (!this.Path) {
