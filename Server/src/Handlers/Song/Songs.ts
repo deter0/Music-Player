@@ -190,13 +190,15 @@ export default class Songs {
 			}
 		})
 	}
-	
+
 	DeleteSong(Identifier: string) {
 		return new Promise((resolve, reject) => {
 			fs.unlink(path.join(this.Path, Identifier), (error) => {
 				if (error) {
 					reject(error);
 				} else {
+					delete this.SongLookup[this.Path + Identifier];
+					this.SongArray.splice(this.SongArray.findIndex(Song => Song.Identifier === Identifier), 1);
 					resolve(true);
 				}
 			});
