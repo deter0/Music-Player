@@ -150,13 +150,23 @@ export default class Songs {
 		return fs.readFileSync(Path);
 	}
 
-	async GetSongs(From: number, To: number, Path?: string) {
+	async GetSongs(From: number, To: number, Path?: string, Sort: string = "Recent") {
 		return new Promise<Song[]>(async (resolve, reject) => {
 			const Songs = new Array<Song>();
 			if (!Path) {
 				Path = path.join(__dirname, '../Songs');
 			}
-			const FileNames = fs.readdirSync(Path);
+			let FileNames = fs.readdirSync(Path);
+			switch (Sort) {
+				case ("Recent"):
+					FileNames = FileNames.sort((a, b) => {
+						const DCreatedA = fs.statSync(path.join(this.Path, a)).birthtimeMs;
+						const DCreatedB = fs.statSync(path.join(this.Path, b)).birthtimeMs;
+
+						return DCreatedA < DCreatedB ? 1 : -1;
+					});
+					break;
+			}
 			let Finished = 0;
 			To = Math.min(FileNames.length, To);
 			From = Math.max(0, From);
