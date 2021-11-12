@@ -44,17 +44,18 @@ export default class AudioPlayer {
 		if ('mediaSession' in navigator) {
 			navigator.mediaSession.playbackState = "playing";
 			if ('mediaSession' in navigator) {
+				const Src = `http://localhost:${App.Port[0]}/songs/image?Identifier=${Song.Identifier}`;
 				navigator.mediaSession.metadata = new MediaMetadata({
-					title: 'Unforgettable',
-					artist: 'Nat King Cole',
-					album: 'The Ultimate Collection (Remastered)',
+					title: Song.Title,
+					artist: Song.Artist,
+					album: Song.Album,
 					artwork: [
-						{ src: 'https://dummyimage.com/96x96', sizes: '96x96', type: 'image/png' },
-						{ src: 'https://dummyimage.com/128x128', sizes: '128x128', type: 'image/png' },
-						{ src: 'https://dummyimage.com/192x192', sizes: '192x192', type: 'image/png' },
-						{ src: 'https://dummyimage.com/256x256', sizes: '256x256', type: 'image/png' },
-						{ src: 'https://dummyimage.com/384x384', sizes: '384x384', type: 'image/png' },
-						{ src: 'https://dummyimage.com/512x512', sizes: '512x512', type: 'image/png' },
+						{ src: Src, sizes: '96x96', type: 'image/jpeg' },
+						{ src: Src, sizes: '128x128', type: 'image/jpeg' },
+						{ src: Src, sizes: '192x192', type: 'image/jpeg' },
+						{ src: Src, sizes: '256x256', type: 'image/jpeg' },
+						{ src: Src, sizes: '384x384', type: 'image/jpeg' },
+						{ src: Src, sizes: '512x512', type: 'image/jpeg' },
 					]
 				});
 				navigator.mediaSession.setActionHandler('play', () => {

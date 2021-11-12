@@ -12,6 +12,7 @@
 	height: 250px;
 	margin-right: 18px;
 	border-radius: $border-radius-sharp;
+	object-fit: cover;
 }
 
 @media (max-width: 700px) {
