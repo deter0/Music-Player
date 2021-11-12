@@ -231,6 +231,9 @@ $size: 100%;
 	height: $vertical-songs-height;
 	width: $vertical-songs-height;
 	border-radius: calc($border-radius / 2);
+	transition: filter $background-transition;
+	position: relative;
+	z-index: -1;
 }
 
 .song-div {

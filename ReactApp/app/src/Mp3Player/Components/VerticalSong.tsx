@@ -21,6 +21,7 @@ export default class VerticalSong extends Component<Props> {
 	state = {
 		Image: "",
 		Liked: false,
+		MouseFocus: false
 	}
 	constructor(props: Props) {
 		super(props);
@@ -83,10 +84,14 @@ export default class VerticalSong extends Component<Props> {
 	}
 	render() {
 		return (
-			<div className="song-container" style={this.props.style}>
-				<ImageLoader className="song-image" Loading={this.state.Image === ""} ImageElement={
-					<img loading="lazy" draggable={false} className="song-image" src={this.state.Image} alt="" />
-				} />
+			<div
+				onDoubleClick={() => window.PlaySong(this.props.Item)}
+				onMouseEnter={() => this.setState({ MouseFocus: true })}
+				onMouseLeave={() => this.setState({ MouseFocus: false })}
+				className="song-container"
+				style={this.props.style}
+			>
+				<img loading="lazy" draggable={false} className={`${this.state.MouseFocus && "song-image-hover"} song-image`} src={this.state.Image} alt="" />
 				<h1 className="song-index">{this.props.Index + 1 < 10 ? `0${this.props.Index + 1}` : this.props.Index + 1}</h1>
 				<button onClick={() => {
 					this.Like();

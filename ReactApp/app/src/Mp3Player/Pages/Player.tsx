@@ -36,7 +36,9 @@ export default class Player extends Component {
 			// AudioPlayer.SetSrc(AudioSrc);
 			AudioPlayer.PlaySong(Song);
 			this.setState({ Song: Song });
-			this.LoadImage();
+			setTimeout(() => {
+				this.LoadImage();
+			}, 100);
 		}
 
 		AudioPlayer.OnPause.connect((State) => {

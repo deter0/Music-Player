@@ -115,16 +115,16 @@ export default class SongsRouter {
 			if (Identfier) {
 				this.Songs.GetSongImagePng(Identfier).then(Image => {
 					if (Image !== "") {
-						Response.sendFile(Image, (error) => {
-							if (error) {
-								console.error(error);
-								if (error.toString().includes("ENOENT")) {
-									Response.sendStatus(404);
-								} else {
-									Response.sendStatus(500);
+						if (Request.statusCode !== 400 && Request.aborted) {
+							Response.sendFile(Image, (error) => {
+								if (error) {
+									console.error(error);
+									if (error.toString().includes("ENOENT")) {
+										Response.sendStatus(404);
+									}
 								}
-							}
-						});
+							});
+						}
 					} else {
 						Response.sendStatus(404);
 					}
