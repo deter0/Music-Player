@@ -96,10 +96,10 @@ const pathHandler = new PathHandler.default();
 
 const WebServer = new WSS(PORT + 1);
 
-var RoutesSubsrcibed = false;
+var RoutesSubscribed = false;
 const SubscribeRoutes = () => {
-	if (!RoutesSubsrcibed) {
-		RoutesSubsrcibed = true;
+	if (!RoutesSubscribed) {
+		RoutesSubscribed = true;
 		app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, pathHandler.Path).Router);
 		app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 		app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);

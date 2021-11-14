@@ -15,7 +15,6 @@ Please note that **a name has not been decided** and "Music Player" is not the f
 		- [ ] Integreated Youtube search
 2. Song Page<br/>
 3. Artist Page<br/>
-4. Better Spotify Auth (fix bugs)
 ### Frontend<br/>
 1. Playlists<br/>
 2. Artist<br/>
