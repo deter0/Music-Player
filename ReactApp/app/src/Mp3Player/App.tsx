@@ -1,22 +1,28 @@
-import React, { Component } from 'react'
-import { Router as BrowserRouter, Route, Redirect } from "react-router-dom";
+import React, { Component, Suspense } from 'react'
+import { Router as BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 
 import Nav from "./Components/Nav";
 import "./Styles/index.scss";
-import Home from "./Pages/Home";
 
 import Shortcuts from "./Shortcuts/Shortcuts";
 import axios, { AxiosInstance } from 'axios';
 import DropDowns from './Components/DropDowns';
-import Download from './Pages/Download';
-import Search from './Pages/Search';
-import Player from './Pages/Player';
 import Library from './Pages/Library/Library';
 
 import Error from './Components/Error';
 import Path from './Pages/Path';
-import Album from './Pages/Album';
+
+// import Download from './Pages/Download';
+// import Search from './Pages/Search';
+// import Player from './Pages/Player';
+// import Album from './Pages/Album';
+// import Home from "./Pages/Home";
+const Download = React.lazy(() => import('./Pages/Download'));
+const Search = React.lazy(() => import('./Pages/Search'));
+const Player = React.lazy(() => import('./Pages/Player'));
+const Album = React.lazy(() => import('./Pages/Album'));
+const Home = React.lazy(() => import('./Pages/Home'));
 
 export const Port = [9091];
 const API = axios.create({
@@ -52,32 +58,36 @@ export default class App extends Component {
 	}
 	render() {
 		return (
-			<BrowserRouter history={window.History}>
-				<Route component={Path} exact={true} path="/path" />
-				{this.state.SetPath ? <Redirect to="/path" /> : <>
-					{/* <Search /> */}
-					<Error />
-					<div className="player-layout">
-						<div className="playing-layout">
-							<div className="layout">
-								<DropDowns />
-								<Nav />
-								<div ref={this.PageContainer} className="page-container">
-									<div id="page-animation-container" className="page-animation-container">
-										<Route component={Home} exact={true} path="/home" />
-										<Route component={Download} exact={false} path="/download" />
-										<Route component={Search} exact={false} path="/search" />
-										<Route component={Library} exact={false} path="/library" />
-										<Route component={Album} exact={false} path="/album" />
+			<Suspense fallback={<h1>Loading...</h1>}>
+				<BrowserRouter history={window.History}>
+					<Route component={Path} exact={true} path="/path" />
+					{this.state.SetPath ? <Redirect to="/path" /> : <>
+						{/* <Search /> */}
+						<Error />
+						<div className="player-layout">
+							<div className="playing-layout">
+								<div className="layout">
+									<DropDowns />
+									<Nav />
+									<div ref={this.PageContainer} className="page-container">
+										<div id="page-animation-container" className="page-animation-container">
+											<Switch>
+												<Route component={Home} exact={true} path="/home" />
+												<Route component={Download} exact={false} path="/download" />
+												<Route component={Search} exact={false} path="/search" />
+												<Route component={Library} exact={false} path="/library" />
+												<Route component={Album} exact={false} path="/album" />
+											</Switch>
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<Player />
-				</>}
-				<div id="hidden-links" className="hidden" />
-			</BrowserRouter>
+						<Player />
+					</>}
+					<div id="hidden-links" className="hidden" />
+				</BrowserRouter>
+			</Suspense>
 		)
 	}
 }

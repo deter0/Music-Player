@@ -131,6 +131,10 @@ $size: 100%;
 	text-decoration: none;
 }
 
+.song-artist-span:hover {
+	text-decoration: underline;
+}
+
 @keyframes heart-inner-animation {
 	from {
 		transform: rotateY(90deg) scale(0);
