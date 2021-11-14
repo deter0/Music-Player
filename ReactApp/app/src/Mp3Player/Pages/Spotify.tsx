@@ -65,7 +65,8 @@ class SpotifySearch extends Component {
 							Album: Data.Album,
 							CoverIndex: "",
 							AlbumId: "0",
-							ExternalMedia: true
+							ExternalMedia: true,
+							Features: Data.Artists.splice(1).map((Artist: any) => Artist.Name)
 						};
 					})
 				});

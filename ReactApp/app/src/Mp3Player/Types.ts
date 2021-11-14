@@ -9,6 +9,7 @@ export interface Song {
 	Codec?: string;
 	Id: string;
 	Identifier: string;
+	Features: string[];
 
 	ImageFormat?: string;
 	ImageData?: string;

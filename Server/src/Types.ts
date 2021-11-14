@@ -3,6 +3,7 @@ import * as Ratings_ from "./Handlers/Song/Rating/Rating";
 
 export class Song {
 	Artist: string;
+	Features: string[] = [];
 	Title: string;
 	Album: string;
 
@@ -19,7 +20,9 @@ export class Song {
 	AlbumId: string;
 	ExternalMedia: boolean;
 	constructor(Artist: string, Title: string, Identifier: string, CoverIndex: string, Duration?: number, Album?: string, ImageFormat?: string, ImageData?: string, ExternalMedia?: boolean) {
-		this.Artist = Artist;
+		const Artists = Artist.split(", ");
+		this.Artist = Artists[0];
+		this.Features = Artists.slice(1);
 		this.Title = Title;
 		this.Identifier = Identifier;
 		this.CoverIndex = CoverIndex;
