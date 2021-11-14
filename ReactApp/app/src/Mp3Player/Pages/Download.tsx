@@ -29,13 +29,23 @@ class SongDownloadC extends Component<{ Data: SongDownload }> {
 	}
 }
 
-var Connection = new WebSocket('ws://localhost:8081', ['soap', 'xmpp']);
+// var Connection = new WebSocket('ws://localhost:8081', ['soap', 'xmpp']);
 class Main extends Component {
 	state = { Authorized: false, Downloads: [] };
+	Mounted = false;
 	componentDidMount() {
 		window.API.get("/spotify/authorized").then(Response => {
 			this.setState({ Authorized: Response.data });
 			console.log(Response.data, typeof (Response.data));
+		});
+
+		window.WS.SubscribeEvent<SongDownload[]>("DownloadsChanged").connect((Data) => {
+			if (!this.Mounted) return;
+			this.setState({
+				Downloads: Data.map(Download => {
+					return <SongDownloadC Data={Download} />
+				})
+			});
 		});
 
 		this.Mounted = true;
@@ -44,30 +54,20 @@ class Main extends Component {
 		// 		this.UpdateDownloads();
 		// 	}
 		// }, 1000);
-		Connection.onmessage = (Message) => {
-			let Data = JSON.parse(Message.data);
-			if (Data.Downloads) {
-				if (this.Mounted)
-					this.setState({
-						Downloads: (Data.Downloads as SongDownload[]).map((Download) => {
-							return <SongDownloadC Data={Download} />
-						})
-					});
-			}
-		};
+		// Connection.onmessage = (Message) => {
+		// 	let Data = JSON.parse(Message.data);
+		// 	if (Data.Downloads) {
+		// 		if (this.Mounted)
+		// 			this.setState({
+		// 				Downloads: (Data.Downloads as SongDownload[]).map((Download) => {
+		// 					return <SongDownloadC Data={Download} />
+		// 				})
+		// 			});
+		// 	}
+		// };
 	}
 	componentWillUnmount() {
 		this.Mounted = false;
-	}
-	Mounted = false;
-	UpdateDownloads() {
-		window.API.get("/spotify/downloads").then(Response => {
-			this.setState({
-				Downloads: (Response.data as SongDownload[]).map(Download => {
-					return <SongDownloadC Data={Download} />
-				})
-			});
-		});
 	}
 	render() {
 		return <div className="page-padding-top">

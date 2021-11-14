@@ -46,10 +46,12 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-export const PORT = 9091; // default port to listen
+export const GET_PORT = () => 9091;
+export const PORT = GET_PORT(); // default port to listen
 
 import GetUTC from './GetUTC';
 import PlaybackRouter from './Routes/Playback';
+import WSS from './WSS';
 
 (async () => {
 	try {
@@ -92,6 +94,8 @@ const ArtistArray: Types.ArtistArray = [];
 
 const pathHandler = new PathHandler.default();
 
+const WebServer = new WSS(PORT + 1);
+
 var RoutesSubsrcibed = false;
 const SubscribeRoutes = () => {
 	if (!RoutesSubsrcibed) {
@@ -99,7 +103,7 @@ const SubscribeRoutes = () => {
 		app.use("/songs", new SongsRouter(SongArray, SongLookup, SongImages, AlbumArray, AlbumLookup, pathHandler.Path).Router);
 		app.use("/search", new SearchRouter(SongArray, AlbumArray).Router);
 		app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
-		app.use("/spotify", new SpotifyRouter(pathHandler.Path, pathHandler.Python).Router);
+		app.use("/spotify", new SpotifyRouter(pathHandler.Path, WebServer, pathHandler.Python).Router);
 		app.use("/playback", new PlaybackRouter().Router);
 	}
 }

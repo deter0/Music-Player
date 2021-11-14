@@ -2,8 +2,8 @@ import { Router } from "express";
 import Spotify from "../Handlers/Spotify/Spotify";
 
 import { WebSocketServer } from "ws";
+import WSS from "../WSS";
 
-const wss = new WebSocketServer({ port: 8081 });
 
 export default class SpotifyRouter {
 	Router = Router();
@@ -11,9 +11,11 @@ export default class SpotifyRouter {
 	Path: string;
 
 	PythonVersion?: string;
-	constructor(Path: string, Python?: string) {
+	WebServer: WSS;
+	constructor(Path: string, WebServer: WSS, Python?: string) {
 		this.Path = Path;
 		this.PythonVersion = Python;
+		this.WebServer = WebServer;
 		this.Router.post("/set", (Request, Response) => {
 			let ClientId = Request.body.ClientId as string;
 			let ClientSecret = Request.body.ClientSecret as string;
@@ -92,25 +94,28 @@ export default class SpotifyRouter {
 		this.Router.get("/Downloads", (Request, Response) => {
 			Response.json(this.Spotify.Downloads);
 		});
-		let ConnectionCount = 0;
-		wss.on('connection', (ws) => {
-			ConnectionCount++;
-			let Connected = ConnectionCount;
-			ws.on('message', (message) => {
-				console.log('received: %s', message);
-			});
+		// wss.on('connection', (ws) => {
+		// 	ConnectionCount++;
+		// 	let Connected = ConnectionCount;
+		// 	ws.on('message', (message) => {
+		// 		console.log('received: %s', message);
+		// 	});
 
-			let Callback = () => {
-				if (Connected === ConnectionCount) {
-					ws.send(JSON.stringify({
-						Downloads: this.Spotify.Downloads
-					}));
-					setTimeout(Callback, 250);
-				} else {
-					ws.close();
-				}
-			}
-			Callback();
-		});
+		// 	let Callback = () => {
+		// 		if (Connected === ConnectionCount) {
+		// 			ws.send(JSON.stringify({
+		// 				Data: this.Spotify.Downloads,
+		// 				Action: "DownloadsChanged"
+		// 			}));
+		// 			setTimeout(Callback, 250);
+		// 		} else {
+		// 			ws.close();
+		// 		}
+		// 	}
+		// 	Callback();
+		// });
+		setInterval(() => {
+			this.WebServer.Send("DownloadsChanged", JSON.stringify(this.Spotify.Downloads));
+		}, 100);
 	}
 }

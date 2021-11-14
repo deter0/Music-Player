@@ -12,6 +12,7 @@ import Library from './Pages/Library/Library';
 
 import Error from './Components/Error';
 import Path from './Pages/Path';
+import WS from './WS';
 
 // import Download from './Pages/Download';
 // import Search from './Pages/Search';
@@ -23,24 +24,28 @@ const Search = React.lazy(() => import('./Pages/Search'));
 const Player = React.lazy(() => import('./Pages/Player'));
 const Album = React.lazy(() => import('./Pages/Album'));
 const Home = React.lazy(() => import('./Pages/Home'));
+const Settings = React.lazy(() => import('./Pages/Splash'));
 
 export const Port = [9091];
 const API = axios.create({
 	baseURL: `http://localhost:${Port[0]}/`,
 	timeout: 10000
 });
+const WSHandler = new WS(`ws://localhost:${Port[0] + 1}`);
 
 const AppShortcuts = new Shortcuts();
 declare global {
 	interface Window {
 		History: any; SetImage: (src: string) => void,
 		Shortcuts: Shortcuts,
-		API: AxiosInstance
+		API: AxiosInstance,
+		WS: WS
 	}
 }
 window.API = API;
 window.Shortcuts = AppShortcuts;
 window.History = createBrowserHistory();
+window.WS = WSHandler;
 
 export default class App extends Component {
 	state = { SetPath: false }
@@ -77,6 +82,7 @@ export default class App extends Component {
 												<Route component={Search} exact={false} path="/search" />
 												<Route component={Library} exact={false} path="/library" />
 												<Route component={Album} exact={false} path="/album" />
+												<Route component={Settings} exact={false} path="/settings" />
 											</Switch>
 										</div>
 									</div>
