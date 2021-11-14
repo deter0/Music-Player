@@ -4,6 +4,9 @@ import * as Types from "../Types";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
 import * as App from "../App";
 
+import { Link } from 'react-router-dom';
+import { SHA256 } from 'sha-256';
+
 import "./VerticalSongs.scss";
 import DropDown from './DropDown';
 import { Redirect } from 'react-router';
@@ -115,7 +118,7 @@ export default class VerticalSong extends Component<Props> {
 				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.state.Liked ? "favorite" : "favorite_border"}</button>
 				<div className='song-div'>
 					<h1 className="song-title">{this.props.Item.Title}</h1>
-					<h1 className="song-album">{this.props.Item.Artist + this.props.Item.Features.map(Feature => `, ${Feature}`)}<span className="song-artist-span">• {this.props.Item.Album}</span></h1>
+					<h1 className="song-album">{this.props.Item.Artist + this.props.Item.Features.map(Feature => `, ${Feature}`)}<Link to={`/album/${this.props.Item.AlbumId}`} className="song-artist-span">• {this.props.Item.Album}</Link></h1>
 				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>
 				{/* <button className="song-options material-icons">more_horiz</button> */}

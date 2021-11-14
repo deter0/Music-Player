@@ -127,6 +127,8 @@ $size: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	color: $text-color;
+	text-decoration: none;
 }
 
 @keyframes heart-inner-animation {
