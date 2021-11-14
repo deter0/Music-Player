@@ -61,7 +61,7 @@ export default class Spotify {
 	ValidateTokenExpiration() {
 		if (this.IsAuthorized()) {
 			let ElapsedTime = GetUTC() - this.Auth.recieved_at;
-			if (ElapsedTime >= (this.Auth.expires_in / 60 - 10)) { // Margin
+			if (ElapsedTime >= (this.Auth.expires_in - 60)) { // Margin
 				this.RefreshToken();
 			}
 		}
