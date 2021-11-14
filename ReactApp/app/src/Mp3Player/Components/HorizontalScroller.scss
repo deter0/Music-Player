@@ -40,6 +40,9 @@
 
 	white-space: nowrap;
 	text-overflow: ellipsis;
+
+	text-decoration: none !important;
+	color: $text-color;
 }
 
 .album-artist {
@@ -52,6 +55,9 @@
 
 	white-space: nowrap;
 	text-overflow: ellipsis;
+
+	text-decoration: none !important;
+	color: $text-color;
 }
 
 @media all and (max-width: 756px) {

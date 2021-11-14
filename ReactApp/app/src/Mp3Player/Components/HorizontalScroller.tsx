@@ -10,6 +10,7 @@ import Vector2 from '../Helpers/Vector2';
 import GetUTC from '../Helpers/GetUTC';
 import Lerp from '../Helpers/Lerp';
 import ImageLoader from './ImageLoader';
+import { Link } from 'react-router-dom';
 
 interface Props {
 	Items?: Types.Album[],
@@ -181,12 +182,12 @@ export class Album extends Component<AlbumProps> {
 			this.setState({ Image: this.props.Item.Cover })
 	}
 	render() {
-		return <li onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
+		return <div onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
 			<ImageLoader className="album-cover" Loading={this.state.Image === ""} ImageElement={
 				<img loading="lazy" draggable={false} className="album-cover" src={this.state.Image} alt="" />
 			} />
-			<h1 className="album-title">{this.props.Item.Title}</h1>
+			<Link to={`/album/${this.props.Item.Id}`} className="album-title">{this.props.Item.Title}</Link>
 			<h2 className="album-artist">{this.props.Item.Artist}</h2>
-		</li>
+		</div>
 	}
 }
