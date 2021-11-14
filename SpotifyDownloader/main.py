@@ -228,7 +228,12 @@ def main(): # Arguments: `Type Id Path TOKEN`
         if (spotify_song.status_code == 200):
             spotify_song = spotify_song.json()
             song_name = spotify_song["name"];
-            song_artist = spotify_song["artists"][0]["name"];
+            song_artist = "";
+            for (i, artist) in enumerate(spotify_song["artists"]):
+                if (i == 0):
+                    song_artist = artist["name"]
+                else:
+                    song_artist = song_artist + ", " + artist["name"]
             song_album = spotify_song["album"]["name"];
             song_cover = spotify_song["album"]["images"][0]["url"];
 

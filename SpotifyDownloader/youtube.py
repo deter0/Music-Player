@@ -43,7 +43,7 @@ class Youtube:
     def get_video_id(song_name: str) -> Optional[str]:
         query = "+".join(song_name.split()).encode("utf-8")
        
-        url = f"https://www.youtube.com/results?search_query={query}+lyrics"
+        url = f"https://www.youtube.com/results?search_query=\"{query}\"+lyrics"
         html = requests.get(url)
         vid_ids = re.findall(r"watch\?v=(\S{11})", html.text)
 

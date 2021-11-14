@@ -354,7 +354,9 @@ export default class Spotify {
 				});
 				PythonProcess.on("exit", (Code: number) => {
 					if (Code === 0) {
-						let SongName = `${Song.Artists[0].Name} ${Song.Name}`.replace(/[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*/, "");
+						const Artist = Song.Artists.map((Artist: any) => Artist.Name).join(", ");
+						const SongName =
+							`${Artist} ${Song.Name}`.replace(/[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*/g, "");
 						_global.CacheSong(`${SongName}.m4a`, Path);
 						console.log("Downloaded", Song.Name + ".m4a", Path);
 						this.Downloads[this.Downloads.indexOf(Download)].Status = "Completed";
