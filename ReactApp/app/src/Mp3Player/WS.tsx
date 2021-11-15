@@ -102,9 +102,15 @@ export default class WS {
 		console.log(`WS: UnSubscribing to ${Action}`);
 		delete this.Connections[Action];
 	}
-	private OutgoingMessages: { At: number, Action: string, Id: string, Resolve: (params: { Action: string, Data: unknown }, Reject: (Reason?: any) => void) => void }[] = [];
+	private OutgoingMessages: {
+		At: number,
+		Action: string,
+		Id: string,
+		Resolve: (params: { Action: string, Data: unknown }) => void,
+		Reject: (reason?: any) => void
+	}[] = [];
 	SendData<T>(Action: string, Data: unknown, AnticipatingResponse: boolean = true) {
-		return new Promise<{ Action: String, Data: T }>((Resolve, Reject) => {
+		return new Promise<{ Action: String, Data?: T }>((Resolve, Reject) => {
 			if (typeof (Data) === "object") {
 				Data = JSON.stringify(Data as { [key: string]: unknown });
 			}
@@ -112,14 +118,14 @@ export default class WS {
 			this.Connection.send(JSON.stringify({
 				Action: Action,
 				Data: Data,
-				MessageId: MessageID
+				MessageId: MessageId
 			}));
 			if (AnticipatingResponse) {
 				this.OutgoingMessages.push({
 					Action: Action,
 					Id: MessageId,
-					Resolve: Resolve,
-					Reject: Reject,
+					Resolve: Resolve as (params: { Action: string, Data: unknown }) => void,
+					Reject: Reject as (reason?: any) => void,
 					At: GetUTC()
 				});
 			} else {
