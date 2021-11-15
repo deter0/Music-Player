@@ -94,26 +94,10 @@ export default class SpotifyRouter {
 		this.Router.get("/Downloads", (Request, Response) => {
 			Response.json(this.Spotify.Downloads);
 		});
-		// wss.on('connection', (ws) => {
-		// 	ConnectionCount++;
-		// 	let Connected = ConnectionCount;
-		// 	ws.on('message', (message) => {
-		// 		console.log('received: %s', message);
-		// 	});
-
-		// 	let Callback = () => {
-		// 		if (Connected === ConnectionCount) {
-		// 			ws.send(JSON.stringify({
-		// 				Data: this.Spotify.Downloads,
-		// 				Action: "DownloadsChanged"
-		// 			}));
-		// 			setTimeout(Callback, 250);
-		// 		} else {
-		// 			ws.close();
-		// 		}
-		// 	}
-		// 	Callback();
-		// });
+		this.WebServer.AppendRequestHandler("GetDownloads", (Client, Message) => {
+			const MessageData = Message.Prase();
+			return this.Spotify.Downloads.slice(MessageData.Data.From, MessageData.Data.To);
+		})
 		setInterval(() => {
 			this.WebServer.Send("DownloadsChanged", JSON.stringify(this.Spotify.Downloads));
 		}, 100);

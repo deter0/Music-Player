@@ -47,6 +47,11 @@ class Main extends Component {
 				})
 			});
 		});
+		window.WS.SendData<SongDownload[]>("GetDownloads", { From: 1, To: 10 }).then(Response => {
+			console.log(Response);
+		}).catch(Error => {
+			console.error(Error);
+		});
 
 		this.Mounted = true;
 		// setInterval(() => {

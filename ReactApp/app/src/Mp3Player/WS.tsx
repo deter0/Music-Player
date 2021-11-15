@@ -111,9 +111,6 @@ export default class WS {
 	}[] = [];
 	SendData<T>(Action: string, Data: unknown, AnticipatingResponse: boolean = true) {
 		return new Promise<{ Action: String, Data?: T }>((Resolve, Reject) => {
-			if (typeof (Data) === "object") {
-				Data = JSON.stringify(Data as { [key: string]: unknown });
-			}
 			const MessageId = UUID();
 			this.Connection.send(JSON.stringify({
 				Action: Action,

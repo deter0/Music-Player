@@ -58,9 +58,9 @@ export class WSC {
 		const SentMessage = new Message(this.ClientId, MessageRaw);
 		this.WSS.HandleMessage(this, SentMessage);
 	}
-	Send(Action: string, Data: any) {
+	Send(Action: string, Data: any, Referer: string = "NONE", RefererId?: string) {
 		// console.log(`Sent client ${this.ClientId} some data.`);
-		this.Socket.send(JSON.stringify({ Action: Action, Data: Data }));
+		this.Socket.send(JSON.stringify({ Action: Action, Data: Data, Referer: Referer, Id: RefererId }));
 	}
 }
 
@@ -80,7 +80,18 @@ export default class WSS {
 		});
 	}
 	HandleMessage(Client: WSC, Message: Message) {
-		console.log(`Recieved message from ${Client.ClientId} with content: ${Message.Prase()}`);
+		const MessageData = Message.Prase();
+		const Action = MessageData.Action as string;
+		console.log(MessageData);
+		if (this.RequestHandlers[Action]) {
+			const Response = this.RequestHandlers[Action](Client, Message);
+			if (Response) {
+				Client.Send(Action, Response, "RESPONSE", MessageData.MessageId);
+			}
+		} else {
+			Client.Send(Action, null, "RESPONSE", MessageData.MessageId);
+		}
+		// console.log(`Recieved message from ${Client.ClientId} with content: ${Message.Data}:${typeof (Message.Prase())}`);
 	}
 	Send(Action: string, Message: string, ValidateClient?: (Client: WSC) => boolean) {
 		for (let WebSocketConnection of this.WebSocketConnections) {
@@ -90,6 +101,10 @@ export default class WSS {
 			WebSocketConnection.Send(Action, Message);
 		}
 	}
+	RequestHandlers: { [Action: string]: (Client: WSC, Message: Message) => unknown } = {};
+	AppendRequestHandler<T>(Action: string, Callback: (Client: WSC, Message: Message) => T) {
+		this.RequestHandlers[Action] = Callback;
+	};
 	ClientDisconnect(Client: WSC) {
 		this.WebSocketConnections = this.WebSocketConnections.filter((WebSocketConnection) => {
 			return WebSocketConnection.ClientId !== Client.ClientId;
