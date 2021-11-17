@@ -8,16 +8,25 @@ export default class Error extends Component {
 
 	componentDidMount() {
 		const Validate = () => {
-			window.API.get("/online").then(Response => {
-				this.setState({ Err: false });
-			}).catch(Error => {
-				this.setState({ Err: true })
-			})
+			// window.API.get("/online").then(Response => {
+			// 	this.setState({ Err: false });
+			// }).catch(Error => {
+			// 	this.setState({ Err: true })
+			// })
+			try {
+				window.WS.SendData<boolean>("Live", null).then(Response => {
+					this.setState({ Err: false });
+				}).catch(Err => {
+					this.setState({ Err: true });
+				})
+			} catch (err) {
+				this.setState({ Err: true });
+			}
 		}
 		Validate();
 		setInterval(() => {
 			Validate();
-		}, 10000);
+		}, 1000);
 	}
 	render() {
 		return this.state.Err ? (

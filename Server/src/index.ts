@@ -96,6 +96,10 @@ const pathHandler = new PathHandler.default();
 
 const WebServer = new WSS(PORT + 1);
 
+WebServer.AppendRequestHandler<null>("Live", (Client, Message) => {
+	return true;
+});
+
 var RoutesSubscribed = false;
 const SubscribeRoutes = () => {
 	if (!RoutesSubscribed) {
