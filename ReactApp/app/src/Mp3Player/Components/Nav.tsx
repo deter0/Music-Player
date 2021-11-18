@@ -39,7 +39,12 @@ const Paths: { [key: string]: Path[] } = {
 		}
 	]
 }
-interface Props { Path: string; Data: Path };
+declare global {
+	interface Window {
+		SetNotifications: (Notifications: number, Label: string) => (void)
+	}
+}
+interface Props { Path: string; Data: Path, Notifications?: number };
 class NavItem extends Component<Props> {
 	render() {
 		return (
@@ -47,14 +52,14 @@ class NavItem extends Component<Props> {
 				<span className="material-icons">
 					{this.props.Data.icon}
 				</span>
-				<span className="nav-text">{this.props.Data.label}</span>
+				<span className={`nav-text ${(this.props.Notifications && this.props.Notifications > 0) ? "notifications" : ""}`} data-notifications={this.props.Notifications}>{this.props.Data.label}</span>
 			</Link>
 		)
 	}
 }
 
 export default class Nav extends Component {
-	state = { Path: "/" };
+	state: { Path: string, Notifications: { [key: string]: number } } = { Path: "/", Notifications: {} };
 	UpdatePath() {
 		let Location = window.location.pathname;
 		this.setState({ Path: Location });
@@ -69,13 +74,18 @@ export default class Nav extends Component {
 		setInterval(() => {
 			this.UpdatePath();
 		}, 100);
+		window.SetNotifications = (NotificationCount, Label) => {
+			const Notifications = this.state.Notifications;
+			Notifications[Label] = NotificationCount;
+			this.setState({ Notifications: Notifications });
+		}
 	}
 	render() {
 		let Render = [];
 		for (const Key in Paths) {
 			Render.push(<h1>{Key}</h1>);
 			Render.push(Paths[Key].map(Data => {
-				return <NavItem Path={this.state.Path} Data={Data} />
+				return <NavItem Notifications={this.state.Notifications[Data.label]} Path={this.state.Path} Data={Data} />
 			}));
 		}
 		return (

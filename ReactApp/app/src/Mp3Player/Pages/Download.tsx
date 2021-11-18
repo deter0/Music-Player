@@ -40,12 +40,14 @@ class Main extends Component {
 		});
 
 		window.WS.SubscribeEvent<SongDownload[]>("DownloadsChanged").connect((Data) => {
-			if (!this.Mounted) return;
-			this.setState({
-				Downloads: Data.map(Download => {
-					return <SongDownloadC Data={Download} />
-				})
-			});
+			if (this.Mounted) {
+				this.setState({
+					Downloads: Data.map(Download => {
+						return <SongDownloadC Data={Download} />
+					})
+				});
+			}
+			window.SetNotifications(Data.filter(Download => Download.Status !== "Completed").length, "Download");
 		});
 		window.WS.SendData<SongDownload[]>("GetDownloads", { From: 1, To: 10 }).then(Response => {
 			console.log(Response);

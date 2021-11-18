@@ -187,13 +187,11 @@ button:focus,
 
 .notifications::after {
 	content: attr(data-notifications);
-	width: fit-content;
-	height: fit-content;
 	font-family: $font;
 	font-size: $notifications-size;
 	position: absolute;
 	color: $special-button-text;
-	right: -5%;
+	left: calc(100% + $notifications-size / 2);
 	top: -20%;
 	z-index: 2;
 	background-color: $notifications-background;
