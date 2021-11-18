@@ -73,6 +73,11 @@ export default class Player extends Component {
 			}
 		});
 
+		const Volume = localStorage.getItem("Volume");
+		if (Volume) {
+			AudioPlayer.Audio.volume = JSON.parse(Volume);
+		}
+
 		window.addEventListener("mouseup", () => {
 			this.MouseUp = true;
 		});
@@ -170,6 +175,8 @@ export default class Player extends Component {
 				AudioPlayer.Audio.volume = Offset;
 				if (!this.MouseUp) {
 					requestAnimationFrame(() => Callback());
+				} else {
+					localStorage.setItem("Volume", JSON.stringify(Offset));
 				}
 			}
 			requestAnimationFrame(() => Callback());
