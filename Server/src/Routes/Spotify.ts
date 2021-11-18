@@ -94,7 +94,7 @@ export default class SpotifyRouter {
 		this.Router.get("/Downloads", (Request, Response) => {
 			Response.json(this.Spotify.Downloads);
 		});
-		this.WebServer.AppendRequestHandler("GetDownloads", (Client, Message) => {
+		this.WebServer.AppendRequestHandler<{ Data: { From: number, To: number } }>("GetDownloads", (Client, Message) => {
 			const MessageData = Message.Prase();
 			return this.Spotify.Downloads.slice(MessageData.Data.From, MessageData.Data.To);
 		})

@@ -18,19 +18,18 @@ function UUID() { // Public Domain/MIT
 }
 
 
-class Message {
+class Message<T> {
 	ClientId: string;
 	Data: string;
 	constructor(ClientId: string, Data: string) {
 		this.ClientId = ClientId;
 		this.Data = Data;
 	}
-	Prase() {
+	Prase(): T {
 		try {
 			return JSON.parse(this.Data);
 		} catch (error) {
-			console.warn(error);
-			return this.Data;
+			console.error(error);
 		}
 	}
 }
@@ -79,7 +78,7 @@ export default class WSS {
 			this.WebSocketConnections.push(WebSocketConnection);
 		});
 	}
-	HandleMessage(Client: WSC, Message: Message) {
+	HandleMessage(Client: WSC, Message: Message<any>) {
 		const MessageData = Message.Prase();
 		const Action = MessageData.Action as string;
 		console.log(MessageData);
@@ -101,8 +100,8 @@ export default class WSS {
 			WebSocketConnection.Send(Action, Message);
 		}
 	}
-	RequestHandlers: { [Action: string]: (Client: WSC, Message: Message) => unknown } = {};
-	AppendRequestHandler<T>(Action: string, Callback: (Client: WSC, Message: Message) => T) {
+	RequestHandlers: { [Action: string]: (Client: WSC, Message: Message<unknown>) => unknown } = {};
+	AppendRequestHandler<T>(Action: string, Callback: (Client: WSC, Message: Message<T>) => unknown) {
 		this.RequestHandlers[Action] = Callback;
 	};
 	ClientDisconnect(Client: WSC) {
