@@ -11,7 +11,7 @@ declare global {
 	}
 }
 
-const AudioPlayer = new AudioPlayer_.default("");
+const AudioPlayer = new AudioPlayer_.default();
 export default class Player extends Component {
 	state: {
 		Song?: Types.Song,
@@ -20,14 +20,16 @@ export default class Player extends Component {
 		AudioSrc: string,
 		Paused: boolean,
 		HoveringSeek: boolean,
-		MouseX: number
+		MouseX: number,
+		Volume: number,
 	} = {
 			Image: "",
 			Percentage: 0,
 			AudioSrc: "",
 			Paused: false,
 			HoveringSeek: false,
-			MouseX: 0
+			MouseX: 0,
+			Volume: 1
 		};
 
 	componentDidMount() {
@@ -46,6 +48,12 @@ export default class Player extends Component {
 				Paused: State
 			});
 		})
+
+		AudioPlayer.OnVolumeChange.connect((volume) => {
+			this.setState({
+				Volume: volume
+			});
+		});
 
 		AudioPlayer.OnSongChange.connect((Song) => {
 			this.setState({ Song: Song });
@@ -150,6 +158,24 @@ export default class Player extends Component {
 		this.setState({ Song: NewSong });
 	}
 
+	OnVolumeMouseDown(Event: React.MouseEvent) {
+		let Target = Event.target as HTMLDivElement;
+		if (Target) {
+			this.MouseUp = false;
+			let Callback = () => {
+				let MouseX = window.MouseLocation.x;
+				let Rect = Target.getBoundingClientRect();
+				let Offset = 1 - ((Rect.right - MouseX) / Rect.width);
+				Offset = Offset > 1 ? 1 : (Offset < 0 ? 0 : Offset);
+				AudioPlayer.Audio.volume = Offset;
+				if (!this.MouseUp) {
+					requestAnimationFrame(() => Callback());
+				}
+			}
+			requestAnimationFrame(() => Callback());
+		}
+	}
+
 	render() {
 		return (
 			<div className="player">
@@ -179,6 +205,17 @@ export default class Player extends Component {
 					</div>
 				</div>
 				<div className="player-section">
+					<h2 className="player-icon-ex-small player-icon material-icons">volume_down</h2>
+					<div className="slider-container">
+						<div style={{ width: `${this.state.Volume * 100}%` }} className="slider-progress" />
+						<div style={{ left: `calc(${this.state.Volume * 100}% - 5px)` }} className="slider-head" />
+						<div
+							className="slider-base"
+							onMouseDown={(Event) => this.OnVolumeMouseDown(Event)}
+							onMouseUp={() => null}
+						/>
+					</div>
+					<h2 className="player-icon-ex-small player-icon material-icons">volume_up</h2>
 					<button onClick={() => this.Like()} className={`${this.state.Song?.Liked ? "player-icon-color" : ""} player-icon-extra-small player-icon material-icons`}>{this.state.Song?.Liked ? "favorite" : "favorite_outline"}</button>
 					<button className="player-icon-small player-icon material-icons">first_page</button>
 					<button onClick={() => AudioPlayer.Pause()} className="player-icon material-icons">{(this.state.Paused) ? "play_arrow" : "pause"}</button>

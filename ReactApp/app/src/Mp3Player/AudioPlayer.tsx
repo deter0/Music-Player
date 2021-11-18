@@ -8,7 +8,8 @@ export default class AudioPlayer {
 	OnEnded = new Signal<void>();
 	OnLoad = new Signal<boolean>();
 	OnSongChange = new Signal<Song>();
-	constructor(src: string) {
+	OnVolumeChange = new Signal<number>();
+	constructor() {
 		this.Audio = document.createElement("audio");
 
 		this.Audio.oncanplaythrough = () => {
@@ -28,6 +29,9 @@ export default class AudioPlayer {
 		}
 		this.Audio.onloadstart = () => {
 			this.OnLoad.dispatch(false);
+		}
+		this.Audio.onvolumechange = () => {
+			this.OnVolumeChange.dispatch(this.Audio.volume);
 		}
 	}
 	PlayingSong?: Song;

@@ -125,6 +125,11 @@ $spacing: 60px;
 	font-size: 30px;
 }
 
+.player-icon-ex-small {
+	font-size: 18px;
+	font-weight: 400;
+}
+
 .player-icon-extra-small {
 	font-size: 20px;
 }
@@ -209,4 +214,39 @@ $spacing: 60px;
 	border-radius: $border-radius-sharp;
 	top: 10px;
 	z-index: 2910318391839;
+}
+
+.slider-container {
+	position: relative;
+	width: 120px;
+	height: 100%;
+
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.slider-base {
+	background-color: $transparent-border;
+	height: 4px;
+	width: 100%;
+	border-radius: $border-radius;
+}
+
+.slider-head {
+	width: 10px;
+	height: 10px;
+	background-color: $highlight;
+	border-radius: 50%;
+	position: absolute;
+	pointer-events: none;
+}
+
+.slider-progress {
+	position: absolute;
+	width: 0;
+	height: 100%;
+	background-color: $highlight;
+	border-radius: $border-radius;
+	pointer-events: none;
 }
