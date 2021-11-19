@@ -21,8 +21,8 @@ export default class Playlists {
 		const VALIDATION = /[^a-zA-Z0-9<>\[\]^\/.2"'`~!@#$%^&*() ]/gm;
 		Name.replace(VALIDATION, "");
 		Name.replace("\n", "");
-		return new Promise<Playlist>((resolve, reject) => {
-			if (!this.GetPlaylistByName(Name)) {
+		return new Promise<Playlist>(async (resolve, reject) => {
+			if (!await this.GetPlaylistByName(Name)) {
 				const NewPlaylist = new Playlist();
 				NewPlaylist.Name = Name;
 				NewPlaylist.Songs = [];
