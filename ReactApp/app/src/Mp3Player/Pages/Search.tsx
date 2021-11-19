@@ -41,7 +41,7 @@ export default class Search extends Component {
 				<h1>Search your music</h1>
 				<div className="search"><input id="search-page-search" placeholder="Search..." onInput={(Event) => this.OnInput(Event)} /></div>
 				<HorizontalScroller style={{ padding: 0 }} Items={this.state.Albums} />
-				<VerticalSongs songStyle={{ marginLeft: -15, width: `calc(100% + 5px)` }} style={{ padding: 0 }} Items={this.state.Songs} />
+				<VerticalSongs NoPages={true} songStyle={{ marginLeft: -15, width: `calc(100% + 5px)` }} style={{ padding: 0 }} Items={this.state.Songs} />
 			</div>
 		)
 	}

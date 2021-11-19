@@ -35,8 +35,10 @@
 	height: fit-content;
 	font-size: $text-size-1;
 	font-weight: 500;
-	width: 100%;
+	max-width: 100%;
+	margin: 0;
 	overflow: hidden;
+	display: block;
 
 	white-space: nowrap;
 	text-overflow: ellipsis;
