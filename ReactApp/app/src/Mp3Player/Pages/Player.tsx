@@ -33,7 +33,8 @@ export default class Player extends Component {
 		MouseX: number,
 		Volume: number,
 		Lyrics?: string,
-		LyricsVisible: false
+		LyricsVisible: false,
+		Repeat: boolean,
 	} = {
 			Image: "",
 			Percentage: 0,
@@ -42,7 +43,8 @@ export default class Player extends Component {
 			HoveringSeek: false,
 			MouseX: 0,
 			Volume: 1,
-			LyricsVisible: false
+			LyricsVisible: false,
+			Repeat: false
 		};
 
 	componentDidMount() {
@@ -66,6 +68,13 @@ export default class Player extends Component {
 			this.setState({
 				Volume: volume
 			});
+		});
+
+		AudioPlayer.OnEnded.connect(() => {
+			if (this.state.Repeat && this.state.Song) {
+				AudioPlayer.Seek(0);
+				AudioPlayer.PlaySong(this.state.Song);
+			}
 		});
 
 		AudioPlayer.OnSongChange.connect((Song) => {
@@ -238,6 +247,7 @@ export default class Player extends Component {
 					</div>
 				</div>
 				<div className="player-section">
+					<button onClick={() => this.setState({ Repeat: !this.state.Repeat })} className={`${this.state.Repeat ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>restart_alt</button>
 					{this.state.Lyrics &&
 						<button onClick={() => this.setState({ LyricsVisible: !this.state.LyricsVisible })} className="player-icon-small player-icon material-icons">format_quote</button>
 					}
