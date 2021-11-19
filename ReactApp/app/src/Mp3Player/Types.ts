@@ -94,4 +94,9 @@ export interface Artist {
 }
 
 export type ArtistLookup = { [key: string]: Artist };
-export type ArtistArray = Artist[];
+export type ArtistArray = Artist[]
+
+export interface Playlist {
+	Songs: Song[];
+	Name: string;
+}

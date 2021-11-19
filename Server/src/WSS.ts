@@ -25,7 +25,7 @@ class Message<T> {
 		this.ClientId = ClientId;
 		this.Data = Data;
 	}
-	Prase(): T {
+	Prase(): { Action: string, MessageId?: string, Data: T } {
 		try {
 			return JSON.parse(this.Data);
 		} catch (error) {
@@ -78,14 +78,16 @@ export default class WSS {
 			this.WebSocketConnections.push(WebSocketConnection);
 		});
 	}
-	HandleMessage(Client: WSC, Message: Message<any>) {
+	async HandleMessage(Client: WSC, Message: Message<any>) {
 		const MessageData = Message.Prase();
 		const Action = MessageData.Action as string;
-		console.log(MessageData);
+		// console.log(MessageData); SHUT!!
 		if (this.RequestHandlers[Action]) {
 			const Response = this.RequestHandlers[Action](Client, Message);
-			if (Response) {
+			if (Response && JSON.stringify(Response) !== "{}") {
 				Client.Send(Action, Response, "RESPONSE", MessageData.MessageId);
+			} else {
+				Client.Send(Action, await (Response), "RESPONSE", MessageData.MessageId);
 			}
 		} else {
 			Client.Send(Action, null, "RESPONSE", MessageData.MessageId);

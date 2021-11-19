@@ -25,6 +25,7 @@ const Player = React.lazy(() => import('./Pages/Player'));
 const Album = React.lazy(() => import('./Pages/Album'));
 const Home = React.lazy(() => import('./Pages/Home'));
 const Settings = React.lazy(() => import('./Pages/Splash'));
+const Playlists = React.lazy(() => import('./Pages/Playlist/PlaylistRouter'));
 
 export const Port = [9091];
 const API = axios.create({
@@ -83,6 +84,7 @@ export default class App extends Component {
 												<Route component={Library} exact={false} path="/library" />
 												<Route component={Album} exact={false} path="/album" />
 												<Route component={Settings} exact={false} path="/settings" />
+												<Route component={Playlists} exact={false} path="/playlist" />
 											</Switch>
 										</div>
 									</div>

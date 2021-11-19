@@ -41,6 +41,8 @@ import SearchRouter from "./Routes/Search";
 import AlbumsRouter from './Routes/Albums';
 import GetLocalNetworks from './GetLocalNetworkAddress';
 import SpotifyRouter from './Routes/Spotify';
+import PlaylistsRouter from "./Routes/Playlists";
+import { Playlist } from './Handlers/Playlists/Playlists';
 
 const app = express();
 app.use(cors());
@@ -56,7 +58,7 @@ import WSS from './WSS';
 (async () => {
 	try {
 		const RequiredFolders = ["Data", "Songs"];
-		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json", "Data/Playback.json"];
+		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json", "Data/Playback.json", "Data/Playlists.json"];
 		const Path = path.join(__dirname, '../');
 		const Files = await fs.readdirSync(Path);
 
@@ -92,6 +94,9 @@ const SongImages: Types.SongImages = {};
 const ArtistLookup: Types.ArtistLookup = {};
 const ArtistArray: Types.ArtistArray = [];
 
+const PlaylistArray: Playlist[] = [];
+const PlaylistLookup: { [key: string]: Playlist } = {};
+
 const pathHandler = new PathHandler.default();
 
 const WebServer = new WSS(PORT + 1);
@@ -109,6 +114,7 @@ const SubscribeRoutes = () => {
 		app.use("/albums", new AlbumsRouter(AlbumArray, AlbumLookup).Router);
 		app.use("/spotify", new SpotifyRouter(pathHandler.Path, WebServer, pathHandler.Python).Router);
 		app.use("/playback", new PlaybackRouter().Router);
+		app.use("/playlists", new PlaylistsRouter(PlaylistArray, PlaylistLookup, WebServer).Router);
 	}
 }
 

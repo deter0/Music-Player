@@ -1,0 +1,42 @@
+@import "../../Styles/Variables.scss";
+.playlist-name {
+	width: 100%;
+}
+
+.validate-container {
+	margin-top: 6px;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.validator {
+	font-size: 1.5rem;
+	opacity: 60%;
+}
+
+.validating {
+	animation-name: spin;
+	animation-duration: 1520ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+.validate-error {
+	opacity: 100%;
+	color: $red;
+}
+
+.validate-error-text {
+	margin-right: 6px;
+	color: $red;
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(360deg);
+	}
+	to {
+		transform: rotate(0deg);
+	}
+}
