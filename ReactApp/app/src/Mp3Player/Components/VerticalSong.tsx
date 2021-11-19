@@ -142,7 +142,7 @@ export default class VerticalSong extends Component<Props> {
 			>
 				<img loading="lazy" draggable={false} className={`${this.state.MouseFocus && "song-image-hover"} song-image`} src={this.state.Image} alt="" />
 				<h1 className="song-index">{this.props.Index + 1 < 10 ? `0${this.props.Index + 1}` : this.props.Index + 1}</h1>
-				<button onClick={() => {
+				<button title="Toggle like" onClick={() => {
 					this.Like();
 					this.setState({ Liked: !this.state.Liked });
 				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.state.Liked ? "favorite" : "favorite_border"}</button>

@@ -247,9 +247,9 @@ export default class Player extends Component {
 					</div>
 				</div>
 				<div className="player-section">
-					<button onClick={() => this.setState({ Repeat: !this.state.Repeat })} className={`${this.state.Repeat ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>restart_alt</button>
+					<button title="Toggle repeat" onClick={() => this.setState({ Repeat: !this.state.Repeat })} className={`${this.state.Repeat ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>restart_alt</button>
 					{this.state.Lyrics &&
-						<button onClick={() => this.setState({ LyricsVisible: !this.state.LyricsVisible })} className={`${this.state.LyricsVisible ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>format_quote</button>
+						<button title="Toggle lyrics" onClick={() => this.setState({ LyricsVisible: !this.state.LyricsVisible })} className={`${this.state.LyricsVisible ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>format_quote</button>
 					}
 					<h2 className="player-icon-ex-small player-icon material-icons">volume_down</h2>
 					<div className="slider-container">
@@ -262,10 +262,10 @@ export default class Player extends Component {
 						/>
 					</div>
 					<h2 className="player-icon-ex-small player-icon material-icons">volume_up</h2>
-					<button onClick={() => this.Like()} className={`${this.state.Song?.Liked ? "player-icon-color" : ""} player-icon-extra-small player-icon material-icons`}>{this.state.Song?.Liked ? "favorite" : "favorite_outline"}</button>
-					<button className="player-icon-small player-icon material-icons">first_page</button>
-					<button onClick={() => AudioPlayer.Pause()} className="player-icon material-icons">{(this.state.Paused) ? "play_arrow" : "pause"}</button>
-					<button className="player-icon-small player-icon material-icons">last_page</button>
+					<button title="Toggle like" onClick={() => this.Like()} className={`${this.state.Song?.Liked ? "player-icon-color" : ""} player-icon-extra-small player-icon material-icons`}>{this.state.Song?.Liked ? "favorite" : "favorite_outline"}</button>
+					<button title="Previous Song" className="player-icon-small player-icon material-icons">first_page</button>
+					<button title={this.state.Paused ? "Play" : "Pause"} onClick={() => AudioPlayer.Pause()} className="player-icon material-icons">{(this.state.Paused) ? "play_arrow" : "pause"}</button>
+					<button title="Skip Song" className="player-icon-small player-icon material-icons">last_page</button>
 				</div>
 				{/* <div className="player-section"></div> */}
 			</div>
