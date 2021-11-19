@@ -84,7 +84,7 @@ export default class App extends Component {
 												<Route component={Library} exact={false} path="/library" />
 												<Route component={Album} exact={false} path="/album" />
 												<Route component={Settings} exact={false} path="/settings" />
-												<Route component={Playlists} exact={false} path="/playlist" />
+												<Route component={Playlists} exact={false} path="/playlists" />
 											</Switch>
 										</div>
 									</div>

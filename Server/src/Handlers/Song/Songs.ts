@@ -78,9 +78,10 @@ export default class Songs {
 		});
 		const _global = global as any;
 		_global.CacheSong = this.CacheSong.bind(this);
+		_global.GetSong = this.GetSong.bind(this);
 	}
 
-	async GetSong(Identifier: string, Path?: string, DontSaveImage?: boolean, DontLookup?: boolean) {
+	async GetSong(Identifier: string, Path?: string, DontSaveImage: boolean = true, DontLookup: boolean = false) {
 		let Accepted = false;
 		const FileExtension = GetFileExtension(Identifier);
 		for (const Format of Formats) {

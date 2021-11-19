@@ -5,11 +5,11 @@ import SecondsToHMS from '../Helpers/SecondsToHMS';
 import * as App from "../App";
 
 import { Link } from 'react-router-dom';
-import { SHA256 } from 'sha-256';
 
 import "./VerticalSongs.scss";
 import DropDown from './DropDown';
 import { Redirect } from 'react-router';
+import Vector2 from '../Helpers/Vector2';
 
 export interface Props {
 	Item: Types.Song,
@@ -88,7 +88,31 @@ export default class VerticalSong extends Component<Props> {
 					this.setState({ Album: true });
 					break;
 				case (4):
-
+					window.API.get(`/playlists`, {
+						params: {
+							From: 0,
+							To: 5
+						}
+					}).then(Response => {
+						window.CreateDropdown((Response.data as Types.Playlist[]).map((Playlist) => {
+							return {
+								Icon: "",
+								Label: Playlist.Name
+							}
+						}), new Vector2(window.MouseLocation.y, window.MouseLocation.x), (Selected) => {
+							console.log("SELECTED" + Selected);
+							if ((Response.data as Types.Playlist[])[Selected]) {
+								window.API.post(`/playlists/add-to-playlist`, {
+									SongIdentifier: this.props.Item.Identifier,
+									PlaylistName: (Response.data as Types.Playlist[])[Selected].Name
+								}).then(Response => {
+									console.log("Added to playlist");
+								}).catch(error => {
+									console.error(error);
+								});
+							}
+						});
+					});
 					break;
 				case (5):
 					window.API.delete(`/songs/`, {

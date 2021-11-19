@@ -4,7 +4,7 @@ import fs from "fs";
 
 export class Playlist {
 	Name: string;
-	Songs: Types.Song[];
+	Songs: string[];
 }
 
 const PLAYLIST_PATH = path.join(__dirname, "../../../Data/Playlists.json");
@@ -18,7 +18,7 @@ export default class Playlists {
 		this.LoadPlaylists();
 	}
 	CreatePlaylist(Name: string) {
-		const VALIDATION = /[a-zA-Z0-9<>\[\]^\/.2"'`~!@#$%^&*() ]/gm;
+		const VALIDATION = /[^a-zA-Z0-9<>\[\]^\/.2"'`~!@#$%^&*() ]/gm;
 		Name.replace(VALIDATION, "");
 		Name.replace("\n", "");
 		return new Promise<Playlist>((resolve, reject) => {
@@ -36,13 +36,36 @@ export default class Playlists {
 			}
 		});
 	}
-	GetPlaylistByName(Name: string) {
-		return this.PlaylistLookup[Name];
+	async GetPlaylistByName(Name: string) {
+		const Playlist = this.PlaylistLookup[Name];
+		if (Playlist) {
+			const _global = global as any;
+			const Playlist_ = {
+				Name: Playlist.Name,
+				Songs: new Array<Types.Song>(Playlist.Songs.length)
+			};
+			for (let i = 0; i < Playlist.Songs.length; i++) {
+				Playlist_.Songs[i] = await _global.GetSong(Playlist.Songs[i]);
+			}
+			console.log(Playlist_);
+			return Playlist_;
+		}
 	}
 	GetPlaylists(From: number, To: number) {
 		return new Promise<Playlist[]>((resolve, reject) => {
 			resolve(this.PlaylistArray.slice(From, To));
 		});
+	}
+	async AddSongToPlaylist(PlaylistName: string, SongIdentifier: string) {
+		for (let i = 0; i < this.PlaylistLookup[PlaylistName].Songs.length; i++) {
+			const _global = global as any;
+			const Song = await _global.GetSong(this.PlaylistLookup[PlaylistName].Songs[i], undefined, true);
+			if (Song.Identifier === SongIdentifier) {
+				return;
+			}
+		}
+		this.PlaylistLookup[PlaylistName].Songs.push(SongIdentifier);
+		this.SavePlaylists();
 	}
 
 	private SavePlaylists() {

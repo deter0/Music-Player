@@ -8,11 +8,13 @@ export default class PlaylistsRouter {
 	constructor(PlaylistArray: Playlist[], PlaylistLookup: { [key: string]: Playlist }, WebServer: WSS) {
 		this.Playlists = new Playlists(PlaylistArray, PlaylistLookup);
 		this.Router = Router();
-		this.Router.get("/", (Request, Response) => {
+		this.Router.get("/", async (Request, Response) => {
 			try {
+				console.log(Request.query);
 				if (Request.query.Name) {
-					const Name = (Request.query.Name as string).trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "");
-					const Playlist = this.Playlists.GetPlaylistByName(Name as string);
+					const Name = Request.query.Name;//(Request.query.Name as string).trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]/g, "");
+					console.log(Name);
+					const Playlist = await this.Playlists.GetPlaylistByName(Name as string);
 					if (Playlist) {
 						Response.json(Playlist);
 						return;
@@ -21,18 +23,26 @@ export default class PlaylistsRouter {
 						return;
 					}
 				} else if (Request.query.From && Request.query.To) {
-					const From = parseInt(Request.query.From as string, 10);
-					const To = parseInt(Request.query.To as string, 10);
-					if (From >= 0 && To >= 0 && To >= From) {
-						return Response.json(this.Playlists.GetPlaylists(From, To));
-					} else {
-						Response.sendStatus(400);
-						return;
-					}
+					const From = parseInt(Request.query.From as string);
+					const To = parseInt(Request.query.To as string);
+					return Response.json(await this.Playlists.GetPlaylists(From, To));
 				}
 				Response.sendStatus(400);
 			} catch (Error) {
 				console.error(Error);
+				Response.sendStatus(500);
+			}
+		});
+		this.Router.post("/add-to-playlist", async (Request, Response) => {
+			try {
+				const { PlaylistName, SongIdentifier } = Request.body;
+				if (this.Playlists.GetPlaylistByName(PlaylistName)) {
+					this.Playlists.AddSongToPlaylist(PlaylistName, SongIdentifier);
+					Response.sendStatus(200);
+				} else {
+					Response.sendStatus(400);
+				}
+			} catch (error) {
 				Response.sendStatus(500);
 			}
 		});
