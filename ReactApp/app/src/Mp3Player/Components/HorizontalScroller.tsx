@@ -74,7 +74,7 @@ export default class HorizontalScroller extends Component<Props, State, {}> {
 								DeltaTime * 20
 							);
 						if (!MouseUp) {
-							requestAnimationFrame(() => Callback());
+							setTimeout(Callback, 16);
 						} else {
 							MouseUp = false;
 						}
@@ -184,7 +184,7 @@ export class Album extends Component<AlbumProps> {
 	render() {
 		return <div onMouseDown={() => this.props.OnMouseDown.dispatch(undefined)} className="album">
 			<ImageLoader className="album-cover" Loading={this.state.Image === ""} ImageElement={
-				<img loading="lazy" draggable={false} className="album-cover" src={this.state.Image} alt="" />
+				<img onDragStart={(Event) => Event.preventDefault()} loading="lazy" draggable={false} className="album-cover" src={this.state.Image} alt="" />
 			} />
 			<Link to={`/album/${this.props.Item.Id}`} className="album-title">{this.props.Item.Title}</Link>
 			<h2 className="album-artist">{this.props.Item.Artist}</h2>
