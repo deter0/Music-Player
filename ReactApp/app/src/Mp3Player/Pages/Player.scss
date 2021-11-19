@@ -54,6 +54,9 @@ $spacing: 60px;
 		width: calc(100vw - $navigation-size-small - $spacing);
 		height: 90px;
 	}
+	.lyrics {
+		width: calc(100vw - $navigation-size-small - $spacing) !important;
+	}
 	.player-icon {
 		font-size: 20px;
 		padding: 4px !important;
@@ -79,8 +82,9 @@ $spacing: 60px;
 }
 
 @media (max-width: 500px) {
-	.player {
-		width: calc(100vw - $spacing);
+	.player,
+	.lyrics {
+		width: calc(100vw - $spacing) !important;
 	}
 }
 
