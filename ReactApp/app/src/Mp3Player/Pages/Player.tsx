@@ -58,6 +58,15 @@ export default class Player extends Component {
 		AudioPlayer.OnSongChange.connect((Song) => {
 			this.setState({ Song: Song });
 			this.LoadImage();
+
+			window.API.get("/lyrics", {
+				params: {
+					Artist: Song.Artist,
+					Title: Song.Title
+				}
+			}).then(Response => {
+				console.log(Response.data);
+			})
 		});
 		if (AudioPlayer.GetSong()) {
 			this.setState({ Song: AudioPlayer.GetSong() });

@@ -88,6 +88,9 @@ export default class VerticalSong extends Component<Props> {
 					this.setState({ Album: true });
 					break;
 				case (4):
+
+					break;
+				case (5):
 					window.API.delete(`/songs/`, {
 						params: {
 							Identifier: this.props.Item.Identifier
@@ -138,6 +141,10 @@ export default class VerticalSong extends Component<Props> {
 					{
 						Icon: "library_music",
 						Label: "Go to Album"
+					},
+					{
+						Icon: "bookmark_add",
+						Label: "Add to Playlist"
 					},
 					{
 						Icon: "delete_outline",

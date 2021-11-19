@@ -54,6 +54,8 @@ export const PORT = GET_PORT(); // default port to listen
 import GetUTC from './GetUTC';
 import PlaybackRouter from './Routes/Playback';
 import WSS from './WSS';
+import axios from 'axios';
+import LyricsRouter from './Routes/Lyrics';
 
 (async () => {
 	try {
@@ -115,6 +117,7 @@ const SubscribeRoutes = () => {
 		app.use("/spotify", new SpotifyRouter(pathHandler.Path, WebServer, pathHandler.Python).Router);
 		app.use("/playback", new PlaybackRouter().Router);
 		app.use("/playlists", new PlaylistsRouter(PlaylistArray, PlaylistLookup, WebServer).Router);
+		app.use("/lyrics", new LyricsRouter().Router);
 	}
 }
 
