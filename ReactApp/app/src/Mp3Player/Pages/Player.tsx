@@ -249,7 +249,7 @@ export default class Player extends Component {
 				<div className="player-section">
 					<button onClick={() => this.setState({ Repeat: !this.state.Repeat })} className={`${this.state.Repeat ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>restart_alt</button>
 					{this.state.Lyrics &&
-						<button onClick={() => this.setState({ LyricsVisible: !this.state.LyricsVisible })} className="player-icon-small player-icon material-icons">format_quote</button>
+						<button onClick={() => this.setState({ LyricsVisible: !this.state.LyricsVisible })} className={`${this.state.LyricsVisible ? "player-icon-active" : ""} player-icon-small player-icon material-icons`}>format_quote</button>
 					}
 					<h2 className="player-icon-ex-small player-icon material-icons">volume_down</h2>
 					<div className="slider-container">
