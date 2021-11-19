@@ -81,6 +81,8 @@ export default class Playlists {
 				this.PlaylistLookup[Playlist.Name] = Playlist;
 			}
 		} catch (error) {
+			this.PlaylistArray = [];
+			this.PlaylistLookup = {};
 			if (error.code !== "ENOENT") {
 				console.error(error);
 			} else {

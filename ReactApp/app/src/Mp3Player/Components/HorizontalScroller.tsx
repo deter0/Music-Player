@@ -27,17 +27,6 @@ declare global {
 	}
 }
 
-let MouseLocation = new Vector2();
-window.MouseLocation = MouseLocation;
-window.addEventListener("mousemove", (Event) => {
-	MouseLocation.x = Event.clientX;
-	MouseLocation.y = Event.clientY;
-});
-let MouseUp = false;
-window.addEventListener("mouseup", () => {
-	MouseUp = true;
-});
-
 export default class HorizontalScroller extends Component<Props, State, {}> {
 	state: State = {
 		Items: []
@@ -54,16 +43,16 @@ export default class HorizontalScroller extends Component<Props, State, {}> {
 		}
 
 		this.OnMouseDown.connect((args) => {
-			let X = MouseLocation.x;
+			let X = window.MouseLocation.x;
 			let Last = GetUTC();
-			MouseUp = false;
+			window.MouseUp = false;
 			if (this.Scroller.current) {
 				let Real = this.Scroller.current.scrollLeft;
 				let Callback = () => {
 					let DeltaTime = GetUTC() - Last;
 					if (this.Scroller.current) {
-						let Difference = X - MouseLocation.x;
-						X = MouseLocation.x;
+						let Difference = X - window.MouseLocation.x;
+						X = window.MouseLocation.x;
 
 						Real += Difference;
 						Real = Math.max(Real, 0);
@@ -73,10 +62,10 @@ export default class HorizontalScroller extends Component<Props, State, {}> {
 								Real,
 								DeltaTime * 20
 							);
-						if (!MouseUp) {
+						if (!window.MouseUp) {
 							setTimeout(Callback, 16);
 						} else {
-							MouseUp = false;
+							window.MouseUp = false;
 						}
 					}
 					Last = GetUTC();

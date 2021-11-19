@@ -13,6 +13,7 @@ import Library from './Pages/Library/Library';
 import Error from './Components/Error';
 import Path from './Pages/Path';
 import WS from './WS';
+import Vector2 from './Helpers/Vector2';
 
 // import Download from './Pages/Download';
 // import Search from './Pages/Search';
@@ -40,13 +41,25 @@ declare global {
 		History: any; SetImage: (src: string) => void,
 		Shortcuts: Shortcuts,
 		API: AxiosInstance,
-		WS: WS
+		WS: WS,
+		MouseUp: boolean,
 	}
 }
 window.API = API;
 window.Shortcuts = AppShortcuts;
 window.History = createBrowserHistory();
 window.WS = WSHandler;
+
+let MouseLocation = new Vector2();
+window.MouseLocation = MouseLocation;
+window.addEventListener("mousemove", (Event) => {
+	MouseLocation.x = Event.clientX;
+	MouseLocation.y = Event.clientY;
+});
+window.MouseUp = false;
+window.addEventListener("mouseup", () => {
+	window.MouseUp = true;
+});
 
 export default class App extends Component {
 	state = { SetPath: false }
