@@ -35,7 +35,7 @@ const Paths: { [key: string]: Path[] } = {
 	"Playlists": [
 		{
 			icon: "queue",
-			to: "/playlist/create",
+			to: "/playlists/create",
 			label: "New Playlist"
 		}
 	],

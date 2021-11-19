@@ -9,7 +9,7 @@ export default function Lyrics(Artist: string, Title: string): Promise<string> {
 		const LyricsQuery = `/lyrics/${ValidateStr(Artist)}/${ValidateStr(Title)}`;
 		axios.get("https://www.musixmatch.com" + LyricsQuery).then(Response => {
 			let LyricsRes = (Response.data as string).match(/\"body":"(.*)/gm);
-			let Lyrics = LyricsRes[0].split(`"body":"`)[1].split(`","language`)[0].replace(/\\n/gm, "\n");
+			let Lyrics = LyricsRes[0].split(`"body":"`)[1].split(`","language`)[0].replace(/\\n/gm, "<br/>").replace("\n", "<br/>");
 			resolve(Lyrics);
 		}).catch(error => {
 			reject(error);

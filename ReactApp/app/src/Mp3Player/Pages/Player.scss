@@ -250,3 +250,32 @@ $spacing: 60px;
 	border-radius: $border-radius;
 	pointer-events: none;
 }
+
+.lyrics {
+	height: fit-content;
+	max-height: $player-height * 3;
+	width: calc(100vw - $navigation-size - $spacing);
+	flex-shrink: 0;
+	padding: $button-padding * 2;
+	background-color: transparentize($text-color, 0.98);
+	position: fixed;
+	bottom: calc($spacing / 2) + calc($player-height * 1.1);
+	right: calc($spacing / 2);
+
+	backdrop-filter: blur(90px);
+	transform: translateZ(0) scaleZ(1) perspective(1);
+	border-radius: $border-radius;
+
+	overflow: hidden;
+	overflow-y: auto;
+
+	z-index: 50000;
+
+	box-shadow: 0 0 25px transparentize($color: $black, $amount: 0.6);
+}
+
+.lyrics-text {
+	font-size: 1.25rem;
+	font-weight: 700;
+	line-height: 1.5;
+}

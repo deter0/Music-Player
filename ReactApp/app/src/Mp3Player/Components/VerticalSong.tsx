@@ -94,12 +94,15 @@ export default class VerticalSong extends Component<Props> {
 							To: 5
 						}
 					}).then(Response => {
+						if (!window.MouseLocation) {
+							window.MouseLocation = new Vector2(0, 0);
+						}
 						window.CreateDropdown((Response.data as Types.Playlist[]).map((Playlist) => {
 							return {
 								Icon: "",
 								Label: Playlist.Name
 							}
-						}), new Vector2(window.MouseLocation.y, window.MouseLocation.x), (Selected) => {
+						}), new Vector2(window.MouseLocation.y - 20, window.MouseLocation.x - 40), (Selected) => {
 							console.log("SELECTED" + Selected);
 							if ((Response.data as Types.Playlist[])[Selected]) {
 								window.API.post(`/playlists/add-to-playlist`, {

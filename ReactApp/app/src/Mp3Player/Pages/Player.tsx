@@ -11,6 +11,16 @@ declare global {
 	}
 }
 
+class Lyrics extends Component<{ Lyrics: string }> {
+	render() {
+		return (
+			<div className="lyrics">
+				<h1 dangerouslySetInnerHTML={{ __html: this.props.Lyrics.replace("\n", "<br/>") }} className="lyrics-text" />
+			</div>
+		)
+	}
+}
+
 const AudioPlayer = new AudioPlayer_.default();
 export default class Player extends Component {
 	state: {
@@ -22,6 +32,8 @@ export default class Player extends Component {
 		HoveringSeek: boolean,
 		MouseX: number,
 		Volume: number,
+		Lyrics?: string,
+		LyricsVisible: false
 	} = {
 			Image: "",
 			Percentage: 0,
@@ -29,7 +41,8 @@ export default class Player extends Component {
 			Paused: false,
 			HoveringSeek: false,
 			MouseX: 0,
-			Volume: 1
+			Volume: 1,
+			LyricsVisible: false
 		};
 
 	componentDidMount() {
@@ -65,7 +78,10 @@ export default class Player extends Component {
 					Title: Song.Title
 				}
 			}).then(Response => {
-				console.log(Response.data);
+				this.setState({ Lyrics: Response.data });
+			}).catch(error => {
+				console.error(error);
+				this.setState({ Lyrics: undefined, LyricsVisible: false });
 			})
 		});
 		if (AudioPlayer.GetSong()) {
@@ -193,7 +209,8 @@ export default class Player extends Component {
 	}
 
 	render() {
-		return (
+		return <>
+			{(this.state.LyricsVisible && this.state.Lyrics) && <Lyrics Lyrics={this.state.Lyrics} />}
 			<div className="player">
 				<div
 					id="progress-tracker"
@@ -221,6 +238,9 @@ export default class Player extends Component {
 					</div>
 				</div>
 				<div className="player-section">
+					{this.state.Lyrics &&
+						<button onClick={() => this.setState({ LyricsVisible: !this.state.LyricsVisible })} className="player-icon-small player-icon material-icons">format_quote</button>
+					}
 					<h2 className="player-icon-ex-small player-icon material-icons">volume_down</h2>
 					<div className="slider-container">
 						<div style={{ width: `${this.state.Volume * 100}%` }} className="slider-progress" />
@@ -239,6 +259,6 @@ export default class Player extends Component {
 				</div>
 				{/* <div className="player-section"></div> */}
 			</div>
-		)
+		</>
 	}
 }
