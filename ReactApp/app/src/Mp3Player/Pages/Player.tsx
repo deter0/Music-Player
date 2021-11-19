@@ -15,7 +15,7 @@ class Lyrics extends Component<{ Lyrics: string }> {
 	render() {
 		return (
 			<div className="lyrics">
-				<h1 dangerouslySetInnerHTML={{ __html: this.props.Lyrics.replace("\n", "<br/>") }} className="lyrics-text" />
+				<h1 dangerouslySetInnerHTML={{ __html: this.props.Lyrics.replace("\n", "<br/>").replace(/\\"/g, "\"") }} className="lyrics-text" />
 			</div>
 		)
 	}

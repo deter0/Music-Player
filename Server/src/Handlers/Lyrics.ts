@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ValidateStr = (Str: string) => {
-	return Str.normalize("NFD").replace(/[^a-zA-Z0-9 ]/g, "").replace(/[ ]/g, "-");
+	return Str.normalize("NFD").replace("'", "-").replace(/[^a-zA-Z0-9- ]/g, "").replace(/[ ]/g, "-");
 }
 
 export default function Lyrics(Artist: string, Title: string): Promise<string> {
@@ -12,6 +12,7 @@ export default function Lyrics(Artist: string, Title: string): Promise<string> {
 			let Lyrics = LyricsRes[0].split(`"body":"`)[1].split(`","language`)[0].replace(/\\n/gm, "<br/>").replace("\n", "<br/>");
 			resolve(Lyrics);
 		}).catch(error => {
+			console.log("Error for", LyricsQuery, Artist, Title);
 			reject(error);
 		})
 	});
