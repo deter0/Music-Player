@@ -22,7 +22,12 @@ const Paths: { [key: string]: Path[] } = {
 		{
 			icon: "file_download",
 			to: "/download",
-			label: "Download"
+			label: "Downloads"
+		},
+		{
+			icon: "support",
+			to: "/download/spotify",
+			label: "Spotify"
 		}
 	],
 	"Library": [
