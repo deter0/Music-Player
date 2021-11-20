@@ -35,6 +35,12 @@
 
 @media (max-width: 600px) {
 	.song-like {
+		font-size: 18px !important;
+	}
+	.song-options::before {
+		font-size: 18px !important;
+	}
+	.song-duration {
 		display: none !important;
 	}
 	.song-container {
