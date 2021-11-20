@@ -36,7 +36,7 @@ Powered by [Musixmatch](https://musixmatch.com)
 currently the only method is to run from source, this will change in the future.
 
 # Running from source
-Dependencies: NodeJS, npm, python, pip
+Dependencies: [NodeJS](https://nodejs.org/en/), [python](https://www.python.org), [pip](https://packaging.python.org/tutorials/installing-packages/)<br/>
 First you'll have to clone the repo do so by running the following commands.
 ```bash
 $ git clone https://www.github.com/deter0/Music-Player
@@ -57,6 +57,8 @@ and in a seperate terminal tab run the server by cd'ing into `/Server` and also 
 ```bash
 $ npm start
 ```
+
+**After running** It will take you through a first time setup. If you somehow happen to input it wrong (don't be ashamed I've done it) you can see all the data in `/Server/Data`. Primarily the first time setup data is stored in `/Server/Data/Paths.txt` simply edit it and then restart the server. I will likely include this in settings page in the future.
 
 ## TODO<br/>
 ### Backend<br/>
