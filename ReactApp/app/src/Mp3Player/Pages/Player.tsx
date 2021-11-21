@@ -4,6 +4,7 @@ import * as Types from "../Types";
 import * as App from "../App";
 import * as AudioPlayer_ from "../AudioPlayer";
 import SecondsToHMS from '../Helpers/SecondsToHMS';
+import LyricMatcher from '../Core/LyricMatcher';
 
 declare global {
 	interface Window {
@@ -88,6 +89,7 @@ export default class Player extends Component {
 				}
 			}).then(Response => {
 				this.setState({ Lyrics: Response.data });
+				// const LyricMatcher_ = new LyricMatcher(Response.data as string, AudioPlayer.Audio);
 			}).catch(error => {
 				console.error(error);
 				this.setState({ Lyrics: undefined, LyricsVisible: false });

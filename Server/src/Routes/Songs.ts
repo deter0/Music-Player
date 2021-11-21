@@ -67,6 +67,17 @@ export default class SongsRouter {
 		});
 
 		this.Router.get("/raw", async (Request, Response) => {
+			console.log("Set headers");
+			Response.header('Access-Control-Allow-Origin', Request.get('Origin') || '*');
+			Response.header('Access-Control-Allow-Credentials', 'true');
+			Response.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE');
+			Response.header('Access-Control-Expose-Headers', 'Content-Length');
+			Response.header('Access-Control-Allow-Headers', 'Accept, Authorization, Content-Type, X-Requested-With, Range');
+			if (Request.method === 'OPTIONS') {
+				console.log("Sent options");
+				Response.sendStatus(200);
+				return;
+			}
 			let Identifier = Request.query.Identifier as string;
 			if (!Identifier) {
 				Response.sendStatus(400);

@@ -10,7 +10,8 @@ export default class AudioPlayer {
 	OnSongChange = new Signal<Song>();
 	OnVolumeChange = new Signal<number>();
 	constructor() {
-		this.Audio = document.createElement("audio");
+		this.Audio = new Audio();
+		this.Audio.crossOrigin = "anonymous";
 
 		this.Audio.oncanplaythrough = () => {
 			this.Audio.play();
