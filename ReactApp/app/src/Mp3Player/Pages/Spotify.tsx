@@ -125,6 +125,11 @@ export default class Spotify extends Component {
 				<span style={{ paddingLeft: 24, marginBottom: 24 }}>Slow Downloads? I can't do anything about that because it's on youtube's end.</span>
 			</p>
 			<SpotifyProfile />
+			<button onClick={() => {
+				window.API.get("/spotify/download-liked").then(Response => {
+					console.log("downloading all liked songs");
+				})
+			}}>Download all like songs (ALL! be careful)</button>
 			<SpotifySearch />
 		</div>// : <Redirect to="/download/spotify-config?e=true" />
 	}

@@ -244,8 +244,46 @@ def main(): # Arguments: `Type Id Path TOKEN`
             print("Invalid song ID");
             sys.stdout.flush();
             sys.exit();
+    elif (Type == "liked-songs"): # Deprecated (cancelled had better idea actually) just download individual songs
+        print("type is liked songs", "https://api.spotify.com/v1/me/tracks", Token);
+        sys.stdout.flush();
+        ended = False;
+        def recurse(index):
+            spotify_songs = requests.get("https://api.spotify.com/v1/me/tracks?offset-" + str(index) + "&limit=" + "50", headers={
+                "Authorization": "Bearer " + Token
+            });
+            sys.stdout.flush();
+            print("made request");
+            sys.stdout.flush();
+            if (spotify_songs.status_code == 200):
+                spotify_songs = spotify_songs.json()
+                for (i, song) in enumerate(spotify_songs["items"]):
+                    song_name = song["track"]["name"];
+                    song_artist = "";
+                    for (j, artist) in enumerate(song["track"]["artists"]):
+                        if (j == 0):
+                            song_artist = artist["name"]
+                        else:
+                            song_artist = song_artist + ", " + artist["name"]
+                    song_album = song["track"]["album"]["name"];
+                    song_cover = song["track"]["album"]["images"][0]["url"];
+
+                    songs.append(
+                        Song(song["track"]["id"], song_name, song_artist, song_album, song_cover)
+                    );
+                if (not spotify_songs.next):
+                    Ended = True;
+                if (spotify_songs.tracks.length == 0):
+                    Ended = True;
+                if (not ended):
+                    recurse(index + 50);
+                else:
+                    print("done fetching songs");
+                    sys.stdout.flush();
     else:
-        songs = [];
+        print("Invalid song ID");
+        sys.stdout.flush();
+        sys.exit();
     print("0.5"); 
     # platform = ask_platform()
     # if "1" in platform:

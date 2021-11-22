@@ -119,3 +119,5 @@ export interface Artist {
 
 export type ArtistLookup = { [key: string]: Artist };
 export type ArtistArray = Artist[];
+
+export type Download = { Status: string, Percentage: number, Rate: number, Song: SpotifySong, ETA: number };

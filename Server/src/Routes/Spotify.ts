@@ -7,7 +7,7 @@ import WSS from "../WSS";
 
 export default class SpotifyRouter {
 	Router = Router();
-	Spotify = new Spotify();
+	Spotify: Spotify;
 	Path: string;
 
 	PythonVersion?: string;
@@ -16,6 +16,7 @@ export default class SpotifyRouter {
 		this.Path = Path;
 		this.PythonVersion = Python;
 		this.WebServer = WebServer;
+		this.Spotify = new Spotify(this.Path, Python);
 		this.Router.post("/set", (Request, Response) => {
 			let ClientId = Request.body.ClientId as string;
 			let ClientSecret = Request.body.ClientSecret as string;
@@ -91,12 +92,18 @@ export default class SpotifyRouter {
 				Response.status(400).send("No id or path");
 			}
 		});
+		this.Router.get("/download-liked", (Request, Response) => {
+			this.Spotify.DownloadLikedSongs();
+			Response.sendStatus(200);
+		})
 		this.Router.get("/Downloads", (Request, Response) => {
 			Response.json(this.Spotify.Downloads);
 		});
 		this.WebServer.AppendRequestHandler<{ Data: { From: number, To: number } }>("GetDownloads", (Client, Message) => {
-			const MessageData = Message.Prase().Data;
-			return this.Spotify.Downloads.slice(MessageData.Data.From, MessageData.Data.To);
+			const MessageData = Message.Prase().Data.Data;
+			if (MessageData !== undefined) {
+				return this.Spotify.Downloads.slice(MessageData.From, MessageData.To);
+			}
 		})
 		setInterval(() => {
 			this.WebServer.Send("DownloadsChanged", JSON.stringify(this.Spotify.Downloads));

@@ -145,6 +145,8 @@ app.post("/", (Request, Response) => {
 	if (!pathHandler.Path && Path) {
 		pathHandler.SetPath(Path, Python).then((Path: string) => {
 			SubscribeRoutes();
+		}).catch(error => {
+			console.error(error);
 		});
 		Response.sendStatus(202);
 	} else {

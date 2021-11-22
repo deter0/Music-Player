@@ -119,11 +119,13 @@ export default class Player extends Component {
 		});
 
 		window.addEventListener("keydown", (Event) => {
-			if (Event.key.toLowerCase() === " ") {
-				//@ts-ignore
-				if (Event.target.tagName.toLowerCase() !== "input") {
-					AudioPlayer.Pause();
-					Event.preventDefault();
+			if (Event.key) {
+				if (Event.key.toLowerCase() === " ") {
+					//@ts-ignore
+					if (Event.target.tagName.toLowerCase() !== "input") {
+						AudioPlayer.Pause();
+						Event.preventDefault();
+					}
 				}
 			}
 		});
