@@ -10,7 +10,7 @@ from utils import Song
 
 from youtube import Youtube
 from spotify import Spotify
-from downloader import download
+from downloader import download, download_song_from_yt
 
 MAXVAL = 1000
 
@@ -280,6 +280,12 @@ def main(): # Arguments: `Type Id Path TOKEN`
                 else:
                     print("done fetching songs");
                     sys.stdout.flush();
+    elif (Type == "test"):
+        download_song_from_yt(
+            "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "test2.m4a"
+            );
+        return;
     else:
         print("Invalid song ID");
         sys.stdout.flush();

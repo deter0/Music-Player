@@ -1,4 +1,4 @@
-cd ../../
+cd ../
 cd ReactApp/app
 npm install
 cd ../../Server
