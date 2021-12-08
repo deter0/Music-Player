@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "prestart": "npm run build",
-    "start": "node .",
+    "prestart": "tsc --watch & nodemon --ignore Data/ --ignore Songs/ --ignore /Temp && fg",
+    "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -25,6 +25,7 @@
     "form-data": "^4.0.0",
     "fuse.js": "^6.4.6",
     "music-metadata": "^7.11.4",
+    "nodemon": "^2.0.15",
     "sha256": "^0.2.0",
     "ws": "^8.2.3"
   },
