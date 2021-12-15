@@ -388,78 +388,7 @@ export default class Spotify {
 	Downloads: Download[] = [];
 	async Download(Id: string, Path: string, PythonV?: string) {
 		this.GetSong(Id).then(Song => {
-			const Download = {
-				Status: "Queued",
-				Percentage: 0,
-				Rate: 0,
-				Song: Song,
-				ETA: 0
-			};
-			this.Downloads.push(Download);
-			try {
-				// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
-				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
-				PythonProcess.on("error", (Error: any) => {
-					console.error(Error);
-				});
-				const _global = global as any;
-				PythonProcess.stdout.on("data", (Data: any) => {
-					let Line = Data.toString() as string;
-					if (Line.indexOf("ETA") !== -1) {
-						let Data = {
-							Percentage: 0,
-							Speed: 0,
-							Eta: 0
-						}
-						let Split = Line.split("[");
-						for (let i = 0; i < Split.length; i++) {
-							let Input = Split[i];
-							let NumStr = Input.match(/[\d.,]+/);
-							if (NumStr && NumStr[0]) {
-								let Num = parseFloat(NumStr[0]);
-								if (Input.indexOf("%") !== -1) {
-									Data.Percentage = Num;
-								} else if (Input.indexOf("KB/s") !== -1) {
-									Data.Speed = Num;
-								} else if (Input.indexOf("secs") !== -1) {
-									Data.Eta = Num;
-								}
-							}
-						}
-						if (Data.Percentage) {
-							Download.Percentage = Data.Percentage;
-							Download.Rate = Data.Speed;
-							Download.ETA = Data.Eta;
-						}
-					} else if (Line.indexOf("Downloading") !== -1) {
-						this.Downloads[this.Downloads.indexOf(Download)].Status = "Downloading";
-					}
-				});
-				PythonProcess.stderr.on("data", (message) => {
-					console.error(`ERROR: ${message}`);
-					this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: ${message}`;
-				})
-				PythonProcess.on("exit", (Code: number) => {
-					if (Code === 0) {
-						const Artist = Song.Artists.map((Artist: any) => Artist.Name).join(", ");
-						const SongName =
-							`${Artist} ${Song.Name}`.replace(/[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*/g, "");
-						_global.CacheSong(`${SongName}.m4a`, Path);
-						console.log("Downloaded", Song.Name + ".m4a", Path);
-						this.Downloads[this.Downloads.indexOf(Download)].Status = "Completed";
-						this.Downloads[this.Downloads.indexOf(Download)].Percentage = 100;
-						this.DownloadsRemoved.dispatch(this.Downloads[this.Downloads.indexOf(Download)]);
-					} else {
-						console.error("Error code dowloading", Code);
-						this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: Code ${Code}`;
-						this.DownloadsRemoved.dispatch(this.Downloads[this.Downloads.indexOf(Download)]);
-					}
-				});
-			} catch (error) {
-				console.error("ERror dowloading", error);
-				this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: ${error}`;
-				this.DownloadsRemoved.dispatch(this.Downloads[this.Downloads.indexOf(Download)]);
-			}
+			this.DownloadTrack(Song, PythonV, Path);
 		}).catch(Error => {
 			console.error(Error);
 		});

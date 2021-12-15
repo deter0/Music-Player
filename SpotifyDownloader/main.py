@@ -1,11 +1,11 @@
-import re
+#!/usr/bin/python3
 import os
 import sys
 import requests;
 from pathlib import Path
 from threading import Thread
 
-from PyInquirer import prompt
+# from PyInquirer import prompt
 from utils import Song
 
 from youtube import Youtube
@@ -15,191 +15,191 @@ from downloader import download, download_song_from_yt
 MAXVAL = 1000
 
 
-def ask_platform():
-    options = {
-        "type": "list",
-        "name": "choice",
-        "message": "Download From?",
-        "choices": ["1.Spotify", "2.Youtube", "3.Exit"],
-    }
-    return prompt(options)["choice"]
+# def ask_platform():
+#     options = {
+#         "type": "list",
+#         "name": "choice",
+#         "message": "Download From?",
+#         "choices": ["1.Spotify", "2.Youtube", "3.Exit"],
+#     }
+#     return prompt(options)["choice"]
 
 
-def ask_download_option_youtube():
-    options = {
-        "type": "list",
-        "name": "choice",
-        "message": "What do you want to do?",
-        "choices": ["1.Download a playlist", "2.Download a particular song", "3.Exit"],
-    }
-    return prompt(options)["choice"]
+# def ask_download_option_youtube():
+#     options = {
+#         "type": "list",
+#         "name": "choice",
+#         "message": "What do you want to do?",
+#         "choices": ["1.Download a playlist", "2.Download a particular song", "3.Exit"],
+#     }
+#     return prompt(options)["choice"]
 
 
-def ask_download_option_spotify():
-    options = {
-        "type": "list",
-        "name": "choice",
-        "message": "What do you want to do?",
-        "choices": [
-            "1.Download your liked songs",
-            "2.Download a playlist",
-            "3.Download a particular song",
-            "4.Download an album",
-            "5.Exit",
-        ],
-    }
-    return prompt(options)["choice"]
+# def ask_download_option_spotify():
+#     options = {
+#         "type": "list",
+#         "name": "choice",
+#         "message": "What do you want to do?",
+#         "choices": [
+#             "1.Download your liked songs",
+#             "2.Download a playlist",
+#             "3.Download a particular song",
+#             "4.Download an album",
+#             "5.Exit",
+#         ],
+#     }
+#     return prompt(options)["choice"]
 
 
-def ask_num_songs_to_download():
-    options = {
-        "type": "list",
-        "name": "choice",
-        "message": "Select an option.",
-        "choices": ["1.Download all", "2.Enter a custom value:", "3.Exit"],
-    }
+# def ask_num_songs_to_download():
+#     options = {
+#         "type": "list",
+#         "name": "choice",
+#         "message": "Select an option.",
+#         "choices": ["1.Download all", "2.Enter a custom value:", "3.Exit"],
+#     }
 
-    ans = prompt(options)["choice"]
+#     ans = prompt(options)["choice"]
 
-    if "2" in ans:
-        number = {
-            "type": "input",
-            "name": "num_songs",
-            "message": "How many songs you want to download?",
-        }
+#     if "2" in ans:
+#         number = {
+#             "type": "input",
+#             "name": "num_songs",
+#             "message": "How many songs you want to download?",
+#         }
 
-        num_songs = prompt(number)["num_songs"]
-        return int(num_songs)
+#         num_songs = prompt(number)["num_songs"]
+#         return int(num_songs)
 
-    elif "3" in ans:
-        sys.exit()
+#     elif "3" in ans:
+#         sys.exit()
 
-    return MAXVAL
-
-
-def ask_download_playlist_songs():
-    options = {
-        "type": "input",
-        "name": "id",
-        "message": "Enter playlist id or url (Enter playlist id for youtube):",
-    }
-
-    return prompt(options)["id"]
+#     return MAXVAL
 
 
-def ask_download_album_songs():
-    options = {
-        "type": "input",
-        "name": "id",
-        "message": "Enter album id or url:",
-    }
+# def ask_download_playlist_songs():
+#     options = {
+#         "type": "input",
+#         "name": "id",
+#         "message": "Enter playlist id or url (Enter playlist id for youtube):",
+#     }
 
-    return prompt(options)["id"]
-
-
-def ask_download_particular_song():
-    options = [
-        {"type": "input", "name": "artist", "message": "Enter artist name:"},
-        {"type": "input", "name": "song", "message": "Enter song name:"},
-    ]
-
-    return prompt(options)
+#     return prompt(options)["id"]
 
 
-def ask_download_path():
-    options = {
-        "type": "list",
-        "name": "choice",
-        "message": "Where do you want to download the song?",
-        "choices": [
-            "1.Current folder",
-            "2.Create a new folder here and download",
-            "3.Enter a custom download path",
-            "4.Exit",
-        ],
-    }
+# def ask_download_album_songs():
+#     options = {
+#         "type": "input",
+#         "name": "id",
+#         "message": "Enter album id or url:",
+#     }
 
-    choice = prompt(options)["choice"]
-    if "1" in choice:
-        return os.getcwd()
-
-    elif "2" in choice:
-        ques = {"type": "input", "name": "folder", "message": "Enter a folder name:"}
-        folder = prompt(ques)["folder"]
-        if not os.path.exists(folder):
-            os.mkdir(folder)
-
-        return folder
-
-    elif "3" in choice:
-        ques = {
-            "type": "input",
-            "name": "path",
-            "message": "Enter path where songs should be downloaded:",
-        }
-
-        return prompt(ques)["path"]
-
-    else:
-        sys.exit()
+#     return prompt(options)["id"]
 
 
-def spotifydl():
-    choice = ask_download_option_spotify()
+# def ask_download_particular_song():
+#     options = [
+#         {"type": "input", "name": "artist", "message": "Enter artist name:"},
+#         {"type": "input", "name": "song", "message": "Enter song name:"},
+#     ]
 
-    if "1" in choice:
-        num_songs = ask_num_songs_to_download()
-        songs = Spotify.get_saved_songs(limit=num_songs)
-
-    elif "2" in choice:
-        playlist_id = ask_download_playlist_songs()
-        if "https" in playlist_id:
-            playlist_id = re.search(r"playlist\/(.*)\?", playlist_id).group(1)
-        num_songs = ask_num_songs_to_download()
-        try:
-            songs = Spotify.get_playlist_songs(playlist_id, limit=num_songs)
-        except Exception as e:
-            print("Invalid playlist ID or playlist is empty.")
-            sys.exit()
-    elif "3" in choice:
-        data = ask_download_particular_song()
-        songs = [Spotify.search_song(data["artist"], data["song"])]  # List of 1 song
-
-    elif "4" in choice:
-        album_id = ask_download_album_songs()
-        if "https" in album_id:
-            album_id = re.search(r"album\/(.*)\?", album_id).group(1)
-        try:
-            songs = Spotify.get_album_songs(album_id)
-        except Exception as e:
-            print("Invalid album ID or album is empty.")
-            sys.exit()
-    else:
-        sys.exit()
-
-    path = ask_download_path()
-
-    return songs, path
+    # return prompt(options)
 
 
-def youtubedl():
-    choice = ask_download_option_youtube()
+# def ask_download_path():
+#     options = {
+#         "type": "list",
+#         "name": "choice",
+#         "message": "Where do you want to download the song?",
+#         "choices": [
+#             "1.Current folder",
+#             "2.Create a new folder here and download",
+#             "3.Enter a custom download path",
+#             "4.Exit",
+#         ],
+#     }
 
-    if "1" in choice:
-        playlist_id = ask_download_playlist_songs()
-        num_songs = ask_num_songs_to_download()
-        songs = Youtube.get_playlist_songs(playlist_id, limit=num_songs)
+#     choice = prompt(options)["choice"]
+#     if "1" in choice:
+#         return os.getcwd()
 
-    elif "2" in choice:
-        data = ask_download_particular_song()
-        songs = [Youtube.get_song(f"{data['artist']} {data['song']}")]
+#     elif "2" in choice:
+#         ques = {"type": "input", "name": "folder", "message": "Enter a folder name:"}
+#         folder = prompt(ques)["folder"]
+#         if not os.path.exists(folder):
+#             os.mkdir(folder)
 
-    else:
-        sys.exit()
+#         return folder
 
-    path = ask_download_path()
+#     elif "3" in choice:
+#         ques = {
+#             "type": "input",
+#             "name": "path",
+#             "message": "Enter path where songs should be downloaded:",
+#         }
 
-    return songs, path
+#         return prompt(ques)["path"]
+
+#     else:
+#         sys.exit()
+
+
+# def spotifydl():
+#     choice = ask_download_option_spotify()
+
+#     if "1" in choice:
+#         num_songs = ask_num_songs_to_download()
+#         songs = Spotify.get_saved_songs(limit=num_songs)
+
+#     elif "2" in choice:
+#         playlist_id = ask_download_playlist_songs()
+#         if "https" in playlist_id:
+#             playlist_id = re.search(r"playlist\/(.*)\?", playlist_id).group(1)
+#         num_songs = ask_num_songs_to_download()
+#         try:
+#             songs = Spotify.get_playlist_songs(playlist_id, limit=num_songs)
+#         except Exception as e:
+#             print("Invalid playlist ID or playlist is empty.")
+#             sys.exit()
+#     elif "3" in choice:
+#         data = ask_download_particular_song()
+#         songs = [Spotify.search_song(data["artist"], data["song"])]  # List of 1 song
+
+#     elif "4" in choice:
+#         album_id = ask_download_album_songs()
+#         if "https" in album_id:
+#             album_id = re.search(r"album\/(.*)\?", album_id).group(1)
+#         try:
+#             songs = Spotify.get_album_songs(album_id)
+#         except Exception as e:
+#             print("Invalid album ID or album is empty.")
+#             sys.exit()
+#     else:
+#         sys.exit()
+
+#     path = ask_download_path()
+
+#     return songs, path
+
+
+# def youtubedl():
+#     choice = ask_download_option_youtube()
+
+#     if "1" in choice:
+#         playlist_id = ask_download_playlist_songs()
+#         num_songs = ask_num_songs_to_download()
+#         songs = Youtube.get_playlist_songs(playlist_id, limit=num_songs)
+
+#     elif "2" in choice:
+#         data = ask_download_particular_song()
+#         songs = [Youtube.get_song(f"{data['artist']} {data['song']}")]
+
+#     else:
+#         sys.exit()
+
+#     path = ask_download_path()
+
+#     return songs, path
 
 
 def main(): # Arguments: `Type Id Path TOKEN`
@@ -280,12 +280,12 @@ def main(): # Arguments: `Type Id Path TOKEN`
                 else:
                     print("done fetching songs");
                     sys.stdout.flush();
-    elif (Type == "test"):
-        download_song_from_yt(
-            "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            "test2.m4a"
-            );
-        return;
+    # elif (Type == "test"):
+        # download_song_from_yt(
+        #     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        #     "test2.m4a"
+        #     );
+        # return;
     else:
         print("Invalid song ID");
         sys.stdout.flush();
