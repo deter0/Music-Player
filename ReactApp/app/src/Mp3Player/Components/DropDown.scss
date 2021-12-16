@@ -25,7 +25,7 @@
 	left: -1px;
 	height: fit-content;
 	transform: translateY(calc(100% + calc($button-padding / 4) + 20px));
-	background-color: $background;
+	background-color: $background !important;
 	border-radius: $border-radius-alt;
 	border: 1px solid $transparent-border;
 	border-top: none;
