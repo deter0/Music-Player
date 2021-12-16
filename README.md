@@ -41,20 +41,21 @@ First you'll have to clone the repo do so by running the following commands.
 ```bash
 $ git clone https://www.github.com/deter0/Music-Player
 ```
-then cd into the `/Run/Linux` folder and if not installed do.
-```bash
-$ bash ./install.bash
+then cd into the `/Run` folder and if not installed do. It is a folder for simple scripts I've made to make the process of installing dependencies and running easier.
+```sh
+$ ./install.sh
 ```
-after installation of modules has finished. Simply run the `/Run/Linux/Run.bash` script.
-```bash
-$ bash ./run.bash
+If it fails you might need to do `chmod +x ./install.sh && chmod +x ./run.sh` this just adds the executable permission.<br/>
+After installation of modules has finished. Simply run the `/Run/run.sh` script.
+```sh
+$ ./run.sh
 ```
 or manually do it by cd into `/ReactApp/app/` and running
-```bash
+```sh
 $ npm start
 ```
 and in a seperate terminal tab run the server by cd'ing into `/Server` and also running
-```bash
+```sh
 $ npm start
 ```
 
