@@ -26,6 +26,15 @@ $spacing: 60px;
 	box-shadow: 0 0 25px transparentize($color: $black, $amount: 0.6);
 }
 
+@supports not (backdrop-filter: blur(1px)) {
+	.player {
+		background-color: lighten($background, 10);
+	}
+	.lyrics {
+		background-color: lighten($background, 10) !important;
+	}
+}
+
 .progress-outer {
 	height: 4px;
 	width: 100%;
