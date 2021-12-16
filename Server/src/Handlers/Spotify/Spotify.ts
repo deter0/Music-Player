@@ -388,7 +388,7 @@ export default class Spotify {
 	Downloads: Download[] = [];
 	async Download(Id: string, Path: string, PythonV?: string) {
 		this.GetSong(Id).then(Song => {
-			this.DownloadTrack(Song, PythonV, Path);
+			this.DownloadTrack(Song, Path, PythonV);
 		}).catch(Error => {
 			console.error(Error);
 		});
