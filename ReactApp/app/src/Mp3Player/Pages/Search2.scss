@@ -12,9 +12,12 @@
 
 	display: flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: flex-start;
 	flex-direction: column;
 	padding: 0 20%;
+	padding-top: 10%;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 
 @media (max-width: 550px) {
@@ -41,6 +44,8 @@ $search-size: 26px;
 .search2-search-container {
 	font-size: $search-size;
 	width: 100%;
+	padding: $search-size / 2;
+	font-weight: 200;
 }
 
 .search2-search-container::before {
@@ -114,4 +119,25 @@ $search-results-dec-width: 35px;
 
 .mini-song-info {
 	margin-left: 12px;
+	width: 100%;
+	flex-shrink: 0.6;
+	min-width: 60%;
+}
+
+.mini-right {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.mini-icon {
+	border: none;
+	font-weight: lighter;
+	font-size: 1rem;
+	border-radius: 100%;
+}
+
+.mini-icon:hover {
+	background-color: $transparent-border;
 }

@@ -92,7 +92,7 @@ class SpotifySearch extends Component {
 				window.API.get("/spotify/download", {
 					params: {
 						Id: Id,
-						Path: "/home/deter/Music/Liked"
+						Path: "~/Music"
 					}
 				}) //TODO(deter): Change to POST
 			}} Options={[

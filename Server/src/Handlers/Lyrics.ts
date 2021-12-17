@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ValidateStr = (Str: string) => {
-	return Str.normalize("NFD").replace("'", "-").replace(/[^a-zA-Z0-9- ]/g, "").replace(/[ ]/g, "-");
+	return Str.normalize("NFD").replace("'", "-").replace(/[^a-zA-Z0-9-: ]/g, "").replace(/[ :]/g, "-");
 }
 
 const Lyrics = (Artist: string, Title: string, In: number = 0): Promise<string> => {
