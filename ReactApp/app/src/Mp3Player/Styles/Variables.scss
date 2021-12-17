@@ -32,11 +32,14 @@ $transparent-dark: rgba(126, 126, 126, 0.2);
 $grey: rgb(63, 63, 63);
 $shadow-color: rgba(0, 0, 0, 0.2);
 
-@import url("https://fonts.googleapis.com/css2?family=Alegreya&family=Alegreya+Sans:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,300;1,400;1,500;1,800;1,900&display=swap");
-/* Poppins font, https://fonts.google.com/specimen/Poppins#about */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+// Font Experimenting
+// @import url("https://fonts.googleapis.com/css2?family=Alegreya&family=Alegreya+Sans:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,300;1,400;1,500;1,800;1,900&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+// @import url("https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,200;1,400;1,500;1,900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,500;1,900&display=swap");
 /* Other */
-$font: "Alegreya Sans", sans-serif; /* Main font */
+$font: "Archivo", sans-serif; /* Main font */
 $button-padding: 12px;
 $icon-font: "Material Icons", $font;
 $vertical-songs-height: 70px;
@@ -53,10 +56,10 @@ $border-radius-round: 40px;
 $border-radius-sharp: 4px;
 
 /* Font sizes */
-$text-size-1: 1.1rem;
-$text-size-2: 1.08rem;
-$heading-size: 2.5rem;
-$button-font-size: 1.2rem;
+$text-size-1: 1rem;
+$text-size-2: 1.02rem;
+$heading-size: 2rem;
+$button-font-size: 1rem;
 $notifications-size: 16px;
 
 /* Mobile/ smaller font sizes */

@@ -20,6 +20,8 @@ import Vector2 from './Helpers/Vector2';
 // import Player from './Pages/Player';
 // import Album from './Pages/Album';
 // import Home from "./Pages/Home";
+import Search2 from './Pages/Search2';
+
 const Download = React.lazy(() => import('./Pages/Download'));
 const Search = React.lazy(() => import('./Pages/Search'));
 const Player = React.lazy(() => import('./Pages/Player'));
@@ -78,6 +80,7 @@ export default class App extends Component {
 	render() {
 		return (
 			<Suspense fallback={<h1>Loading...</h1>}>
+				<Search2 />
 				<BrowserRouter history={window.History}>
 					<Route component={Path} exact={true} path="/path" />
 					{this.state.SetPath ? <Redirect to="/path" /> : <>

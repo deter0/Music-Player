@@ -1,7 +1,6 @@
 import { Router } from "express";
 import Spotify from "../Handlers/Spotify/Spotify";
 
-import { WebSocketServer } from "ws";
 import WSS from "../WSS";
 
 
@@ -105,8 +104,8 @@ export default class SpotifyRouter {
 				return this.Spotify.Downloads.slice(MessageData.From, MessageData.To);
 			}
 		})
-		setInterval(() => {
+		this.Spotify.DownloadsChanged.connect(() => {
 			this.WebServer.Send("DownloadsChanged", JSON.stringify(this.Spotify.Downloads));
-		}, 100);
+		})
 	}
 }

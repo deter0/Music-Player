@@ -19,6 +19,8 @@ export default class Spotify {
 	// TODO(deter): Save
 	ClientId?: string;
 	ClientSecret?: string;
+
+	DownloadsChanged: Signal<void> = new Signal<void>();
 	//?(deter):Auth
 	SetClientInfo(ClientId: string, ClientSecret: string) {
 		this.ClientId = ClientId;
@@ -402,6 +404,7 @@ export default class Spotify {
 			ETA: 0
 		};
 		this.Downloads.push(Download);
+		this.DownloadsChanged.dispatch();
 		const Id = Song.Id;
 		try {
 			// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
@@ -440,6 +443,7 @@ export default class Spotify {
 					}
 				} else if (Line.indexOf("Downloading") !== -1) {
 					this.Downloads[this.Downloads.indexOf(Download)].Status = "Downloading";
+					this.DownloadsChanged.dispatch();
 				}
 			});
 			PythonProcess.on("exit", (Code: number) => {
@@ -451,14 +455,17 @@ export default class Spotify {
 					console.log("Downloaded", Song.Name + ".m4a", Path);
 					this.Downloads[this.Downloads.indexOf(Download)].Status = "Completed";
 					this.Downloads[this.Downloads.indexOf(Download)].Percentage = 100;
+					this.DownloadsChanged.dispatch();
 				} else {
 					console.error("Error code dowloading", Code);
 					this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: Code ${Code}`;
+					this.DownloadsChanged.dispatch();
 				}
 			});
 		} catch (error) {
-			console.error("ERror dowloading", error);
+			console.error("Error dowloading", error);
 			this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: ${error}`;
+			this.DownloadsChanged.dispatch();
 		}
 	}
 }

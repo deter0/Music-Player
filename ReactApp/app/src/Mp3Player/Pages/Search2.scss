@@ -1,0 +1,117 @@
+@import "../Styles/Variables.scss";
+
+.search2-container {
+	width: 100vw;
+	height: 100vh;
+	position: fixed;
+	background-color: transparentize($color: darken($background, 5), $amount: 0.06);
+	backdrop-filter: blur(4px);
+	z-index: 200000;
+
+	transition: opacity 0.2s ease-out;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 20%;
+}
+
+@media (max-width: 550px) {
+	.search2-container {
+		padding: 0 10%;
+	}
+}
+
+.search2-invisible {
+	opacity: 0;
+	pointer-events: none;
+}
+
+$search-size: 26px;
+
+.search2-search {
+	font-size: $search-size;
+}
+
+.search2-search {
+	font-weight: 800;
+}
+
+.search2-search-container {
+	font-size: $search-size;
+	width: 100%;
+}
+
+.search2-search-container::before {
+	font-size: $search-size;
+}
+.search2-search-container::after {
+	left: calc($search-size * 2.25);
+}
+
+.search-results-container {
+	width: 100%;
+	position: relative;
+	margin-top: 24px;
+}
+
+// Sometimes my genius is almost frightening
+$search-results-dec-width: 35px;
+.search-results-container::before {
+	top: $heading-size / 2;
+	height: calc(100% - $heading-size);
+	position: absolute;
+	width: $search-results-dec-width;
+	left: -$search-results-dec-width * 1.45;
+	border-top-left-radius: $border-radius;
+	border-bottom-left-radius: $border-radius;
+	border: 1px solid $transparent-border;
+	border-right: none;
+	content: "";
+}
+
+.search-results-title {
+	color: $transparent-border;
+	font-weight: 100;
+	margin-block-end: 4px;
+}
+
+.mini-song-container {
+	width: 100%;
+	height: 50px + 12px * 2;
+	border-radius: $border-radius-sharp;
+	padding: 12px;
+	display: flex;
+	align-items: center;
+	background: $background;
+	column-gap: 4px;
+}
+
+.mini-songs-container {
+	display: flex;
+	flex-direction: column;
+	row-gap: 4px;
+}
+
+.mini-song-cover {
+	height: 50px;
+	width: 50px;
+	object-fit: cover;
+	border-radius: $border-radius-sharp;
+}
+
+.mini-song-title {
+	font-size: 1.1rem;
+	font-weight: 400;
+}
+
+.mini-song-artist {
+	font-size: 0.8rem;
+	font-weight: 400;
+	opacity: 60%;
+}
+
+.mini-song-info {
+	margin-left: 12px;
+}
