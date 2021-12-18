@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc build",
     "prestart": "tsc --watch & nodemon --ignore Data/ --ignore Songs/ --ignore /Temp && fg",
     "start": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -312,6 +312,70 @@ export default class Spotify {
 		});
 	}
 
+	MAX_CONCURRENT_DOWNLOADS = 15;
+	Queue: Types.SpotifySong[] = [];
+	private AddToQueue(Song: Types.SpotifySong) {
+		if (this.ConcurrentlyDownload < this.MAX_CONCURRENT_DOWNLOADS) {
+			this.DownloadTrack(Song, this.Path, this.PythonVersion);
+		} else {
+			console.log("Enqueued");;
+			this.Queue.push(Song);
+			this.StartQueue();
+		}
+	}
+	private isQueueRunning: boolean;
+	private StartQueue() {
+		if (!this.isQueueRunning) {
+			this.isQueueRunning = true;
+			const Callback = () => {
+				if (this.Queue.length > 0) {
+					const ToGo = Math.min(this.MAX_CONCURRENT_DOWNLOADS - this.ConcurrentlyDownload, this.MAX_CONCURRENT_DOWNLOADS);
+					if (ToGo > 0) {
+						for (let i = 0; i < ToGo; i++) {
+							if (this.Queue[0]) {
+								this.DownloadTrack(this.Queue[0], this.Path, this.PythonVersion);
+								console.log("Downloding", this.Queue[0].Name);
+								this.Queue.shift();
+							} else {
+								break;
+							}
+						}
+					}
+					setTimeout(Callback, 1000);
+				} else {
+					this.isQueueRunning = false;
+				}
+			}
+			Callback();
+		}
+	}
+	private MapLikedSongs(LikedSongs: unknown[]): Types.SpotifySong[] {
+		return LikedSongs.map((Track: any): Types.SpotifySong => {
+			Track = Track.track;
+			return {
+				Id: Track.id,
+				Artists: Track.artists.map((Artist: any) => {
+					return {
+						Id: Artist.id,
+						Name: Artist.name
+					}
+				}),
+				Images: Track.album ? Track.album.images.map((image: any) => {
+					return {
+						Width: image.width,
+						Height: image.height,
+						Url: image.url
+					}
+				}) : [],
+				Name: Track.name,
+				ReleaseDate: Track.release_date,
+				Album: Track.album.name,
+				ExternalMedia: true,
+				Duration: Track.duration_ms / 1000
+			};
+		});
+	}
+
 	DownloadsRemoved = new Signal<Types.Download>();
 	async DownloadLikedSongs() {
 		return new Promise<boolean>(async (Resolve, Reject) => {
@@ -323,62 +387,17 @@ export default class Spotify {
 						}
 					}).then(Response => {
 						const ResponseData: any = Response.data;
-						console.log("got response", ResponseData.items.length);
-						if (ResponseData.next && ResponseData.items.length > 0) {
-							let Completed = 0;
-							ResponseData.items.forEach((Track: any) => {
-								Track = Track.track;
-								const SpotifySong = { //TODO(deter): Make a function for this
-									Id: Track.id,
-									Artists: Track.artists.map((Artist: any) => {
-										return {
-											Id: Artist.id,
-											Name: Artist.name
-										}
-									}),
-									Images: Track.album ? Track.album.images.map((image: any) => {
-										return {
-											Width: image.width,
-											Height: image.height,
-											Url: image.url
-										}
-									}) : [],
-									Name: Track.name,
-									ReleaseDate: Track.release_date,
-									Album: Track.album.name,
-									ExternalMedia: true,
-									Duration: Track.duration_ms / 1000
-								};
-								console.log(`downloading`, Track.name);
-								if (this.Downloads.length >= 12) { // Limit twelve downloads at a time
-									console.log("Queued");
-									const Connection = this.DownloadsRemoved.connect(() => {
-										setTimeout(() => {
-											if (this.Downloads.length <= 12) {
-												console.log("Awaited downloading");
-												this.DownloadTrack(SpotifySong, this.Path, this.PythonVersion);
-												Completed++;
-												Connection.disconnect();
-												if (Completed >= ResponseData.items.length) {
-													console.log("Next");
-													// Recurse(Offset + 50).then(() => {
-													// 	Resolve(true);
-													// }).catch(error => {
-													// 	console.error(error);
-													// });
-												}
-											}
-										}, Math.random()); // idk, just a quick and dirty way to do this (not building a queue)
-										// TODO(deter): Make a queue
-									})
-								} else {
-									console.log("Downloading track");
-									this.DownloadTrack(SpotifySong, this.Path, this.PythonVersion);
-								}
-							});
-						} else {
-							Resolve(true);
+						const Tracks = this.MapLikedSongs(ResponseData.items);
+						Tracks.forEach(Track => {
+							this.AddToQueue(Track);
+						});
+						const AmountDone = (ResponseData.offset as number) + (ResponseData.limit as number);
+						if (AmountDone < ResponseData.total) {
+							setTimeout(() => {
+								Recurse(Offset + 50);
+							}, 500);
 						}
+						console.log(ResponseData);
 					}).catch(err => console.error(err));
 				});
 			}
@@ -395,77 +414,109 @@ export default class Spotify {
 			console.error(Error);
 		});
 	}
+	private Exists(Song: Types.SpotifySong): boolean {
+		const INVALID = /[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]/g;
+		const Name = `${Song.Artists[0].Name} ${Song.Name}`;
+		if (fs.existsSync(path.join(this.Path, `${Name}.m4a`))) {
+			return true;
+		}
+		return false;
+	}
+	ConcurrentlyDownload: number = 0;
 	DownloadTrack(Song: Types.SpotifySong, Path: string, PythonV?: string) {
-		const Download = {
-			Status: "Queued",
-			Percentage: 0,
-			Rate: 0,
-			Song: Song,
-			ETA: 0
-		};
-		this.Downloads.push(Download);
-		this.DownloadsChanged.dispatch();
-		const Id = Song.Id;
-		try {
-			// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
-			const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
-			PythonProcess.on("error", (Error: any) => {
-				console.error(Error);
-			});
-			const _global = global as any;
-			PythonProcess.stdout.on("data", (Data: any) => {
-				let Line = Data.toString() as string;
-				if (Line.indexOf("ETA") !== -1) {
-					let Data = {
-						Percentage: 0,
-						Speed: 0,
-						Eta: 0
-					}
-					let Split = Line.split("[");
-					for (let i = 0; i < Split.length; i++) {
-						let Input = Split[i];
-						let NumStr = Input.match(/[\d.,]+/);
-						if (NumStr && NumStr[0]) {
-							let Num = parseFloat(NumStr[0]);
-							if (Input.indexOf("%") !== -1) {
-								Data.Percentage = Num;
-							} else if (Input.indexOf("KB/s") !== -1) {
-								Data.Speed = Num;
-							} else if (Input.indexOf("secs") !== -1) {
-								Data.Eta = Num;
+		return new Promise<void>((resolve, reject) => {
+			if (this.Exists(Song)) {
+				console.log("Exists");
+				const Download = {
+					Status: "Completed",
+					Percentage: 100,
+					Rate: 0,
+					Song: Song,
+					ETA: 0
+				};
+				this.Downloads.push(Download);
+				this.DownloadsChanged.dispatch();
+				resolve();
+				return;
+			}
+			const Download = {
+				Status: "Queued",
+				Percentage: 0,
+				Rate: 0,
+				Song: Song,
+				ETA: 0
+			};
+			this.Downloads.push(Download);
+			this.DownloadsChanged.dispatch();
+			this.ConcurrentlyDownload++;
+			const Id = Song.Id;
+			try {
+				// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
+				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
+				PythonProcess.on("error", (Error: any) => {
+					console.error(Error);
+				});
+				const _global = global as any;
+				PythonProcess.stdout.on("data", (Data: any) => {
+					let Line = Data.toString() as string;
+					if (Line.indexOf("ETA") !== -1) {
+						let Data = {
+							Percentage: 0,
+							Speed: 0,
+							Eta: 0
+						}
+						let Split = Line.split("[");
+						for (let i = 0; i < Split.length; i++) {
+							let Input = Split[i];
+							let NumStr = Input.match(/[\d.,]+/);
+							if (NumStr && NumStr[0]) {
+								let Num = parseFloat(NumStr[0]);
+								if (Input.indexOf("%") !== -1) {
+									Data.Percentage = Num;
+								} else if (Input.indexOf("KB/s") !== -1) {
+									Data.Speed = Num;
+								} else if (Input.indexOf("secs") !== -1) {
+									Data.Eta = Num;
+								}
 							}
 						}
+						if (Data.Percentage) {
+							Download.Percentage = Data.Percentage;
+							Download.Rate = Data.Speed;
+							Download.ETA = Data.Eta;
+						}
+					} else if (Line.indexOf("Downloading") !== -1) {
+						this.Downloads[this.Downloads.indexOf(Download)].Status = "Downloading";
+						this.DownloadsChanged.dispatch();
 					}
-					if (Data.Percentage) {
-						Download.Percentage = Data.Percentage;
-						Download.Rate = Data.Speed;
-						Download.ETA = Data.Eta;
+				});
+				PythonProcess.on("exit", (Code: number) => {
+					if (Code === 0) {
+						const Artist = Song.Artists.map((Artist: any) => Artist.Name).join(", ");
+						const SongName =
+							`${Artist} ${Song.Name}`.replace(/[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*/g, "");
+						_global.CacheSong(`${SongName}.m4a`, Path);
+						console.log("Downloaded", Song.Name + ".m4a", Path);
+						this.Downloads[this.Downloads.indexOf(Download)].Status = "Completed";
+						this.Downloads[this.Downloads.indexOf(Download)].Percentage = 100;
+						this.DownloadsChanged.dispatch();
+						this.ConcurrentlyDownload--;
+						resolve();
+					} else {
+						console.error("Error code dowloading", Code);
+						this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: Code ${Code}`;
+						this.DownloadsChanged.dispatch();
+						this.ConcurrentlyDownload--;
+						reject(Code);
 					}
-				} else if (Line.indexOf("Downloading") !== -1) {
-					this.Downloads[this.Downloads.indexOf(Download)].Status = "Downloading";
-					this.DownloadsChanged.dispatch();
-				}
-			});
-			PythonProcess.on("exit", (Code: number) => {
-				if (Code === 0) {
-					const Artist = Song.Artists.map((Artist: any) => Artist.Name).join(", ");
-					const SongName =
-						`${Artist} ${Song.Name}`.replace(/[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*/g, "");
-					_global.CacheSong(`${SongName}.m4a`, Path);
-					console.log("Downloaded", Song.Name + ".m4a", Path);
-					this.Downloads[this.Downloads.indexOf(Download)].Status = "Completed";
-					this.Downloads[this.Downloads.indexOf(Download)].Percentage = 100;
-					this.DownloadsChanged.dispatch();
-				} else {
-					console.error("Error code dowloading", Code);
-					this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: Code ${Code}`;
-					this.DownloadsChanged.dispatch();
-				}
-			});
-		} catch (error) {
-			console.error("Error dowloading", error);
-			this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: ${error}`;
-			this.DownloadsChanged.dispatch();
-		}
+				});
+			} catch (error) {
+				console.error("Error dowloading", error);
+				this.Downloads[this.Downloads.indexOf(Download)].Status = `Error: ${error}`;
+				this.DownloadsChanged.dispatch();
+				this.ConcurrentlyDownload--;
+				reject(error);
+			}
+		});
 	}
 }
