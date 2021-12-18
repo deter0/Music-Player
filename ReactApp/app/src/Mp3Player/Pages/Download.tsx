@@ -49,8 +49,15 @@ class Main extends Component {
 			}
 			window.SetNotifications(Data.filter(Download => Download.Status !== "Completed").length, "Download");
 		});
-		window.WS.SendData<SongDownload[]>("GetDownloads", { From: 1, To: 10 }).then(Response => {
-			console.log(Response);
+		window.WS.SendData<SongDownload[]>("GetDownloads", { From: 0, To: 100 }).then(Response => {
+			if (Response.Data) {
+				window.SetNotifications(Response.Data.filter(Download => Download.Status !== "Completed").length, "Download");
+				this.setState({
+					Downloads: Response.Data.map(Download => {
+						return <SongDownloadC Data={Download} />
+					})
+				});
+			}
 		}).catch(Error => {
 			console.error(Error);
 		});
