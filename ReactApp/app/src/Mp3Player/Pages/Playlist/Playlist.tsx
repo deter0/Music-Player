@@ -6,7 +6,39 @@ import "../Album.scss";
 
 export default class Playlist extends Component {
 	state: { Playlist?: Types.Playlist, FallbackAlbumCover: boolean } = { FallbackAlbumCover: false };
+	constructor(props: {}) {
+		super(props);
+
+		let bodyList = document.querySelector("body") as HTMLBodyElement;
+		let oldHref = document.location.href;
+		let observer = new MutationObserver((mutations) => {
+			mutations.forEach((mutation) => {
+				if (oldHref !== document.location.href) {
+					oldHref = document.location.href;
+					/* Changed ! your code here */
+
+					if (this.Mounted) {
+						this.componentDidMount();
+					}
+				}
+			});
+		});
+
+		var config = {
+			childList: true,
+			subtree: true
+		};
+
+		observer.observe(bodyList, config);
+	}
+
+	Mounted = false;
+	componentWillUnmount() {
+		this.Mounted = false;
+	}
+
 	componentDidMount() {
+		this.Mounted = true;
 		// Get playlist name from query params
 		let Params = new URLSearchParams(window.location.search);
 		let PlaylistName = Params.get('Name');
