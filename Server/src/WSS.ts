@@ -84,7 +84,7 @@ export default class WSS {
 		// console.log(MessageData); SHUT!!
 		if (this.RequestHandlers[Action]) {
 			const Response = this.RequestHandlers[Action](Client, Message);
-			if (Response && JSON.stringify(Response) !== "{}") {
+			if (Response !== undefined && JSON.stringify(Response) !== "{}") {
 				Client.Send(Action, Response, "RESPONSE", MessageData.MessageId);
 			} else {
 				Client.Send(Action, await (Response), "RESPONSE", MessageData.MessageId);

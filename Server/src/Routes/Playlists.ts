@@ -51,6 +51,16 @@ export default class PlaylistsRouter {
 			From?: number,
 			To?: number
 		};
+		WebServer.AppendRequestHandler<{ Name: string }>("ValidatePlaylistName", async (Client, Message) => {
+			const MessageData = Message.Prase().Data;
+			console.log("Recieved message!", MessageData);
+			const Exists = await this.Playlists.GetPlaylistByName(MessageData.Name);
+			if (Exists) {
+				return false;
+			} else {
+				return true;
+			}
+		})
 		WebServer.AppendRequestHandler<T>("Playlists", async (Client, Message) => {
 			const MessageData = Message.Prase().Data;
 			const Playlists = await this.Playlists.GetPlaylists(MessageData.From, MessageData.To);
