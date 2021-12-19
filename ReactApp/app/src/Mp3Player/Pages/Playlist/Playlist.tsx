@@ -5,7 +5,7 @@ import * as Types from "../../Types";
 import "../Album.scss";
 
 export default class Playlist extends Component {
-	state: { Playlist?: Types.Playlist } = {};
+	state: { Playlist?: Types.Playlist, FallbackAlbumCover: boolean } = { FallbackAlbumCover: false };
 	componentDidMount() {
 		// Get playlist name from query params
 		let Params = new URLSearchParams(window.location.search);
@@ -27,6 +27,10 @@ export default class Playlist extends Component {
 								}
 								return false;
 							});
+							if (UniqueAlbums.length < 3) {
+								this.setState({ FallbackAlbumCover: true });
+								return;
+							}
 							console.log(Seen);
 							const Images = UniqueAlbums.map(Song => Song.ImageData);
 							// let AllImages = this.state.Playlist.Songs.map(Song => Song.ImageData);
@@ -78,7 +82,9 @@ export default class Playlist extends Component {
 		return (
 			<div className="page-padding-top">
 				<div className="info-container">
-					<canvas width={300} height={300} ref={this.Canvas} draggable={false} className="album-img" />
+					{this.state.FallbackAlbumCover ? <rect width={300} height={300} className='album-img-fallback album-img'><span className='material-icons'>queue_music</span></rect> :
+						<canvas width={300} height={300} ref={this.Canvas} draggable={false} className="album-img" />
+					}
 					<div className="album-info">
 						<h1 className="album-page-title">{this.state.Playlist?.Name}</h1>
 						<h1 className="album-page-artist"><span className="material-icons">person</span>Made by you</h1>

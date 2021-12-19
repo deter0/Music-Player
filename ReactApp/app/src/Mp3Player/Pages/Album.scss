@@ -87,5 +87,16 @@
 }
 
 .album-info {
-	width: 100%;
+	width: fit-content;
+}
+
+.album-img-fallback {
+	background-color: $transparent-border;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.album-img-fallback span {
+	font-size: 90px;
 }
