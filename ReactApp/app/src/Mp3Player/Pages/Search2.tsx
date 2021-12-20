@@ -4,6 +4,7 @@ import "./Search2.scss";
 import { AxiosResponse } from 'axios';
 import { Redirect } from 'react-router-dom';
 import GetUTC from '../Helpers/GetUTC';
+import HorizontalScroller from '../Components/HorizontalScroller';
 
 enum ResultType {
 	Song,
@@ -25,7 +26,7 @@ class SearchResultsSongRenderer extends Component<{ Data: Types.Song[], Close: (
 	render() {
 		return this.state.Redirect ? <Redirect to={this.state.Redirect} /> : <div className='mini-songs-container'>
 			{this.props.Data.slice(0, 6).map(Song => {
-				return <div onClick={() => {
+				return <button onClick={() => {
 					if (Song.ImageData?.charAt(0) === "/") {
 						this.setState({ Redirect: `/album/${Song.AlbumId}?song=${Song.Id}` });
 						setTimeout(() => {
@@ -48,7 +49,7 @@ class SearchResultsSongRenderer extends Component<{ Data: Types.Song[], Close: (
 								(event.target as HTMLButtonElement).disabled = true;
 							}} className="mini-icon material-icons">download</button> : <></>}
 					</div>
-				</div>
+				</button>
 			})}
 		</div>
 	}
@@ -57,18 +58,17 @@ class SearchResultsSongRenderer extends Component<{ Data: Types.Song[], Close: (
 class SearchResult extends Component<{
 	ResultType: ResultType,
 	SongData?: Types.Song[],
+	AlbumData?: Types.Album[],
 	Title: string,
 	Close: () => void
 }> {
 	render() {
 		return <div className='search-results-container'>
 			<h1 className='search-results-title'>{this.props.Title}</h1>
-			{(
-				this.props.ResultType
-				=== ResultType.Song
-				&& this.props.SongData) &&
-				<SearchResultsSongRenderer Close={this.props.Close} Data={this.props.SongData} />
-			}
+			{(this.props.ResultType === ResultType.Song && this.props.SongData) &&
+				<SearchResultsSongRenderer Close={this.props.Close} Data={this.props.SongData} />}
+			{(this.props.ResultType === ResultType.Album && this.props.AlbumData && this.props.AlbumData.length > 0) &&
+				<HorizontalScroller Items={this.props.AlbumData} />}
 		</div>
 	}
 }
@@ -77,11 +77,13 @@ export default class Search2 extends Component {
 	state: {
 		Searching: boolean,
 		SongResults: Types.Song[],
-		SpotifyResults: Types.Song[]
+		SpotifyResults: Types.Song[],
+		AlbumResults: Types.Album[]
 	} = {
 			Searching: false,
 			SongResults: [],
-			SpotifyResults: []
+			SpotifyResults: [],
+			AlbumResults: []
 		};
 	componentDidMount() {
 		window.Shortcuts.On("Quit").connect((Event) => {
@@ -129,9 +131,9 @@ export default class Search2 extends Component {
 		if (Query !== "") {
 			this.SearchSongs(Query);
 			this.QueueSpotifySearch(Query);
-			// this.SearchSpotify(Query);
+			this.SearchAlbums(Query);
 		} else {
-			this.setState({ SongResults: [] });
+			this.setState({ SongResults: [], SpotifyResults: [], AlbumResults: [] });
 		}
 	}
 	private SearchSongs(Query: string) {
@@ -141,6 +143,18 @@ export default class Search2 extends Component {
 			}
 		}).then(Response => {
 			this.setState({ SongResults: Response.data });
+		})
+	}
+	private SearchAlbums(Query: string) {
+		window.API.post("/search/albums", undefined, {
+			params: {
+				Query: Query
+			}
+		}).then(Response => {
+			console.log(Response.data);
+			this.setState({
+				AlbumResults: Response.data
+			});
 		})
 	}
 	private SearchSpotify(Query: string) {
@@ -189,7 +203,8 @@ export default class Search2 extends Component {
 			<SearchResult
 				Close={() => this.Close()}
 				ResultType={ResultType.Album}
-				Title="Album" />
+				AlbumData={this.state.AlbumResults}
+				Title="Albums" />
 			<SearchResult
 				Close={() => this.Close()}
 				ResultType={ResultType.Song}

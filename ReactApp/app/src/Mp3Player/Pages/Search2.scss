@@ -16,6 +16,7 @@
 	flex-direction: column;
 	padding: 0 20%;
 	padding-top: 10%;
+	padding-bottom: 24px;
 	overflow-x: hidden;
 	overflow-y: auto;
 }
@@ -89,9 +90,11 @@ $search-results-dec-width: 35px;
 	padding: 12px;
 	display: flex;
 	align-items: center;
-	background: $background;
+	background: transparentize($background, 0.4);
 	column-gap: 4px;
 	cursor: pointer;
+	border: none;
+	font-size: 0;
 }
 
 .mini-songs-container {
@@ -110,12 +113,14 @@ $search-results-dec-width: 35px;
 .mini-song-title {
 	font-size: 1.1rem;
 	font-weight: 400;
+	text-align: left;
 }
 
 .mini-song-artist {
 	font-size: 0.8rem;
 	font-weight: 400;
 	opacity: 60%;
+	text-align: left;
 }
 
 .mini-song-info {
@@ -136,7 +141,10 @@ $search-results-dec-width: 35px;
 	border: none;
 	font-weight: lighter;
 	font-size: 1rem;
+	width: 40px;
+	height: 40px;
 	border-radius: 100%;
+	transition: background-color $background-transition;
 }
 
 .mini-icon:hover {
