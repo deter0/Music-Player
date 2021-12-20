@@ -88,6 +88,12 @@
 	font-size: 1rem !important;
 }
 
+.spotify-svg {
+	width: 1rem;
+	height: 1rem;
+	filter: saturate(0);
+}
+
 .nav-item:hover {
 	background-color: transparentize($navigation-accent, 0.9);
 }
