@@ -3,6 +3,7 @@ import * as Types from "../Types";
 import "./Search2.scss";
 import { AxiosResponse } from 'axios';
 import { Redirect } from 'react-router-dom';
+import GetUTC from '../Helpers/GetUTC';
 
 enum ResultType {
 	Song,
@@ -101,10 +102,33 @@ export default class Search2 extends Component {
 			});
 		});
 	}
+	private LastSearch: number = 0;
+	private ScheduledSearch?: string;
+	private QueueSpotifySearch(Query: string) {
+		if (GetUTC() - this.LastSearch < 1) {
+			this.ScheduledSearch = Query;
+			this.WatchForSearch();
+		} else {
+			this.SearchSpotify(Query);
+			this.LastSearch = GetUTC();
+		}
+	}
+	private WatchForSearch() {
+		const QueryAtTimeOfCall = this.ScheduledSearch;
+		if (QueryAtTimeOfCall) {
+			setTimeout(() => {
+				if (QueryAtTimeOfCall === this.ScheduledSearch) {
+					this.SearchSpotify(this.ScheduledSearch);
+					this.LastSearch = GetUTC();
+				}
+			}, 1000);
+		}
+	}
 	Search(Event: React.FormEvent<HTMLInputElement>) {
 		const Query = (Event.target as HTMLInputElement).value.trim();
 		if (Query !== "") {
 			this.SearchSongs(Query);
+			this.QueueSpotifySearch(Query);
 			// this.SearchSpotify(Query);
 		} else {
 			this.setState({ SongResults: [] });

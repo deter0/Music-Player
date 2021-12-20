@@ -47,7 +47,7 @@ export default class VerticalSong extends Component<Props> {
 	componentDidMount() {
 		this.LoadImage();
 		const Element = document.getElementById(this.props.Item.Identifier);
-		if (Element) {
+		if (Element && this.props.Highlighted) {
 			Element.scrollIntoView({
 				behavior: "smooth",
 				block: "center",
