@@ -7,11 +7,17 @@ import VerticalSongs from '../Components/VerticalSongs';
 export default class Album extends Component {
 	state: {
 		AlbumId: string,
-		Album?: Types.Album
+		Album?: Types.Album,
+		HighlightedSongId?: string
 	} = {
 			AlbumId: ""
 		};
 	componentDidMount() {
+		let Params = new URLSearchParams(window.location.search);
+		let HighlightedSong = Params.get('song');
+		if (HighlightedSong) {
+			this.setState({ HighlightedSongId: HighlightedSong });
+		}
 		const Id = window.location.pathname.split("/")[2];
 		this.setState({
 			AlbumId: Id
@@ -41,7 +47,7 @@ export default class Album extends Component {
 					</div >
 				</div>
 				<h1 className="songs-text">Songs</h1>
-				<VerticalSongs style={{ paddingTop: 0 }} NoPages={true} Items={this.state.Album ? this.state.Album.Songs : []} />
+				<VerticalSongs HighlightId={this.state.HighlightedSongId} style={{ paddingTop: 0 }} NoPages={true} Items={this.state.Album ? this.state.Album.Songs : []} />
 			</div>
 		)
 	}

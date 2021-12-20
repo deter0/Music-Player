@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import * as Types from "../Types";
 import "./Search2.scss";
 import { AxiosResponse } from 'axios';
+import { Redirect } from 'react-router-dom';
 
 enum ResultType {
 	Song,
@@ -9,7 +10,8 @@ enum ResultType {
 	Page
 }
 
-class SearchResultsSongRenderer extends Component<{ Data: Types.Song[] }> {
+class SearchResultsSongRenderer extends Component<{ Data: Types.Song[], Close: () => void }> {
+	state: { Redirect?: string } = {};
 	private Download(Song: Types.Song) {
 		// ! FIXME: Should be post
 		window.API.get("/spotify/download", {
@@ -20,9 +22,19 @@ class SearchResultsSongRenderer extends Component<{ Data: Types.Song[] }> {
 		});
 	}
 	render() {
-		return <div className='mini-songs-container'>
+		return this.state.Redirect ? <Redirect to={this.state.Redirect} /> : <div className='mini-songs-container'>
 			{this.props.Data.slice(0, 6).map(Song => {
-				return <div className='mini-song-container'>
+				return <div onClick={() => {
+					if (Song.ImageData?.charAt(0) === "/") {
+						this.setState({ Redirect: `/album/${Song.AlbumId}?song=${Song.Id}` });
+						setTimeout(() => {
+							this.setState({ Redirect: undefined });
+						}, 50); // Weird ass fix
+					}
+					setTimeout(() => {
+						this.props.Close();
+					}, 50);
+				}} className='mini-song-container'>
 					<img draggable={false} className="mini-song-cover" src={Song.ImageData?.charAt(0) === "/" ? `http://localhost:9091${Song.ImageData}` : Song.ImageData} alt="album-cover" />
 					<div className='mini-song-info'>
 						<h1 className='mini-song-title'>{Song.Title}</h1>
@@ -44,7 +56,8 @@ class SearchResultsSongRenderer extends Component<{ Data: Types.Song[] }> {
 class SearchResult extends Component<{
 	ResultType: ResultType,
 	SongData?: Types.Song[],
-	Title: string
+	Title: string,
+	Close: () => void
 }> {
 	render() {
 		return <div className='search-results-container'>
@@ -53,7 +66,7 @@ class SearchResult extends Component<{
 				this.props.ResultType
 				=== ResultType.Song
 				&& this.props.SongData) &&
-				<SearchResultsSongRenderer Data={this.props.SongData} />
+				<SearchResultsSongRenderer Close={this.props.Close} Data={this.props.SongData} />
 			}
 		</div>
 	}
@@ -92,7 +105,7 @@ export default class Search2 extends Component {
 		const Query = (Event.target as HTMLInputElement).value.trim();
 		if (Query !== "") {
 			this.SearchSongs(Query);
-			this.SearchSpotify(Query);
+			// this.SearchSpotify(Query);
 		} else {
 			this.setState({ SongResults: [] });
 		}
@@ -134,20 +147,27 @@ export default class Search2 extends Component {
 			console.error(Error);
 		})
 	}
+	private Close() {
+		this.setState({ Searching: false });
+	}
 	render() {
 		return <div className={`${this.state.Searching ? "" : "search2-invisible"} search2-container`}>
 			<input id="search2-input" onInput={(Event) => this.Search(Event)} className="search2-search-container" placeholder="Search..." />
 			<SearchResult
+				Close={() => this.Close()}
 				ResultType={ResultType.Song}
 				SongData={this.state.SongResults}
 				Title="Songs" />
 			<SearchResult
+				Close={() => this.Close()}
 				ResultType={ResultType.Page}
 				Title="Links" />
 			<SearchResult
+				Close={() => this.Close()}
 				ResultType={ResultType.Album}
 				Title="Album" />
 			<SearchResult
+				Close={() => this.Close()}
 				ResultType={ResultType.Song}
 				SongData={this.state.SpotifyResults}
 				Title="Spotify" />

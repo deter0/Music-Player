@@ -13,6 +13,7 @@ interface Props {
 	style?: { [index: string]: any };
 	songStyle?: { [index: string]: any };
 	OptionsCallback?: (Index: number, Props: VerticalSong.Props) => void;
+	HighlightId?: string;
 }
 export default class VerticalSongs extends Component<Props> {
 	state: {
@@ -80,7 +81,6 @@ export default class VerticalSongs extends Component<Props> {
 			this.Index -= PAGE_SIZE;
 			this.Completed = false;
 			this.UrlConstructor();
-			console.log(this.Index);
 		}
 	}
 
@@ -90,7 +90,7 @@ export default class VerticalSongs extends Component<Props> {
 				{
 					this.state.Items.map((Item, Index) => {
 						// eslint-disable-next-line react/jsx-pascal-case
-						return <VerticalSong.default OptionsCallback={this.props.OptionsCallback} style={this.props.songStyle} Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
+						return <VerticalSong.default Highlighted={Item.Id === this.props.HighlightId} OptionsCallback={this.props.OptionsCallback} style={this.props.songStyle} Options={this.props.Options} key={Index} Item={Item} Index={Index + this.Index} />
 					})
 				}
 				{

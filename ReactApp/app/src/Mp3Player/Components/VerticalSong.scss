@@ -15,6 +15,22 @@
 	column-gap: 14px;
 }
 
+.song-container-highlighted {
+	background-color: transparentize($grey, 0.9);
+	animation-name: highlight-anim;
+	animation-duration: 1s;
+	animation-delay: 0.3s;
+}
+
+@keyframes highlight-anim {
+	from {
+		background-color: saturate($highlight, 0.5);
+	}
+	to {
+		background-color: transparentize($grey, 0.9);
+	}
+}
+
 @media (max-width: 900px) {
 	.song-index {
 		display: none !important;

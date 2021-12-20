@@ -16,7 +16,8 @@ export interface Props {
 	Index: number;
 	Options?: { Icon: string; Label: string }[];
 	style?: { [index: string]: any };
-	OptionsCallback?: (Index: number, Props: Props) => void
+	OptionsCallback?: (Index: number, Props: Props) => void;
+	Highlighted?: boolean
 };
 export default class VerticalSong extends Component<Props> {
 	state = {
@@ -45,6 +46,14 @@ export default class VerticalSong extends Component<Props> {
 	}
 	componentDidMount() {
 		this.LoadImage();
+		const Element = document.getElementById(this.props.Item.Identifier);
+		if (Element) {
+			Element.scrollIntoView({
+				behavior: "smooth",
+				block: "center",
+				inline: "center"
+			})
+		}
 	}
 	Like_() {
 		let PreviousState = this.state.Liked;
@@ -132,12 +141,13 @@ export default class VerticalSong extends Component<Props> {
 		}
 	}
 	render() {
-		return this.state.Deleted ? null : this.state.Album ? <Redirect to={`/album/${this.props.Item.AlbumId}`} /> : (
+		return this.state.Deleted ? null : this.state.Album ? <Redirect to={`/album/${this.props.Item.AlbumId}?song=${this.props.Item.Id}`} /> : (
 			<div
+				id={this.props.Item.Identifier}
 				onDoubleClick={() => window.PlaySong(this.props.Item)}
 				onMouseEnter={() => this.setState({ MouseFocus: true })}
 				onMouseLeave={() => this.setState({ MouseFocus: false })}
-				className="song-container"
+				className={`${this.props.Highlighted ? "song-container-highlighted" : ""} song-container`}
 				style={this.props.style}
 			>
 				<img loading="lazy" draggable={false} className={`${this.state.MouseFocus && "song-image-hover"} song-image`} src={this.state.Image} alt="" />

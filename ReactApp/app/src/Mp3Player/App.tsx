@@ -80,8 +80,8 @@ export default class App extends Component {
 	render() {
 		return (
 			<Suspense fallback={<h1>Loading...</h1>}>
-				<Search2 />
 				<BrowserRouter history={window.History}>
+					<Search2 />
 					<Route component={Path} exact={true} path="/path" />
 					{this.state.SetPath ? <Redirect to="/path" /> : <>
 						{/* <Search /> */}
