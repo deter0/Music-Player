@@ -70,8 +70,22 @@ export default class Search2 extends Component {
 			SpotifyResults: []
 		};
 	componentDidMount() {
+		window.Shortcuts.On("Quit").connect((Event) => {
+			if (this.state.Searching) {
+				this.setState({ Searching: false });
+				Event.preventDefault();
+			}
+		})
 		window.Shortcuts.On("Search").connect((Event) => {
-			this.setState({ Searching: !this.state.Searching });
+			this.setState({ Searching: !this.state.Searching }, () => {
+				if (this.state.Searching) {
+					const Search2Input = document.getElementById("search2-input");
+					if (Search2Input) {
+						(Search2Input as HTMLInputElement).focus();
+						Search2Input.parentElement?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+					}
+				}
+			});
 		});
 	}
 	Search(Event: React.FormEvent<HTMLInputElement>) {
@@ -122,7 +136,7 @@ export default class Search2 extends Component {
 	}
 	render() {
 		return <div className={`${this.state.Searching ? "" : "search2-invisible"} search2-container`}>
-			<input onInput={(Event) => this.Search(Event)} className="search2-search-container" placeholder="Search..." />
+			<input id="search2-input" onInput={(Event) => this.Search(Event)} className="search2-search-container" placeholder="Search..." />
 			<SearchResult
 				ResultType={ResultType.Song}
 				SongData={this.state.SongResults}
