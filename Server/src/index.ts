@@ -44,6 +44,14 @@ import SpotifyRouter from './Routes/Spotify';
 import PlaylistsRouter from "./Routes/Playlists";
 import { Playlist } from './Handlers/Playlists/Playlists';
 
+process.on("exit", () => {
+	if (fs.existsSync(path.join(__dirname, "../Temp"))) {
+		fs.rm(path.join(__dirname, "../Temp"), { recursive: true, force: true }, () => {
+			console.log("REMOVED TEMPORARY DIRECTORY FROM PREVIOUS SESSIOn");
+		});
+	}
+})
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
@@ -59,14 +67,14 @@ import LyricsRouter from './Routes/Lyrics';
 
 (async () => {
 	try {
-		const RequiredFolders = ["Data", "Songs"];
+		const RequiredFolders = ["Data", "Songs", "Temp"];
 		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json", "Data/Playback.json", "Data/Playlists.json"];
 		const Path = path.join(__dirname, '../');
 		const Files = await fs.readdirSync(Path);
 
 		for (const RequiredFolder of RequiredFolders) {
 			if (Files.indexOf(RequiredFolder) === -1) {
-				await fs.mkdirSync(`${Path}/${RequiredFolder}`);
+				await fs.mkdirSync(path.join(Path, RequiredFolder));
 
 				for (const RequiredFile of RequiredFiles) {
 					if (RequiredFile.split(`/`)[0] === RequiredFolder) {

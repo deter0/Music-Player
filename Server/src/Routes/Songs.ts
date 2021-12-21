@@ -137,7 +137,7 @@ export default class SongsRouter {
 		this.Router.get("/image", async (Request, Response) => {
 			let Identfier = Request.query.Identifier as string;
 			if (Identfier) {
-				this.Songs.GetSongImagePng(Identfier).then(Image => {
+				this.Songs.CacheAndGetSongImage(Identfier).then(Image => {
 					if (Image !== "") {
 						if (!Request.aborted) {
 							Response.sendFile(Image, (error) => {
