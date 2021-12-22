@@ -280,12 +280,13 @@ def main(): # Arguments: `Type Id Path TOKEN`
                 else:
                     print("done fetching songs");
                     sys.stdout.flush();
-    # elif (Type == "test"):
-        # download_song_from_yt(
-        #     "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        #     "test2.m4a"
-        #     );
-        # return;
+    elif (Type == "test"):
+        download_song_from_yt(
+            "https://www.youtube.com/watch?v=PTgSxJ-mR0E",
+            "test2.m4a",
+            None
+        );
+        return;
     else:
         print("Invalid song ID");
         sys.stdout.flush();

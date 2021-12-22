@@ -1,6 +1,7 @@
 import re
 import os
 import sys
+from typing import Union
 
 from pytube import YouTube as youtube_dl
 import requests
@@ -20,15 +21,20 @@ def progress_callback(stream, chunk, bytes_remaining):
 #     if (song_gl):
 #         addtags(os.getcwd() + f"/{song_name_gl}.m4a", song_gl);
 
-def download_song_from_yt(vid_url: str, song_name: str, song:Song) -> None:
+def download_song_from_yt(vid_url: str, song_name: str, song: Union[Song, None]) -> None:
     """Download song in the current directory and rename it"""
     song_gl = song;
     song_name_gl = song_name;
     def completed(*args):
+        if (song):
+            addtags(os.path.join(os.getcwd(), song_name+".m4a"), song_gl);
         print("COMPLETED");
-        addtags(os.path.join(os.getcwd(), song_name+".m4a"), song_gl);
+        exit(0);
     vid = youtube_dl(vid_url, on_progress_callback=progress_callback, on_complete_callback=completed);
-    ys = vid.streams.filter(only_audio=True, file_extension='mp4').last();
+    # ys = vid.streams.filter(only_audio=True, file_extension='mp4');
+    ys = vid.streams.get_audio_only();
+    print("Downloading:");
+    print(ys);
     ys.download(output_path=os.getcwd(), filename=song_name+".m4a");
 
 
