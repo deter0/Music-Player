@@ -32,14 +32,20 @@ $transparent-dark: rgba(126, 126, 126, 0.2);
 $grey: rgb(63, 63, 63);
 $shadow-color: rgba(0, 0, 0, 0.2);
 
-// Font Experimenting
-// @import url("https://fonts.googleapis.com/css2?family=Alegreya&family=Alegreya+Sans:ital,wght@0,100;0,300;0,400;0,500;0,700;0,800;0,900;1,300;1,400;1,500;1,800;1,900&display=swap");
-// @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-// @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-// @import url("https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,200;1,400;1,500;1,900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,500;1,900&display=swap");
+// * These are the same fonts Mozilla uses.
+// Metrolpolis
+@font-face {
+	font-family: "Metrolpolis";
+	src: url("./Fonts/Metropolis/Metropolis-SemiBold.otf");
+}
+// Zila Slab
+@import url("https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap");
+// Inter
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700;900&family=Zilla+Slab:ital,wght@0,400;0,600;0,700;1,400&display=swap");
 /* Other */
-$font: "Archivo", sans-serif; /* Main font */
+$font: "Inter", sans-serif; /* Main font */
+$heading-font: "Metrolpolis", monospace; /* Headings */
+$unique-font: "Zilla Slab", serif; /* Other stuff font */
 $button-padding: 12px;
 $icon-font: "Material Icons", $font;
 $vertical-songs-height: 70px;

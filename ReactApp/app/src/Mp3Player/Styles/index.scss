@@ -43,7 +43,14 @@ p {
 .context-title {
 	padding: 0px 24px;
 	font-size: $heading-size;
+	font-family: $heading-font;
 	font-weight: 500;
+}
+
+.help-page-title {
+	font-family: $unique-font;
+	font-size: 3rem;
+	margin: 12px 0;
 }
 
 .context-title-icon {

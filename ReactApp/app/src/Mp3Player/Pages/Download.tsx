@@ -183,7 +183,7 @@ class ConfigureSpotify extends Component {
 					<button className="button-highlight">Save</button>
 				</div>
 			</form >
-			<h1>How to</h1>
+			<h1 className="help-page-title">How to setup Spotify Auth</h1>
 			<h3>Overview</h3>
 			<p>
 				You need to head over to
