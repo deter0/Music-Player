@@ -157,7 +157,7 @@ export default class VerticalSong extends Component<Props> {
 					this.setState({ Liked: !this.state.Liked });
 				}} className={`${this.state.Liked ? "song-liked" : ""} song-like material-icons`}>{this.state.Liked ? "favorite" : "favorite_border"}</button>
 				<div className='song-div'>
-					<h1 className="song-title">{this.props.Item.Title}</h1>
+					<h1 className="song-title">{this.props.Item.ExplicitLikely !== false && <span className='song-explicit material-icons'>{this.props.Item.ExplicitLikely === undefined ? "help_center" : "explicit"}</span>}{this.props.Item.Title}</h1>
 					<h1 className="song-album">{this.props.Item.Artist + this.props.Item.Features.map(Feature => `, ${Feature}`)}<Link to={`/album/${this.props.Item.AlbumId}`} className="song-artist-span">• {this.props.Item.Album}</Link></h1>
 				</div>
 				<h1 className="song-duration">{SecondsToHMS(Math.round(this.props.Item.Duration))}</h1>

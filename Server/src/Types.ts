@@ -1,4 +1,5 @@
 import sha256 from "sha256";
+import { AreLyricsExplicit } from "./Handlers/Lyrics";
 import * as Ratings_ from "./Handlers/Song/Rating/Rating";
 
 export class Song {
@@ -19,6 +20,8 @@ export class Song {
 	CoverIndex: string;
 	AlbumId: string;
 	ExternalMedia: boolean;
+	Lyrics?:string;
+	ExplicitLikely?: boolean = undefined;
 	constructor(Artist: string, Title: string, Identifier: string, CoverIndex: string, Duration?: number, Album?: string, ImageFormat?: string, ImageData?: string, ExternalMedia?: boolean) {
 		const Artists = Artist.split(", ");
 		this.Artist = Artists[0];
@@ -37,6 +40,13 @@ export class Song {
 
 	async Update() {
 		this.Liked = (await Ratings_.GetSongRating(this)).UserLiked;
+		if (this.ExplicitLikely === undefined) {
+			if (this.Lyrics) {
+				this.ExplicitLikely = AreLyricsExplicit(this.Lyrics);
+			} else {
+				this.ExplicitLikely = undefined;
+			}
+		}
 	}
 }
 

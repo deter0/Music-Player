@@ -16,6 +16,8 @@ export interface Song {
 	CoverIndex: string;
 	AlbumId: string;
 	ExternalMedia?: boolean;
+	Lyrics?: string;
+	ExplicitLikely?: boolean;
 }
 
 export interface Album {

@@ -84,12 +84,11 @@ export default class Player extends Component {
 
 			window.API.get("/lyrics", {
 				params: {
-					Artist: Song.Artist,
-					Title: Song.Title
+					SongIdentifier: Song.Identifier
 				}
 			}).then(Response => {
+				console.log("Got lyrics", Response);
 				this.setState({ Lyrics: Response.data });
-				// const LyricMatcher_ = new LyricMatcher(Response.data as string, AudioPlayer.Audio);
 			}).catch(error => {
 				console.error(error);
 				this.setState({ Lyrics: undefined, LyricsVisible: false });

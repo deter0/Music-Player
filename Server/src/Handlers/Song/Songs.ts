@@ -50,7 +50,7 @@ export default class Songs {
 		this.AlbumLookup = AlbumLookup;
 
 		const Start = GetUTC();
-		this.CacheAllSongs().finally(() => {
+		this.CacheAllSongs().then(() => {
 			let AverageSongsInUniqueAlbums = 0;
 			let UniqueAlbumCount = 0;
 
@@ -76,6 +76,12 @@ export default class Songs {
 				{ index: 3, type: "Average songs in unique albums", amount: AverageSongsInUniqueAlbums.toString().substr(0, 5), time: TimeTook },
 			]);
 			table.printTable();
+			
+			const _global = global as any;
+			_global.UpdateSearch();
+			setTimeout(() => {
+				_global.CachedAllSongs = true;
+			}, 250);
 		});
 		const _global = global as any;
 		_global.CacheSong = this.CacheSong.bind(this);
@@ -208,40 +214,51 @@ export default class Songs {
 	}
 
 	async CacheAllSongs() {
-		if (!this.Path) {
-			this.Path = path.join(__dirname, '../Songs');
-		}
-		const FileNames = fs.readdirSync(this.Path);
-		for (let i = 0; i < FileNames.length; i++) {
-			this.CacheSong(FileNames[i]);
-		}
+		return new Promise<number>((resolve, reject) => {
+			if (!this.Path) {
+				this.Path = path.join(__dirname, '../Songs');
+			}
+			let CompletedCount = 0;
+			const FileNames = fs.readdirSync(this.Path);
+			for (let i = 0; i < FileNames.length; i++) {
+				this.CacheSong(FileNames[i]).then(() => {
+					CompletedCount++;
+					if (CompletedCount >= FileNames.length) {
+						resolve(CompletedCount);
+					}
+				})
+			}
+		})
 	}
 
 	async CacheSong(Identifier: string) {
-		const Song = await this.GetSong(Identifier, this.Path, true);
-		if (!Song) {
-			return;
-		}
-		if (Song.Album) {
-			let Id = sha256(Song.Album + Song.Artist);
-			let Album = this.AlbumLookup[Id];
-			if (!Album) {
-				this.AlbumLookup[Id] = {
-					Title: Song.Album,
-					Artist: Song.Artist,
-					Songs: [],
-					Cover: Song.ImageData || `/songs/image?Identifier=${Identifier}`,
-					Id: Id
-				}
-				this.AlbumArray.push(this.AlbumLookup[Id]);
+		return new Promise<void>(async (resolve, reject) => {
+			const Song = await this.GetSong(Identifier, this.Path, true);
+			if (!Song) {
+				return;
 			}
-			Album = this.AlbumLookup[Id];
-			Album.Songs.push(Song);
-		}
-		this.SongLookup[this.Path + Identifier] = Song;
-		this.SongArray.push(Song);
-		const _global = global as any;
-		_global.UpdateSearch();
+			if (Song.Album) {
+				let Id = sha256(Song.Album + Song.Artist);
+				let Album = this.AlbumLookup[Id];
+				if (!Album) {
+					this.AlbumLookup[Id] = {
+						Title: Song.Album,
+						Artist: Song.Artist,
+						Songs: [],
+						Cover: Song.ImageData || `/songs/image?Identifier=${Identifier}`,
+						Id: Id
+					}
+					this.AlbumArray.push(this.AlbumLookup[Id]);
+				}
+				Album = this.AlbumLookup[Id];
+				Album.Songs.push(Song);
+			}
+			this.SongLookup[this.Path + Identifier] = Song;
+			this.SongArray.push(Song);
+			// const _global = global as any;
+			// _global.UpdateSearch();
+			resolve();
+		});
 	}
 
 	async GetSongImage(Identifier: string, Path?: string) {
