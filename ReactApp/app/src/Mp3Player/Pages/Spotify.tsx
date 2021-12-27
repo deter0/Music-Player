@@ -106,13 +106,16 @@ class SpotifySearch extends Component {
 }
 
 export default class Spotify extends Component {
-	state: { Authorized: boolean } = { Authorized: false };
+	state: { Authorized: boolean, DownloadingLikedSongs?: boolean } = { Authorized: false, DownloadingLikedSongs: false };
 	componentDidMount() {
 		window.API.get("/spotify/authorized").then(Response => {
 			if (!Response.data) {
 				window.location.pathname = "/download/spotify-config"
 			}
 		});
+		window.API.get("/downloading-liked").then(Response => {
+			this.setState(({DownloadingLikedSongs: Response.data}));
+		})
 	}
 	render() {
 		return <div className="page-padding-top">
@@ -123,11 +126,17 @@ export default class Spotify extends Component {
 				</svg>
 			</p>
 			<SpotifyProfile />
-			<button onClick={() => {
-				window.API.get("/spotify/download-liked").then(Response => {
-					console.log("downloading all liked songs");
-				})
-			}}>Download all like songs (ALL! be careful)</button>
+			<button className={`${this.state.DownloadingLikedSongs ? "button-loading" : ""} margin-left rud-margin`} onClick={() => {
+				if (this.state.DownloadingLikedSongs) {
+					window.API.post("/spotify/cancel-download-liked").then(Response => {
+						this.setState({ DownloadingLikedSongs: false });
+					})
+				} else {
+					window.API.post("/spotify/download-liked").then(Response => {
+						this.setState({ DownloadingLikedSongs: true });
+					});
+				}
+			}}>Download all liked songs</button>
 			<SpotifySearch />
 		</div>// : <Redirect to="/download/spotify-config?e=true" />
 	}

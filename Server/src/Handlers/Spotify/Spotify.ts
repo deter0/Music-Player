@@ -376,16 +376,30 @@ export default class Spotify {
 		});
 	}
 
+	CancelledLikedSongs = false;
+	DownloadingLikedSongs = false;
+	CancelDownloadLikedSongs() {
+		this.CancelledLikedSongs = true;
+		this.Queue = [];
+		this.DownloadingLikedSongs = false;
+	}
 	DownloadsRemoved = new Signal<Types.Download>();
 	async DownloadLikedSongs() {
 		return new Promise<boolean>(async (Resolve, Reject) => {
+			this.DownloadingLikedSongs = true;
 			const Recurse = async (Offset: number) => {
+				if (this.CancelledLikedSongs) {
+					return;
+				}
 				return new Promise<boolean>(async (Resolve, Reject) => {
 					axios.get(`https://api.spotify.com/v1/me/tracks?offset=${Offset}&limit=50`, {
 						headers: {
 							Authorization: `${this.Auth.token_type} ${this.Auth.access_token}`
 						}
 					}).then(Response => {
+						if (this.CancelledLikedSongs) {
+							return;
+						}
 						const ResponseData: any = Response.data;
 						const Tracks = this.MapLikedSongs(ResponseData.items);
 						Tracks.forEach(Track => {
@@ -394,8 +408,12 @@ export default class Spotify {
 						const AmountDone = (ResponseData.offset as number) + (ResponseData.limit as number);
 						if (AmountDone < ResponseData.total) {
 							setTimeout(() => {
-								Recurse(Offset + 50);
+								if (!this.CancelDownloadLikedSongs) {
+									Recurse(Offset + 50);
+								}
 							}, 500);
+						} else {
+							this.DownloadingLikedSongs = false;
 						}
 						console.log(ResponseData);
 					}).catch(err => console.error(err));

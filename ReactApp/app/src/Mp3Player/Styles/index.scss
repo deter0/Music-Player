@@ -40,6 +40,15 @@ p {
 	padding-top: 24px;
 }
 
+.margin-left {
+	margin-left: 24px !important;
+}
+
+// Right, Up, Down
+.rud-margin {
+	margin: 8px;
+}
+
 .context-title {
 	padding: 0px 24px;
 	font-size: $heading-size;
@@ -331,4 +340,47 @@ input:focus {
 
 .select button[data-selected]:focus {
 	filter: brightness(1.1);
+}
+
+@keyframes fade {
+	0% {
+		opacity: 70%;
+	}
+	50% {
+		opacity: 20%;
+	}
+	100% {
+		opacity: 70%;
+	}
+}
+.button-loading {
+	opacity: 70%;
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	animation: fade 0.4s infinite;
+	transition: opacity 0.4s;
+}
+
+.button-loading:hover {
+	opacity: 70%;
+	animation: none !important;
+}
+
+.button-loading::after {
+	content: "close";
+	font-family: "Material Icons";
+	font-size: 0%;
+	margin-left: 0px;
+	transition: transform 0.4s, margin-left 0.3s, font-size 0.4s, opacity 0.5s;
+	transform: scale(0);
+	opacity: 0;
+}
+
+.button-loading:hover::after {
+	content: "close";
+	margin-left: 8px;
+	font-size: 100%;
+	opacity: 1;
+	transform: scale(1);
 }

@@ -91,9 +91,16 @@ export default class SpotifyRouter {
 				Response.status(400).send("No id or path");
 			}
 		});
-		this.Router.get("/download-liked", (Request, Response) => {
+		this.Router.post("/download-liked", (Request, Response) => {
 			this.Spotify.DownloadLikedSongs();
 			Response.sendStatus(200);
+		})
+		this.Router.post("/cancel-download-liked", (Request, Response) => {
+			this.Spotify.CancelDownloadLikedSongs();
+			Response.sendStatus(200);
+		})
+		this.Router.get("/downloading-liked", (Request, Response) => {
+			Response.send(this.Spotify.DownloadingLikedSongs);
 		})
 		this.Router.get("/Downloads", (Request, Response) => {
 			Response.json(this.Spotify.Downloads);
