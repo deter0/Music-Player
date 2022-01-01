@@ -3,6 +3,8 @@ import path from "path";
 import fs from 'fs';
 import GetUTC from "../GetUTC";
 
+const DATA_PATH = "../../../Data/Playback.json";
+
 export default class Playback {
 	CurrentPlaying?: {
 		Song: Types.Song,
@@ -57,12 +59,12 @@ export default class Playback {
 	}
 	private SavePlaybackState() {
 		console.log("saving", this.CurrentPlaying);
-		fs.writeFileSync(path.join(__dirname, "../../Data/Playback.json"), JSON.stringify(this.CurrentPlaying), 'utf-8');
+		fs.writeFileSync(path.join(__dirname, DATA_PATH), JSON.stringify(this.CurrentPlaying), 'utf-8');
 		console.log("Saved Playback state!");
 	}
 	private ReadPlaybackState() {
 		try {
-			let PlaybackState = JSON.parse(fs.readFileSync(path.join(__dirname, "../../Data/Playback.json"), "utf-8")) as typeof this.CurrentPlaying;
+			let PlaybackState = JSON.parse(fs.readFileSync(path.join(__dirname, DATA_PATH), "utf-8")) as typeof this.CurrentPlaying;
 			this.SetPlaying(PlaybackState);
 		} catch (error) {
 			console.warn(error);

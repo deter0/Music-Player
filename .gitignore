@@ -1,13 +1,10 @@
 Client/node_modules/
-Client/out/
-ReactApp/node_modules/
-ReactApp/app/node_modules/
-Server/node_modules/
-Server/dist/
 Server/Data/
-Server/Temp/
-Server/Data/Ratings.json
-SpotifyDownloader/__pycache__/
+Server/Songs/
+Server/WebServer/node_modules/
+Server/WebServer/dist/
+Server/WebServer/Temp/
+Server/SpotifyDownloader/__pycache__
 *.env
 # Songs
 Songs/

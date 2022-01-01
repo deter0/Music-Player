@@ -9,6 +9,8 @@ import GetUTC from "../../GetUTC";
 import * as index from "../../index";
 import Signal from "../../Signal";
 
+const DATA_PATH = "../../../../Data/Info.json";
+
 const SCOPES = 'user-read-private user-read-email playlist-read-private playlist-read-collaborative user-read-currently-playing user-top-read user-follow-read user-library-read';
 const REDIRECT_URL = `http://localhost:${index.PORT || 9091}/spotify/callback`;
 
@@ -21,7 +23,7 @@ export default class Spotify {
 	ClientSecret?: string;
 
 	DownloadsChanged: Signal<void> = new Signal<void>();
-	//?(deter):Auth
+	// * (deter):Auth
 	SetClientInfo(ClientId: string, ClientSecret: string) {
 		this.ClientId = ClientId;
 		this.ClientSecret = ClientSecret;
@@ -116,7 +118,7 @@ export default class Spotify {
 	private async ReadClientInfo() {
 		let ClientInfo;
 		try {
-			const ClientInfoBuffer = await fs.readFileSync(path.join(__dirname, "../../../Data/Info.json"), 'utf8');
+			const ClientInfoBuffer = await fs.readFileSync(path.join(__dirname, DATA_PATH), 'utf8');
 			ClientInfo = JSON.parse(ClientInfoBuffer);
 		} catch (error) {
 			ClientInfo = {
@@ -142,7 +144,7 @@ export default class Spotify {
 			Auth: this.Auth
 		};
 		console.log("saving", JSON.stringify(Data));
-		await fs.writeFileSync(path.join(__dirname, "../../../Data/Info.json"), JSON.stringify(Data), 'utf-8');
+		await fs.writeFileSync(path.join(__dirname, DATA_PATH), JSON.stringify(Data), 'utf-8');
 		console.log("Saved Info!");
 	}
 	//?(deter):API
@@ -470,7 +472,7 @@ export default class Spotify {
 			const Id = Song.Id;
 			try {
 				// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
-				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
+				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
 				PythonProcess.on("error", (Error: any) => {
 					console.error(Error);
 				});

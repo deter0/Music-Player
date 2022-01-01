@@ -7,7 +7,7 @@ export class Playlist {
 	Songs: string[];
 }
 
-const PLAYLIST_PATH = path.join(__dirname, "../../../Data/Playlists.json");
+const DATA_PATH = path.join(__dirname, "../../../../Data/Playlists.json");
 export default class Playlists {
 	PlaylistArray: Playlist[];
 	PlaylistLookup: { [key: string]: Playlist };
@@ -69,11 +69,11 @@ export default class Playlists {
 	}
 
 	private SavePlaylists() {
-		fs.writeFileSync(PLAYLIST_PATH, JSON.stringify(this.PlaylistArray), "utf-8");
+		fs.writeFileSync(DATA_PATH, JSON.stringify(this.PlaylistArray), "utf-8");
 	}
 	private LoadPlaylists() {
 		try {
-			const Data = fs.readFileSync(PLAYLIST_PATH, "utf-8");
+			const Data = fs.readFileSync(DATA_PATH, "utf-8");
 			const Playlists = JSON.parse(Data) as Playlist[];
 			this.PlaylistArray = Playlists;
 			this.PlaylistLookup = {};

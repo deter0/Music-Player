@@ -69,7 +69,7 @@ import LyricsRouter from './Routes/Lyrics';
 	try {
 		const RequiredFolders = ["Data", "Songs", "Temp"];
 		const RequiredFiles = ["Data/Plays.json", "Data/Ratings.json", "Data/Info.json", "Data/Playback.json", "Data/Playlists.json"];
-		const Path = path.join(__dirname, '../');
+		const Path = path.join(__dirname, '../../');
 		const Files = await fs.readdirSync(Path);
 
 		for (const RequiredFolder of RequiredFolders) {

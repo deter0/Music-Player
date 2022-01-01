@@ -3,6 +3,8 @@ import path from "path";
 import * as Types from "../../../Types";
 import sha256 from "sha256";
 
+const DATA_PATH = "../../../../../Data/Ratings.json";
+
 class Rating {
 	UserLiked: boolean = false;
 	GeneratedRating?: number = undefined;
@@ -40,7 +42,7 @@ export default class Ratings {
 	async LoadRatings() {
 		let Ratings;
 		try {
-			const RatingsBuffer = await fs.readFileSync(path.join(__dirname, "../../../../Data/Ratings.json"), 'utf8');
+			const RatingsBuffer = await fs.readFileSync(path.join(__dirname, DATA_PATH), 'utf8');
 			Ratings = JSON.parse(RatingsBuffer);
 		} catch (error) {
 			Ratings = {};
@@ -68,7 +70,7 @@ export default class Ratings {
 			}
 		}
 		console.log("saving", JSON.stringify(this.Ratings), this.Ratings);
-		await fs.writeFileSync(path.join(__dirname, "../../../../Data/Ratings.json"), JSON.stringify(this.Ratings), 'utf-8');
+		await fs.writeFileSync(path.join(__dirname, DATA_PATH), JSON.stringify(this.Ratings), 'utf-8');
 		LastWrite = new Date().getUTCMilliseconds();
 		console.log("Saved ratings!");
 	}

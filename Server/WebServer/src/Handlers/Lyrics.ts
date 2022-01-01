@@ -3,6 +3,8 @@ import fs from "fs";
 import path from "path";
 import * as Types from "../Types";
 
+const DATA_PATH = "../../../Data/Lyrics.json";
+
 const ValidateStr = (Str: string) => {
 	return Str.normalize("NFD").replace("'", "-").replace(/[^a-zA-Z0-9-: ]/g, "").replace(/[ :]/g, "-");
 }
@@ -25,14 +27,14 @@ export function AreLyricsExplicit(Lyrics: string): boolean {
 
 var LyricsData!:{[key: string]: string};
 function SaveLyrics(Song: Types.Song) {
-	if (!fs.existsSync(path.join(__dirname, "../../Data/Lyrics.json"))) {
-		fs.writeFileSync(path.join(__dirname, "../../Data/Lyrics.json"), "{}");
+	if (!fs.existsSync(path.join(__dirname, DATA_PATH))) {
+		fs.writeFileSync(path.join(__dirname, DATA_PATH), "{}");
 	}
 	if (!LyricsData) {
-		LyricsData = JSON.parse(fs.readFileSync(path.join(__dirname, "../../Data/Lyrics.json"), "utf8"));
+		LyricsData = JSON.parse(fs.readFileSync(path.join(__dirname, DATA_PATH), "utf8"));
 	}
 	LyricsData[Song.Identifier] = Song.Lyrics;
-	fs.writeFileSync(path.join(__dirname, "../../Data/Lyrics.json"), JSON.stringify(LyricsData));
+	fs.writeFileSync(path.join(__dirname, DATA_PATH), JSON.stringify(LyricsData));
 }
 
 function ReadLyrics() {
@@ -41,10 +43,10 @@ function ReadLyrics() {
 		setTimeout(ReadLyrics, 500);
 		return;
 	}
-	if (!fs.existsSync(path.join(__dirname, "../../Data/Lyrics.json"))) {
-		fs.writeFileSync(path.join(__dirname, "../../Data/Lyrics.json"), "{}");
+	if (!fs.existsSync(path.join(__dirname, DATA_PATH))) {
+		fs.writeFileSync(path.join(__dirname, DATA_PATH), "{}");
 	}
-	LyricsData = JSON.parse(fs.readFileSync(path.join(__dirname, "../../Data/Lyrics.json"), "utf8")) || {};
+	LyricsData = JSON.parse(fs.readFileSync(path.join(__dirname, DATA_PATH), "utf8")) || {};
 	
 	for (const SongIdentifier in LyricsData) {
 		_global.GetSong(SongIdentifier).then((Song:Types.Song) => {

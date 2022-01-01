@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import App from "./Mp3Player/App";
+import App from "./App";
 
 const root = document.getElementById("root");
 

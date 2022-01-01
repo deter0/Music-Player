@@ -19,7 +19,11 @@ export default class DropDowns extends Component {
 	componentDidMount() {
 		window.CreateDropdown = (Items, Position, Callback: Callback, SelectedIndex) => {
 			this.setState({
-				Items: this.state.Items.concat({ Items: Items, Position: Position, Callback: Callback, SelectedIndex: SelectedIndex })
+				Items: this.state.Items.concat({
+					Items: Items, Position: Position,
+					Callback: Callback,
+					SelectedIndex: SelectedIndex
+				})
 			})
 		}
 	}
