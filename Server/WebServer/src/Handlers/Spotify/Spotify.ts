@@ -472,7 +472,7 @@ export default class Spotify {
 			const Id = Song.Id;
 			try {
 				// If you're getting spawn errors change this to `python` or `python3` depending on what you have installed
-				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
+				const PythonProcess = spawn(PythonV || "python3", [path.join(__dirname, "../../../../SpotifyDownloader/main.py"), "song", Id, Path, this.Auth.access_token]);
 				PythonProcess.on("error", (Error: any) => {
 					console.error(Error);
 				});
