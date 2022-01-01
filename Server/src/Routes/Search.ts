@@ -20,6 +20,15 @@ export default class SearchRouter {
 				Response.send([]);
 			}
 		}));
+		SearchRouter.post("/lyrics", ((Request, Response) => {
+			const Query = Request.query.Query as string;
+			if (Query && Query.trim() !== "") {
+				const LyricResults = Searcher.SearchLyrics(Query);
+				Response.status(200).send(LyricResults);
+			} else {
+				Response.send([]);
+			}
+		}));
 		SearchRouter.post("/albums", ((Request, Response) => {
 			const Query = Request.query.Query as string;
 			if (Query && Query.trim() !== "") {

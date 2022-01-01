@@ -78,11 +78,13 @@ export default class Search2 extends Component {
 		Searching: boolean,
 		SongResults: Types.Song[],
 		SpotifyResults: Types.Song[],
+		LyricSongResults: Types.Song[],
 		AlbumResults: Types.Album[]
 	} = {
 			Searching: false,
 			SongResults: [],
 			SpotifyResults: [],
+			LyricSongResults: [],
 			AlbumResults: []
 		};
 	componentDidMount() {
@@ -132,9 +134,19 @@ export default class Search2 extends Component {
 			this.SearchSongs(Query);
 			this.QueueSpotifySearch(Query);
 			this.SearchAlbums(Query);
+			this.SearchLyrics(Query);
 		} else {
 			this.setState({ SongResults: [], SpotifyResults: [], AlbumResults: [] });
 		}
+	}
+	private SearchLyrics(Query:string):void {
+		window.API.post("/search/lyrics", undefined, {
+			params: {
+				Query: Query
+			}
+		}).then(Response => {
+			this.setState({ LyricSongResults: Response.data });
+		})
 	}
 	private SearchSongs(Query: string) {
 		window.API.post("/search/songs", undefined, {
@@ -196,10 +208,15 @@ export default class Search2 extends Component {
 				ResultType={ResultType.Song}
 				SongData={this.state.SongResults}
 				Title="Songs" />
-			<SearchResult
+			{/* <SearchResult
 				Close={() => this.Close()}
 				ResultType={ResultType.Page}
-				Title="Links" />
+				Title="Links" /> */}
+			<SearchResult
+				Close={() => this.Close()}
+				ResultType={ResultType.Song}
+				SongData={this.state.LyricSongResults}
+				Title="Lyric Matches" />
 			<SearchResult
 				Close={() => this.Close()}
 				ResultType={ResultType.Album}

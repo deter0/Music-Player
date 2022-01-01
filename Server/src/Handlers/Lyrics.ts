@@ -53,6 +53,7 @@ function ReadLyrics() {
 			console.warn("Unknow song id: ", SongIdentifier);
 		});
 	}
+	(global as any).UpdateLryicsSearch();
 }
 ReadLyrics();
 
@@ -71,6 +72,7 @@ const Lyrics = (Song: Types.Song, In: number = 0): Promise<string> => {
 			let LyricsRes = (Response.data as string).match(/\"body":"(.*)/gm);
 			let Lyrics = LyricsRes[0].split(`"body":"`)[1].split(`","language`)[0].replace(/\\n/gm, "<br/>").replace("\n", "<br/>");
 			Song.Lyrics = Lyrics;
+			(global as any).UpdateLryicsSearch();
 			SaveLyrics(Song);
 			resolve(Lyrics);
 		}).catch(async error => {
