@@ -1,3 +1,5 @@
+# CANNOT GURRANTE SAFETY NOR FUNCTIONALITY OF THIS PROJECT ANYMORE
+## I've abondoned it, might restart on it at some point. If I do I will probably rewrite it.
 # Music Player<br/>
 #### WARNING: WORK IN PROGRESS<br/>
 Please note that **a name has not been decided** and "Music Player" is not the final name, obviously. But if you have name suggestion send them to me, please!!<br/>
